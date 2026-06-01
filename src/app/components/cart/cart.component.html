@@ -26,8 +26,8 @@
         <div class="cart-list-mobile show-mobile-only">
           @for (item of cartService.items(); track item.id) {
             <div class="swipe-cart-wrap" [class.removing]="removingItem() === item.id">
-              <div class="swipe-delete-bg">
-                <span class="material-icons">delete</span>
+              <div class="swipe-delete-bg" role="button" aria-label="Delete item">
+                <span class="material-icons" aria-hidden="true">delete</span>
                 Delete
               </div>
               <article
@@ -38,7 +38,7 @@
                 (touchend)="onSwipeEnd(item.id, $event)"
               >
                 <a [routerLink]="['/products', item.product.id]" class="item-image">
-                  <img [src]="item.product.images[0]" [alt]="item.product.name" />
+                  <img [src]="item.product.images[0]" [alt]="item.product.name" loading="lazy" />
                 </a>
                 <div class="item-info">
                   <a [routerLink]="['/products', item.product.id]" class="item-name">{{ item.product.name }}</a>
@@ -76,7 +76,7 @@
             >
               <div class="item-meta">
                 <div class="item-image">
-                  <img [src]="item.product.images[0]" [alt]="item.product.name" />
+                  <img [src]="item.product.images[0]" [alt]="item.product.name" loading="lazy" />
                 </div>
                 <div class="item-info">
                   <a [routerLink]="['/products', item.product.id]" class="item-name">
@@ -174,7 +174,7 @@
         <div class="recommended-list">
           @for (product of recommendedProducts(); track product.id) {
             <a class="recommended-card" [routerLink]="['/products', product.id]">
-              <img [src]="product.mainImage" [alt]="product.name" />
+              <img [src]="product.mainImage" [alt]="product.name" loading="lazy" />
               <div>
                 <span class="recommended-name">{{ product.name }}</span>
                 <span class="recommended-price">{{ product.price | customCurrency }}</span>

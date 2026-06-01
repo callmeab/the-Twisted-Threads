@@ -2,7 +2,6 @@ import {
   Component,
   ElementRef,
   HostListener,
-  OnDestroy,
   OnInit,
   ViewChild,
   inject,
@@ -13,7 +12,8 @@ import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
-import { Subject, Subscription } from 'rxjs';
+import { Subject } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SearchService } from '../../../services/search.service';
 import { SearchSuggestion } from '../../../models/search.model';
 import { HighlightSearchPipe } from '../../../pipes/highlight-search.pipe';
@@ -26,7 +26,7 @@ import { CustomCurrencyPipe } from '../../../pipes/custom-currency.pipe';
   templateUrl: './search-bar.component.html',
   styleUrl: './search-bar.component.scss',
 })
-export class SearchBarComponent implements OnInit, OnDestroy {
+export class SearchBarComponent implements OnInit {
   @ViewChild('searchInput') private searchInput?: ElementRef<HTMLInputElement>;
 
   /** Always expanded (mobile bar) */
@@ -44,21 +44,20 @@ export class SearchBarComponent implements OnInit, OnDestroy {
   protected readonly currentQuery = signal('');
 
   private readonly queryChanges$ = new Subject<string>();
-  private subscription?: Subscription;
 
   public ngOnInit(): void {
     if (this.alwaysVisible()) {
       this.isExpanded.set(true);
     }
 
-    this.subscription = this.searchService.autocompleteDebounced(this.queryChanges$).subscribe(result => {
+    this.searchService.autocompleteDebounced(this.queryChanges$).pipe(takeUntilDestroyed(this)).subscribe(result => {
       this.isLoading.set(false);
       this.suggestions.set(result.suggestions);
       this.currentQuery.set(result.query);
       this.activeIndex.set(result.suggestions.length > 0 ? 0 : -1);
     });
 
-    this.searchControl.valueChanges.subscribe(value => {
+    this.searchControl.valueChanges.pipe(takeUntilDestroyed(this)).subscribe(value => {
       const query = (value ?? '').toString();
       this.isOpen.set(true);
       if (query.trim()) {
@@ -71,7 +70,6 @@ export class SearchBarComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy(): void {
-    this.subscription?.unsubscribe();
     this.queryChanges$.complete();
   }
 

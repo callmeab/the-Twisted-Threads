@@ -24,13 +24,13 @@
       @for (img of images(); track img; let i = $index) {
         <swiper-slide>
           <button type="button" class="slide-btn" (click)="openGallery(i)" [attr.aria-label]="'View image ' + (i + 1)">
-            <img [src]="img" [alt]="productName() + ' image ' + (i + 1)" />
+            <img [src]="img" [alt]="productName() + ' image ' + (i + 1)" loading="lazy" />
           </button>
         </swiper-slide>
       }
     </swiper-container>
     <button type="button" class="expand-btn" (click)="openGallery()" aria-label="Open fullscreen gallery">
-      <span class="material-icons">fullscreen</span>
+      <span class="material-icons" aria-hidden="true">fullscreen</span>
     </button>
   </div>
 
@@ -44,7 +44,7 @@
           (click)="selectThumb(i)"
           [attr.aria-label]="'Show image ' + (i + 1)"
         >
-          <img [src]="img" [alt]="" />
+          <img [src]="img" [alt]="" loading="lazy" />
         </button>
       }
     </div>
@@ -56,29 +56,37 @@
     <div class="fullscreen-top">
       <span class="fullscreen-counter">{{ activeIndex() + 1 }} / {{ images().length }}</span>
       <button type="button" class="fullscreen-close" (click)="closeFullscreen()" aria-label="Close">
-        <span class="material-icons">close</span>
+        <span class="material-icons" aria-hidden="true">close</span>
       </button>
     </div>
 
     <div
       class="fullscreen-stage"
+      tabindex="0"
+      appFocusTrap
+      (keydown.arrowleft)="fullscreenPrev()"
+      (keydown.arrowright)="fullscreenNext()"
+      (keydown.escape)="closeFullscreen()"
       (touchstart)="onFullscreenSwipeStart($event); onFullscreenTouchStart($event)"
       (touchmove)="onFullscreenTouchMove($event)"
       (touchend)="onFullscreenSwipeEnd($event); onFullscreenTouchEnd($event)"
+      role="region"
+      aria-label="Image viewer"
     >
       <button type="button" class="nav-arrow nav-prev" (click)="fullscreenPrev()" aria-label="Previous image">
-        <span class="material-icons">chevron_left</span>
+        <span class="material-icons" aria-hidden="true">chevron_left</span>
       </button>
 
       <img
         class="fullscreen-image"
         [src]="images()[activeIndex()]"
         [alt]="productName()"
+        loading="lazy"
         [style.transform]="fullscreenTransform()"
       />
 
       <button type="button" class="nav-arrow nav-next" (click)="fullscreenNext()" aria-label="Next image">
-        <span class="material-icons">chevron_right</span>
+        <span class="material-icons" aria-hidden="true">chevron_right</span>
       </button>
     </div>
 

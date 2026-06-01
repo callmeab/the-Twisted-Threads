@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -7,6 +7,9 @@ import { OrderService } from '../../services/order.service';
 import { CustomCurrencyPipe } from '../../pipes/custom-currency.pipe';
 import { ToastrService } from 'ngx-toastr';
 import { CustomerInfo, PaymentProof, ShippingAddress } from '../../models/order.model';
+import { validateReceiptFile } from '../../validators/file-upload.validator';
+import { PostalCodeValidatorDirective } from '../../directives/postal-code.validator';
+import { FocusTrapDirective } from '../../directives/focus-trap.directive';
 
 export const GIFT_WRAP_FEE = 200;
 export const COD_FEE = 150;
@@ -14,11 +17,11 @@ export const COD_FEE = 150;
 @Component({
   selector: 'app-checkout',
   standalone: true,
-  imports: [CommonModule, FormsModule, CustomCurrencyPipe],
+  imports: [CommonModule, FormsModule, CustomCurrencyPipe, PostalCodeValidatorDirective, FocusTrapDirective],
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.scss'
 })
-export class CheckoutComponent {
+export class CheckoutComponent implements OnInit, OnDestroy {
   protected readonly cartService = inject(CartService);
   private readonly orderService = inject(OrderService);
   private readonly router = inject(Router);
@@ -30,6 +33,7 @@ export class CheckoutComponent {
   protected receiptFileName: string | null = null;
   protected receiptFileType: string | null = null;
   protected isDragging = false;
+  protected receiptUploadError = '';
 
   // Step 3 state
   protected orderNotes = '';
@@ -75,6 +79,20 @@ export class CheckoutComponent {
 
   constructor() {
     this.loadAddressFromStorage();
+  }
+
+  private onGlobalKeyDown = (ev: KeyboardEvent) => {
+    if (ev.key === 'Escape' && this.showTermsModal) {
+      this.showTermsModal = false;
+    }
+  };
+
+  ngOnInit(): void {
+    window.addEventListener('keydown', this.onGlobalKeyDown);
+  }
+
+  ngOnDestroy(): void {
+    window.removeEventListener('keydown', this.onGlobalKeyDown);
   }
 
   protected onNext(checkoutForm: NgForm): void {
@@ -215,6 +233,7 @@ export class CheckoutComponent {
     this.receiptFile = null;
     this.receiptFileName = null;
     this.receiptFileType = null;
+    this.receiptUploadError = '';
     this.persistChanges();
     this.toastr.info('Receipt removed.', 'Upload Reset');
   }
@@ -228,15 +247,10 @@ export class CheckoutComponent {
   }
 
   protected processFile(file: File): void {
-    const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
-    if (!allowedTypes.includes(file.type)) {
-      this.toastr.error('Invalid format. Please upload JPG, PNG or PDF.', 'Upload Error');
-      return;
-    }
-
-    const maxSize = 5 * 1024 * 1024;
-    if (file.size > maxSize) {
-      this.toastr.error('File size exceeds the 5MB limit.', 'Upload Error');
+    const validationMessage = validateReceiptFile(file);
+    if (validationMessage) {
+      this.receiptUploadError = validationMessage;
+      this.toastr.error(validationMessage, 'Upload Error');
       return;
     }
 

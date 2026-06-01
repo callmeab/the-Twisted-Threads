@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
@@ -6,7 +6,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { Subscription } from 'rxjs';
+import { ScrollingModule } from '@angular/cdk/scrolling';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SearchService } from '../../services/search.service';
 import { CartService } from '../../services/cart.service';
 import { ProductModel } from '../../models/product.model';
@@ -16,10 +17,12 @@ import { WishlistHeartButtonComponent } from '../shared/wishlist-heart-button/wi
 import { listStaggerAnimation } from '../../animations/animations';
 import { ProductCardSkeletonComponent } from '../shared/skeletons/product-card-skeleton.component';
 import { ToastrService } from 'ngx-toastr';
+import { OptimizedImageComponent } from '../shared/optimized-image/optimized-image.component';
 
 @Component({
   selector: 'app-search-results',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
     RouterLink,
@@ -28,15 +31,17 @@ import { ToastrService } from 'ngx-toastr';
     MatSelectModule,
     MatFormFieldModule,
     MatSlideToggleModule,
+    ScrollingModule,
     CustomCurrencyPipe,
     WishlistHeartButtonComponent,
     ProductCardSkeletonComponent,
+    OptimizedImageComponent,
   ],
   animations: [listStaggerAnimation],
   templateUrl: './search-results.component.html',
   styleUrl: './search-results.component.scss',
 })
-export class SearchResultsComponent implements OnInit, OnDestroy {
+export class SearchResultsComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly searchService = inject(SearchService);
@@ -107,8 +112,6 @@ export class SearchResultsComponent implements OnInit, OnDestroy {
   ];
 
   protected readonly popularSearches = this.searchService.popularSearches;
-  private paramSub?: Subscription;
-
   protected readonly filteredProducts = computed(() => {
     let result = [...this.baseResults()];
 
@@ -185,7 +188,7 @@ export class SearchResultsComponent implements OnInit, OnDestroy {
   );
 
   public ngOnInit(): void {
-    this.paramSub = this.route.queryParamMap.subscribe(params => {
+    this.route.queryParamMap.pipe(takeUntilDestroyed(this)).subscribe(params => {
       const q = (params.get('q') ?? '').trim();
       const category = params.get('category');
       const min = params.get('minPrice');
@@ -218,10 +221,6 @@ export class SearchResultsComponent implements OnInit, OnDestroy {
     });
   }
 
-  public ngOnDestroy(): void {
-    this.paramSub?.unsubscribe();
-  }
-
   protected applyDidYouMean(): void {
     const correction = this.correctedQuery();
     if (!correction) {
@@ -232,6 +231,10 @@ export class SearchResultsComponent implements OnInit, OnDestroy {
 
   protected searchPopular(term: string): void {
     void this.router.navigate(['/search'], { queryParams: { q: term } });
+  }
+
+  protected trackByProductId(index: number, product: ProductModel): string {
+    return product.id;
   }
 
   protected toggleCategory(category: string): void {

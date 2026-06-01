@@ -34,12 +34,12 @@
   <!-- TERMS MODAL -->
   @if (showTermsModal) {
     <div class="modal-backdrop" (click)="showTermsModal = false">
-      <div class="modal-box" (click)="$event.stopPropagation()">
-        <div class="modal-header">
-          <h3>Terms & Conditions</h3>
-          <button class="modal-close-btn" (click)="showTermsModal = false">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-          </button>
+      <div class="modal-box" role="dialog" aria-modal="true" aria-label="Terms and conditions" appFocusTrap tabindex="-1" (click)="$event.stopPropagation()">
+          <div class="modal-header">
+            <h3>Terms & Conditions</h3>
+            <button class="modal-close-btn" (click)="showTermsModal = false" aria-label="Close terms dialog">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/></svg>
+            </button>
         </div>
         <div class="modal-body">
           <h4>1. Introduction</h4>
@@ -290,7 +290,7 @@
                 } @else {
                   <div class="file-preview-card" (click)="$event.stopPropagation()">
                     @if (receiptFileType && receiptFileType.startsWith('image/')) {
-                      <div class="preview-img-wrapper"><img [src]="receiptFile" alt="Receipt Preview" /></div>
+                      <div class="preview-img-wrapper"><img [src]="receiptFile" alt="Receipt Preview" loading="lazy" /></div>
                     } @else {
                       <div class="preview-pdf-wrapper">
                         <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#d32f2f" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
@@ -302,6 +302,15 @@
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                         Remove Receipt
                       </button>
+                    </div>
+                  </div>
+                }
+                @if (receiptUploadError) {
+                  <div class="upload-error-banner" role="alert" aria-live="assertive">
+                    <div class="upload-error-text">{{ receiptUploadError }}</div>
+                    <div class="upload-actions">
+                      <button class="retry-btn" (click)="$event.stopPropagation()">Retry</button>
+                      <button class="remove-btn" (click)="removeReceipt()">Remove</button>
                     </div>
                   </div>
                 }
@@ -345,7 +354,7 @@
             <div class="review-cart-items">
               @for (item of cartService.items(); track item.product.id) {
                 <div class="review-cart-item">
-                  <img [src]="item.product.images[0]" [alt]="item.product.name" />
+                  <img [src]="item.product.images[0]" [alt]="item.product.name" loading="lazy" />
                   <div class="review-cart-item-info">
                     <span class="review-item-name">{{ item.product.name }}</span>
                     <span class="review-item-meta">{{ item.product.category }} · Size {{ item.selectedSize || 'N/A' }}</span>
@@ -403,7 +412,7 @@
                       <span class="preview-label">Receipt:</span>
                       <div class="receipt-thumbnail-wrapper">
                         @if (receiptFileType && receiptFileType.startsWith('image/')) {
-                          <img [src]="receiptFile" alt="Receipt" />
+                          <img [src]="receiptFile" alt="Receipt" loading="lazy" />
                         } @else {
                           <div class="pdf-icon-placeholder">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d32f2f" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
@@ -544,7 +553,7 @@
       <div class="order-items">
         @for (item of cartService.items(); track item.product.id) {
           <div class="order-item">
-            <img src="{{ item.product.images[0] }}" alt="{{ item.product.name }}" />
+            <img src="{{ item.product.images[0] }}" alt="{{ item.product.name }}" loading="lazy" />
             <div>
               <span class="product-name">{{ item.product.name }}</span>
               <span class="product-meta">Qty {{ item.quantity }} · {{ item.product.price | customCurrency }} each</span>

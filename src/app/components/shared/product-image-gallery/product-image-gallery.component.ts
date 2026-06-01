@@ -1,9 +1,10 @@
 import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
   ElementRef,
   OnDestroy,
-  AfterViewInit,
   inject,
   input,
   output,
@@ -11,6 +12,7 @@ import {
   viewChild,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FocusTrapDirective } from '../../../directives/focus-trap.directive';
 import { register } from 'swiper/element/bundle';
 register();
 
@@ -19,7 +21,8 @@ type SwiperInstance = { activeIndex: number; slideTo: (index: number) => void };
 @Component({
   selector: 'app-product-image-gallery',
   standalone: true,
-  imports: [CommonModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [CommonModule, FocusTrapDirective],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './product-image-gallery.component.html',
   styleUrl: './product-image-gallery.component.scss',

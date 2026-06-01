@@ -173,6 +173,7 @@
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
+  position: relative;
 
   label {
     font-size: 0.7rem;
@@ -209,6 +210,31 @@
       border-color: var(--rose);
       box-shadow: 0 0 0 3px rgba(183, 110, 121, 0.18);
     }
+  }
+
+  &.has-success {
+    input,
+    select,
+    textarea {
+      border-color: #16a34a;
+      box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.12);
+    }
+  }
+
+  .field-status {
+    position: absolute;
+    right: 1rem;
+    top: 3.6rem;
+    font-size: 1rem;
+    line-height: 1;
+  }
+
+  .field-status.success {
+    color: #16a34a;
+  }
+
+  .field-status.error {
+    color: #dc2626;
   }
 
   select {

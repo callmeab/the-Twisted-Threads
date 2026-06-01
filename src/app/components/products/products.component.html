@@ -214,11 +214,13 @@
                 <mat-card class="product-card card-premium overflow-hidden flex flex-col h-full group border-none">
                   <!-- Image area -->
                   <div class="relative w-full h-80 overflow-hidden bg-neutral-50 border-b border-neutral-100/50">
-                    <img 
-                      [src]="product.images[0]" 
-                      [alt]="product.name" 
-                      loading="lazy" 
-                      class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105" />
+                    <app-optimized-image
+                      [src]="product.images[0]"
+                      [alt]="product.name"
+                      [imgClass]="'w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105'"
+                      [width]="600"
+                      [height]="600"
+                    />
                     
                     <div class="absolute inset-0 bg-neutral-950/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                       <button
@@ -283,11 +285,13 @@
                 <mat-card class="list-card card-premium overflow-hidden flex flex-col sm:flex-row group border-none p-4 gap-6">
                   <!-- Left Image -->
                   <div class="relative w-full sm:w-64 h-64 flex-shrink-0 overflow-hidden bg-neutral-50 rounded-xl border border-neutral-100/50">
-                    <img 
-                      [src]="product.images[0]" 
-                      [alt]="product.name" 
-                      loading="lazy" 
-                      class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105" />
+                    <app-optimized-image
+                      [src]="product.images[0]"
+                      [alt]="product.name"
+                      [imgClass]="'w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105'"
+                      [width]="600"
+                      [height]="600"
+                    />
                     
                     @if (product.isNew) {
                       <span class="absolute top-3 left-3 badge-custom font-body new">New</span>

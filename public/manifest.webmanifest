@@ -1,0 +1,17 @@
+{
+  "name": "The Twisted Threads",
+  "short_name": "TwistedThreads",
+  "description": "A boutique jewelry and apparel storefront with performance-first shopping.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1f2937",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64 128x128 256x256 512x512",
+      "type": "image/x-icon"
+    }
+  ]
+}

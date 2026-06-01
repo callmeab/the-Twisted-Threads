@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal, computed } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject, signal, computed } from '@angular/core';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -9,6 +9,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ProductService } from '../../services/product.service';
 import { CartService } from '../../services/cart.service';
 import { CustomCurrencyPipe } from '../../pipes/custom-currency.pipe';
@@ -19,10 +20,12 @@ import { WishlistHeartButtonComponent } from '../shared/wishlist-heart-button/wi
 import { listStaggerAnimation } from '../../animations/animations';
 import { ProductCardSkeletonComponent } from '../shared/skeletons/product-card-skeleton.component';
 import { BottomSheetComponent } from '../shared/bottom-sheet/bottom-sheet.component';
+import { OptimizedImageComponent } from '../shared/optimized-image/optimized-image.component';
 
 @Component({
   selector: 'app-products',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
     RouterLink,
@@ -39,6 +42,7 @@ import { BottomSheetComponent } from '../shared/bottom-sheet/bottom-sheet.compon
     WishlistHeartButtonComponent,
     ProductCardSkeletonComponent,
     BottomSheetComponent,
+    OptimizedImageComponent,
   ],
   animations: [listStaggerAnimation],
   templateUrl: './products.component.html',
@@ -74,7 +78,7 @@ export class ProductsComponent implements OnInit {
 
   ngOnInit(): void {
     // Read category and search query parameters from router URL
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.pipe(takeUntilDestroyed(this)).subscribe(params => {
       this.isLoading.set(true);
       
       const categoryParam = params['category'];

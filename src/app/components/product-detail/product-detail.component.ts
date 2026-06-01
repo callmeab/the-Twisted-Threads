@@ -1,6 +1,7 @@
-import { Component, inject, signal, OnInit, computed, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal, OnInit, computed, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ProductService } from '../../services/product.service';
 import { CartService } from '../../services/cart.service';
 import { ReviewService } from '../../services/review.service';
@@ -12,10 +13,12 @@ import { StarRatingComponent } from '../shared/star-rating/star-rating.component
 import { ProductReviewsComponent } from '../product-reviews/product-reviews.component';
 import { ProductDetailSkeletonComponent } from '../shared/skeletons/product-detail-skeleton.component';
 import { ProductImageGalleryComponent } from '../shared/product-image-gallery/product-image-gallery.component';
+import { OptimizedImageComponent } from '../shared/optimized-image/optimized-image.component';
 
 @Component({
   selector: 'app-product-detail',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
     RouterLink,
@@ -25,6 +28,7 @@ import { ProductImageGalleryComponent } from '../shared/product-image-gallery/pr
     ProductReviewsComponent,
     ProductDetailSkeletonComponent,
     ProductImageGalleryComponent,
+    OptimizedImageComponent,
   ],
   templateUrl: './product-detail.component.html',
   styleUrls: ['./product-detail.component.scss'],
@@ -92,7 +96,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit(): void {
-    this.route.paramMap.subscribe(params => {
+    this.route.paramMap.pipe(takeUntilDestroyed(this)).subscribe(params => {
       const id = params.get('id');
       if (!id) {
         void this.router.navigate(['/products']);

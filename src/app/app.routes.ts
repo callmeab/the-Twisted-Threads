@@ -52,8 +52,16 @@ export const routes: Routes = [
     loadComponent: () => import('./components/wishlist/wishlist.component').then(m => m.WishlistComponent),
   },
   {
+    path: 'server-error',
+    loadComponent: () => import('./components/server-error/server-error.component').then(m => m.ServerErrorComponent),
+  },
+  {
+    path: 'not-found',
+    loadComponent: () => import('./components/not-found/not-found.component').then(m => m.NotFoundComponent),
+  },
+  {
     path: '**',
-    redirectTo: '',
+    redirectTo: 'not-found',
   },
 ];
 

@@ -14,6 +14,8 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ToastrService } from 'ngx-toastr';
 import { ContactService } from '../../services/contact.service';
 import { ContactSubject, ContactSubjectOption } from '../../models/contact.model';
+import { ConfirmEmailMatchDirective } from '../../directives/confirm-email-match.directive';
+import { ConfirmEmailMatchDirective } from '../../directives/confirm-email-match.directive';
 
 interface FaqItem {
   id: string;
@@ -30,7 +32,7 @@ interface SocialLink {
 @Component({
   selector: 'app-contact',
   standalone: true,
-  imports: [FormsModule, RouterLink],
+  imports: [FormsModule, RouterLink, ConfirmEmailMatchDirective],
   templateUrl: './contact.component.html',
   styleUrl: './contact.component.scss',
 })
@@ -47,9 +49,12 @@ export class ContactComponent implements AfterViewInit, OnDestroy {
   protected readonly showSuccess = signal(false);
   protected readonly expandedFaqId = signal<string | null>('faq-1');
 
+  protected readonly phonePattern = '^(?:\\+92|0)[\\s-]?3\\d{2}[\\s-]?\\d{7}$';
+
   protected contactData = {
     fullName: '',
     email: '',
+    confirmEmail: '',
     phone: '',
     subject: '' as ContactSubject | '',
     message: '',

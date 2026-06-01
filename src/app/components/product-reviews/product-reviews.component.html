@@ -51,7 +51,7 @@
 
     @if (displayedReviews().length === 0) {
       <div class="empty-reviews">
-        <span class="material-icons">rate_review</span>
+        <span class="material-icons" aria-hidden="true">rate_review</span>
         <p>
           @if (ratingFilter()) {
             No {{ ratingFilter() }}-star reviews yet. Try another filter or be the first to review.
@@ -71,7 +71,7 @@
                   <strong>{{ review.customerName }}</strong>
                   @if (review.verified) {
                     <span class="verified-badge" title="Verified purchase">
-                      <span class="material-icons">verified</span>
+                      <span class="material-icons" aria-hidden="true">verified</span>
                       Verified
                     </span>
                   }
@@ -87,7 +87,7 @@
               <div class="review-images">
                 @for (img of review.images; track img) {
                   <button type="button" class="review-img-btn" (click)="openLightbox(img)">
-                    <img [src]="img" alt="Customer review photo" />
+                    <img [src]="img" alt="Customer review photo" loading="lazy" />
                   </button>
                 }
               </div>
@@ -100,7 +100,7 @@
               (click)="markHelpful(review)"
               [disabled]="hasVotedHelpful(review.reviewId)"
             >
-              <span class="material-icons">thumb_up</span>
+              <span class="material-icons" aria-hidden="true">thumb_up</span>
               Helpful ({{ review.helpful }})
             </button>
           </article>
@@ -117,9 +117,9 @@
   <div class="review-lightbox" (click)="closeLightbox()" role="dialog" aria-modal="true" aria-label="Review image">
     <div class="review-lightbox-inner" (click)="$event.stopPropagation()">
       <button type="button" class="lightbox-close" (click)="closeLightbox()" aria-label="Close">
-        <span class="material-icons">close</span>
+        <span class="material-icons" aria-hidden="true">close</span>
       </button>
-      <img [src]="lightboxImage()!" alt="Review photo full size" />
+      <img [src]="lightboxImage()!" alt="Review photo full size" loading="lazy" />
     </div>
   </div>
 }
