@@ -1,0 +1,116 @@
+<div class="cart-page">
+
+  <!-- Page Header -->
+  <div class="cart-header">
+    <h1>Shopping Bag</h1>
+    <p>Review your chosen luxury pieces before checking out.</p>
+  </div>
+
+  @if (cartService.items().length > 0) {
+    <div class="cart-grid">
+
+      <!-- ── Cart Items List ── -->
+      <div>
+        <div class="cart-list">
+          @for (item of cartService.items(); track item.product.id) {
+            <div class="cart-item">
+
+              <!-- Thumbnail -->
+              <div class="item-image">
+                <img [src]="item.product.images[0]" [alt]="item.product.name" />
+              </div>
+
+              <!-- Info -->
+              <div class="item-info">
+                <span class="item-category">{{ item.product.category }}</span>
+                <a class="item-name" [routerLink]="['/products', item.product.id]">
+                  {{ item.product.name }}
+                </a>
+                <span class="item-unit-price">{{ item.product.price | customCurrency }} per piece</span>
+              </div>
+
+              <!-- Quantity controls -->
+              <div class="qty-control">
+                <button class="qty-btn" (click)="decreaseQty(item.product.id, item.quantity)">−</button>
+                <span class="qty-value">{{ item.quantity }}</span>
+                <button class="qty-btn" (click)="increaseQty(item.product.id, item.quantity, item.product.stockQuantity)">+</button>
+              </div>
+
+              <!-- Subtotal + Remove -->
+              <div class="item-price-col">
+                <span class="item-subtotal">{{ (item.product.price * item.quantity) | customCurrency }}</span>
+                <button class="remove-btn" (click)="removeItem(item.product.id, item.product.name)">
+                  Remove
+                </button>
+              </div>
+
+            </div>
+          }
+        </div>
+
+        <!-- Footer row -->
+        <div class="cart-footer-row">
+          <button class="clear-btn" (click)="clearCart()">Clear Bag</button>
+          <a class="continue-link" routerLink="/products">
+            Continue Shopping
+            <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- ── Order Summary ── -->
+      <div class="summary-card">
+        <h3>Order Summary</h3>
+
+        <div class="summary-rows">
+          <div class="summary-row">
+            <span class="label">Selected Pieces</span>
+            <span class="value">{{ cartService.totalItems() }} items</span>
+          </div>
+          <div class="summary-row shipping">
+            <span class="label">Shipping</span>
+            <span class="value">Complimentary</span>
+          </div>
+          <div class="summary-row total">
+            <span class="label">Total</span>
+            <span class="value">{{ cartService.totalPrice() | customCurrency }}</span>
+          </div>
+        </div>
+
+        <a class="checkout-btn" routerLink="/checkout">
+          Proceed to Checkout
+        </a>
+
+        <div class="secure-badges">
+          <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+          </svg>
+          Secure &amp; Encrypted Checkout
+        </div>
+      </div>
+
+    </div>
+
+  } @else {
+    <!-- Empty State -->
+    <div class="empty-state">
+      <svg class="empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+          d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+      </svg>
+      <h3>Your shopping bag is empty</h3>
+      <p>Discover our handcrafted pieces and fill it with something beautiful.</p>
+      <a class="shop-btn" routerLink="/products">
+        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+        </svg>
+        Shop New Arrivals
+      </a>
+    </div>
+  }
+
+</div>

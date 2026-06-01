@@ -1,0 +1,190 @@
+<div class="detail-page">
+  <!-- Back Link -->
+  <a routerLink="/products" class="back-link">
+    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+    </svg>
+    Back to Shop
+  </a>
+
+  @if (product()) {
+    <div class="detail-grid">
+
+      <!-- ── Gallery ── -->
+      <div class="gallery-section">
+        <div class="main-image-wrapper">
+          <img
+            class="main-image"
+            [src]="activeImage() || product()?.images?.[0]"
+            [alt]="product()?.name"
+          />
+        </div>
+
+        @if ((product()?.images?.length || 0) > 1) {
+          <div class="thumbnail-strip">
+            @for (img of product()?.images; track img) {
+              <button
+                class="thumb-btn"
+                [class.active]="activeImage() === img"
+                (click)="activeImage.set(img)"
+              >
+                <img [src]="img" alt="Thumbnail" />
+              </button>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- ── Info ── -->
+      <div class="info-section">
+
+        <!-- Category + New badge -->
+        <div style="display:flex; gap: 0.5rem; align-items: center; flex-wrap:wrap;">
+          <span class="category-badge">{{ product()?.category }}</span>
+          @if (product()?.isNew) {
+            <span class="discount-badge" style="background: linear-gradient(135deg,#b8d4c8,#6ab89a); color:#1b4332;">New</span>
+          }
+          @if (product()?.discount) {
+            <span class="discount-badge">{{ product()?.discount }}% OFF</span>
+          }
+        </div>
+
+        <!-- Name -->
+        <h1 class="product-name">{{ product()?.name }}</h1>
+
+        <!-- Price row -->
+        <div class="price-row">
+          <span class="product-price">{{ product()?.price | customCurrency }}</span>
+          @if (product()?.originalPrice && product()!.originalPrice > product()!.price) {
+            <span class="original-price">{{ product()?.originalPrice | customCurrency }}</span>
+          }
+        </div>
+
+        <!-- Rating -->
+        @if (product()?.rating) {
+          <div class="rating-row">
+            <span class="stars">
+              @for (s of [1,2,3,4,5]; track s) {
+                <svg width="14" height="14" viewBox="0 0 20 20" [attr.fill]="s <= (product()?.rating || 0) ? 'currentColor' : 'none'" stroke="currentColor" stroke-width="1.5">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                </svg>
+              }
+            </span>
+            <strong>{{ product()?.rating }}/5</strong>
+            <span class="review-count">({{ product()?.reviewCount }} reviews)</span>
+          </div>
+        }
+
+        <!-- Description -->
+        <p class="product-description">{{ product()?.description }}</p>
+
+        <!-- Materials / tags -->
+        @if (product()?.materials?.length) {
+          <div class="tags-row">
+            @for (m of product()?.materials; track m) {
+              <span class="tag-chip">{{ m }}</span>
+            }
+          </div>
+        }
+
+        <!-- Specs -->
+        <div class="specs-section">
+          <p class="specs-title">Product Specifications</p>
+          <dl class="specs-grid">
+            <div class="spec-row">
+              <dt>Category</dt>
+              <dd>{{ product()?.category }}</dd>
+            </div>
+            <div class="spec-row">
+              <dt>Sub-Category</dt>
+              <dd>{{ product()?.subCategory }}</dd>
+            </div>
+            <div class="spec-row">
+              <dt>Stock Available</dt>
+              <dd>{{ product()?.stockQuantity }} units</dd>
+            </div>
+            <div class="spec-row">
+              <dt>Availability</dt>
+              <dd>{{ product()?.inStock ? 'In Stock' : 'Out of Stock' }}</dd>
+            </div>
+            @if (product()?.sizes?.length) {
+              <div class="spec-row full-width">
+                <dt>Available Sizes</dt>
+                <dd>{{ product()?.sizes?.join(', ') }}</dd>
+              </div>
+            }
+            @if (product()?.colors?.length) {
+              <div class="spec-row full-width">
+                <dt>Available Colors</dt>
+                <dd>{{ product()?.colors?.join(', ') }}</dd>
+              </div>
+            }
+          </dl>
+        </div>
+
+        <!-- Add to Cart actions -->
+        <div class="action-section">
+          <div class="qty-row">
+            <span class="qty-label">Qty:</span>
+            <div class="qty-control">
+              <button class="qty-btn" (click)="decreaseQty()">−</button>
+              <span class="qty-value">{{ quantity() }}</span>
+              <button class="qty-btn" (click)="increaseQty()">+</button>
+            </div>
+          </div>
+
+          <div style="display:flex; gap: var(--space-3);">
+            <button class="btn-add-cart" (click)="addToCart()">
+              <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+              </svg>
+              Add to Bag
+            </button>
+            <button class="btn-wishlist" title="Add to Wishlist">
+              <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Delivery trust badges -->
+          <div class="delivery-badges">
+            <span class="delivery-badge">
+              <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/>
+              </svg>
+              Free Shipping on orders over $50
+            </span>
+            <span class="delivery-badge">
+              <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+              </svg>
+              Secure & Authentic
+            </span>
+            <span class="delivery-badge">
+              <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+              </svg>
+              Easy 30-day Returns
+            </span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  } @else {
+    <div class="loading-state">
+      <svg width="48" height="48" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="opacity:0.3;">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+          d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+      </svg>
+      Curating your piece…
+    </div>
+  }
+</div>

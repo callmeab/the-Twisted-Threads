@@ -1,0 +1,109 @@
+<div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 space-y-12">
+  <!-- Title Header -->
+  <div class="border-b border-neutral-100 pb-5 max-w-3xl">
+    <h1 class="text-3xl font-extrabold tracking-tight text-neutral-900 sm:text-4xl">Connect with the Atelier</h1>
+    <p class="mt-2 text-sm text-neutral-500">Inquire about custom sizing, bespoke yarn commissions, or shipment statuses.</p>
+  </div>
+
+  <div class="grid grid-cols-1 gap-12 lg:grid-cols-12">
+    <!-- Contact Form -->
+    <div class="lg:col-span-7">
+      <form #contactForm="ngForm" (ngSubmit)="onSubmit(contactForm.valid)" class="space-y-6">
+        <div class="grid grid-cols-1 gap-y-4 gap-x-4 sm:grid-cols-2">
+          <div class="space-y-1">
+            <label for="name" class="text-xs font-semibold text-neutral-500 uppercase tracking-wide">Full Name</label>
+            <input
+              type="text"
+              id="name"
+              name="fullName"
+              [(ngModel)]="contactData.fullName"
+              #fullName="ngModel"
+              required
+              class="w-full rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm text-neutral-950 outline-none focus:border-violet-500"
+              placeholder="Eleanor Vance"
+            />
+          </div>
+
+          <div class="space-y-1">
+            <label for="email" class="text-xs font-semibold text-neutral-500 uppercase tracking-wide">Email Address</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              [(ngModel)]="contactData.email"
+              #email="ngModel"
+              required
+              email
+              class="w-full rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm text-neutral-950 outline-none focus:border-violet-500"
+              placeholder="eleanor&#64;example.com"
+            />
+          </div>
+
+          <div class="sm:col-span-2 space-y-1">
+            <label for="subject" class="text-xs font-semibold text-neutral-500 uppercase tracking-wide">Subject of Inquiry</label>
+            <input
+              type="text"
+              id="subject"
+              name="subject"
+              [(ngModel)]="contactData.subject"
+              #subject="ngModel"
+              required
+              class="w-full rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm text-neutral-950 outline-none focus:border-violet-500"
+              placeholder="e.g. Custom Blanket Dimensions"
+            />
+          </div>
+
+          <div class="sm:col-span-2 space-y-1">
+            <label for="message" class="text-xs font-semibold text-neutral-500 uppercase tracking-wide">Inquiry Details</label>
+            <textarea
+              id="message"
+              name="message"
+              [(ngModel)]="contactData.message"
+              #message="ngModel"
+              required
+              rows="5"
+              class="w-full rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm text-neutral-950 outline-none focus:border-violet-500 resize-none"
+              placeholder="Tell us about your custom design ideas..."
+            ></textarea>
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          [disabled]="contactForm.invalid"
+          class="w-full rounded-xl bg-neutral-900 py-3.5 text-sm font-semibold text-white shadow-md hover:bg-neutral-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          Dispatch Inquiry
+        </button>
+      </form>
+    </div>
+
+    <!-- Sidebar Info -->
+    <div class="lg:col-span-5 space-y-8">
+      <div class="rounded-3xl border border-neutral-100 bg-neutral-50/50 p-6 space-y-6 shadow-sm">
+        <h3 class="text-md font-bold text-neutral-900">Atelier Information</h3>
+        
+        <div class="space-y-4 text-xs">
+          <div class="space-y-1">
+            <span class="font-semibold text-neutral-400 uppercase tracking-wide">Creative Workspace</span>
+            <p class="font-bold text-neutral-800 text-sm">The Twisted Threads Atelier</p>
+            <p class="text-neutral-500">104 Twisted Thread Blvd, Suite 200</p>
+            <p class="text-neutral-500">Portland, OR 97201</p>
+          </div>
+
+          <div class="space-y-1">
+            <span class="font-semibold text-neutral-400 uppercase tracking-wide">Opening Hours</span>
+            <p class="text-neutral-700 font-semibold">Monday &ndash; Friday: 9am &ndash; 6pm PST</p>
+            <p class="text-neutral-500">Closed Weekends and National Holidays</p>
+          </div>
+
+          <div class="space-y-1">
+            <span class="font-semibold text-neutral-400 uppercase tracking-wide">Direct Line</span>
+            <p class="text-neutral-700 font-bold text-sm">(503) 555-0199</p>
+            <p class="text-neutral-400">concierge&#64;thetwistedthreads.com</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

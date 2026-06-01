@@ -1,0 +1,284 @@
+// ============================================================
+// Header Component — Premium Stylesheet
+// ============================================================
+
+:host {
+  display: block;
+}
+
+// 1. Header Container Background States
+.transparent-header {
+  background-color: transparent;
+  border-bottom: 1px solid rgba(183, 110, 121, 0.05);
+  padding: var(--space-2) 0;
+}
+
+.scrolled-header {
+  background-color: rgba(254, 254, 254, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: var(--shadow-soft);
+  border-bottom: 1px solid rgba(183, 110, 121, 0.08);
+  padding: 0;
+
+  // Adapt for Dark Mode
+  .dark-mode & {
+    background-color: rgba(26, 18, 24, 0.85);
+    border-bottom: 1px solid rgba(212, 175, 55, 0.08);
+  }
+}
+
+// 2. Navigation Menus & Links
+.nav-link {
+  color: var(--color-charcoal);
+  text-decoration: none;
+  font-size: var(--font-size-xs);
+  letter-spacing: 0.18em;
+  padding: var(--space-2) 0;
+  position: relative;
+  transition: color var(--transition-fast);
+
+  &:hover {
+    color: var(--color-rose-gold);
+
+    mat-icon {
+      transform: translateY(2px);
+      color: var(--color-rose-gold);
+    }
+  }
+
+  // Underline slide animation on hover
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 50%;
+    width: 0;
+    height: 1.5px;
+    background-color: var(--color-rose-gold);
+    transition: width var(--transition-normal), left var(--transition-normal);
+  }
+
+  &:hover::after {
+    width: 100%;
+    left: 0;
+  }
+}
+
+// Active Nav highlight
+.active-nav-link {
+  color: var(--color-rose-gold) !important;
+  font-weight: var(--font-weight-bold);
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: var(--color-rose-gold);
+  }
+}
+
+// 3. Action Buttons & Icons
+.action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-full);
+  color: var(--color-charcoal);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  transition: background-color var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
+
+  mat-icon {
+    font-size: 22px;
+    width: 22px;
+    height: 22px;
+  }
+
+  &:hover {
+    background-color: rgba(183, 110, 121, 0.08);
+    color: var(--color-rose-gold);
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  // Material Badge overrides for luxurious touch
+  ::ng-deep {
+    .mat-badge-badge {
+      font-family: var(--font-body) !important;
+      font-size: 9px !important;
+      font-weight: 700 !important;
+      width: 18px !important;
+      height: 18px !important;
+      line-height: 18px !important;
+      top: 2px !important;
+      right: 2px !important;
+    }
+    
+    .mat-badge-primary .mat-badge-badge {
+      background-color: var(--color-rose-gold) !important;
+      color: var(--color-pearl) !important;
+    }
+
+    .mat-badge-accent .mat-badge-badge {
+      background-color: var(--color-gold) !important;
+      color: var(--color-purple) !important;
+    }
+  }
+}
+
+// 4. Expanding Search bar styling
+.search-container {
+  position: relative;
+  border-radius: var(--radius-full);
+  transition: background-color var(--transition-normal);
+
+  .search-input {
+    width: 0;
+    opacity: 0;
+    padding: 0;
+    transition: width var(--transition-normal), opacity var(--transition-normal), padding var(--transition-normal);
+    font-family: var(--font-body);
+    font-size: var(--font-size-xs);
+    color: var(--color-charcoal);
+    background: transparent;
+    border: none;
+    outline: none;
+
+    &::placeholder {
+      color: #aaa;
+    }
+  }
+
+  &.expanded {
+    background-color: rgba(44, 44, 44, 0.04);
+    padding-left: var(--space-4);
+
+    .dark-mode & {
+      background-color: rgba(254, 254, 254, 0.06);
+    }
+
+    .search-input {
+      width: 200px;
+      opacity: 1;
+      padding: var(--space-2) var(--space-1);
+      
+      @media (min-width: 640px) {
+        width: 260px;
+      }
+    }
+  }
+}
+
+// Autocomplete and Dropdown overrides
+::ng-deep {
+  .mat-mdc-autocomplete-panel {
+    background-color: rgba(254, 254, 254, 0.98) !important;
+    backdrop-filter: blur(10px) !important;
+    border-radius: var(--radius-lg) !important;
+    border: 1px solid rgba(183, 110, 121, 0.08) !important;
+    box-shadow: var(--shadow-medium) !important;
+    margin-top: 10px !important;
+
+    .dark-mode & {
+      background-color: rgba(26, 18, 24, 0.98) !important;
+      border: 1px solid rgba(212, 175, 55, 0.08) !important;
+    }
+  }
+
+  .search-option.mat-mdc-option {
+    min-height: 54px !important;
+    border-bottom: 1px solid rgba(44, 44, 44, 0.03);
+    transition: background-color var(--transition-fast);
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &:hover:not(.mdc-list-item--disabled) {
+      background-color: rgba(183, 110, 121, 0.04) !important;
+    }
+
+    .mdc-list-item__primary-text {
+      width: 100%;
+    }
+  }
+
+  // Material menu styling
+  .collections-dropdown-menu.mat-mdc-menu-panel,
+  .account-dropdown-menu.mat-mdc-menu-panel {
+    background-color: rgba(254, 254, 254, 0.98) !important;
+    backdrop-filter: blur(10px) !important;
+    border-radius: var(--radius-lg) !important;
+    border: 1px solid rgba(183, 110, 121, 0.08) !important;
+    box-shadow: var(--shadow-medium) !important;
+
+    .dark-mode & {
+      background-color: rgba(26, 18, 24, 0.98) !important;
+      border: 1px solid rgba(212, 175, 55, 0.08) !important;
+    }
+
+    .mat-mdc-menu-content {
+      padding: var(--space-2) 0 !important;
+    }
+  }
+}
+
+// 5. Mobile responsive Drawer
+.mobile-drawer {
+  background-color: rgba(254, 254, 254, 0.96);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-left: 1px solid rgba(183, 110, 121, 0.08);
+
+  .dark-mode & {
+    background-color: rgba(18, 13, 16, 0.96);
+    border-left: 1px solid rgba(212, 175, 55, 0.08);
+  }
+
+  .mobile-nav-link {
+    color: var(--color-charcoal);
+    text-decoration: none;
+    font-size: var(--font-size-lg);
+    letter-spacing: 0.15em;
+    padding: var(--space-2) 0;
+    border-bottom: 1px solid rgba(44, 44, 44, 0.04);
+    transition: color var(--transition-fast);
+
+    &:hover, &.active-nav-link {
+      color: var(--color-rose-gold);
+      border-bottom-color: var(--color-rose-gold);
+    }
+  }
+
+  .mobile-sub-link {
+    color: var(--color-charcoal-soft);
+    text-decoration: none;
+    font-size: var(--font-size-sm);
+    letter-spacing: 0.1em;
+    padding-left: var(--space-4);
+    position: relative;
+    transition: color var(--transition-fast);
+
+    &::before {
+      content: '•';
+      position: absolute;
+      left: var(--space-1);
+      color: var(--color-rose-gold);
+    }
+
+    &:hover {
+      color: var(--color-rose-gold);
+    }
+  }
+}

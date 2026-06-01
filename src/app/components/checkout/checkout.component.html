@@ -1,0 +1,165 @@
+<div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 space-y-8">
+  <!-- Title Header -->
+  <div class="border-b border-neutral-100 pb-5">
+    <h1 class="text-3xl font-extrabold tracking-tight text-neutral-900 sm:text-4xl">Checkout Atelier</h1>
+    <p class="mt-2 text-sm text-neutral-500">Provide shipping coordinates to finalize your order.</p>
+  </div>
+
+  <div class="grid grid-cols-1 gap-x-12 gap-y-8 lg:grid-cols-12">
+    <!-- Billing/Shipping Form -->
+    <div class="lg:col-span-7">
+      <form #checkoutForm="ngForm" (ngSubmit)="onSubmit(checkoutForm.valid)" class="space-y-6">
+        <h3 class="text-lg font-bold text-neutral-900">Shipping Coordinates</h3>
+        
+        <div class="grid grid-cols-1 gap-y-4 gap-x-4 sm:grid-cols-6">
+          <div class="sm:col-span-6 space-y-1">
+            <label for="name" class="text-xs font-semibold text-neutral-500 uppercase tracking-wide">Full Recipient Name</label>
+            <input
+              type="text"
+              id="name"
+              name="fullName"
+              [(ngModel)]="address.fullName"
+              #fullName="ngModel"
+              required
+              class="w-full rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm text-neutral-950 outline-none focus:border-violet-500"
+              placeholder="e.g. Eleanor Vance"
+            />
+            @if (fullName.invalid && (fullName.dirty || fullName.touched)) {
+              <span class="text-xs text-rose-500">Recipient name is required.</span>
+            }
+          </div>
+
+          <div class="sm:col-span-6 space-y-1">
+            <label for="address" class="text-xs font-semibold text-neutral-500 uppercase tracking-wide">Street Address</label>
+            <input
+              type="text"
+              id="address"
+              name="addressLine1"
+              [(ngModel)]="address.addressLine1"
+              #addressLine1="ngModel"
+              required
+              class="w-full rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm text-neutral-950 outline-none focus:border-violet-500"
+              placeholder="e.g. 104 Twisted Thread Blvd"
+            />
+            @if (addressLine1.invalid && (addressLine1.dirty || addressLine1.touched)) {
+              <span class="text-xs text-rose-500">Street address is required.</span>
+            }
+          </div>
+
+          <div class="sm:col-span-3 space-y-1">
+            <label for="city" class="text-xs font-semibold text-neutral-500 uppercase tracking-wide">City</label>
+            <input
+              type="text"
+              id="city"
+              name="city"
+              [(ngModel)]="address.city"
+              #city="ngModel"
+              required
+              class="w-full rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm text-neutral-950 outline-none focus:border-violet-500"
+              placeholder="e.g. Portland"
+            />
+            @if (city.invalid && (city.dirty || city.touched)) {
+              <span class="text-xs text-rose-500">City is required.</span>
+            }
+          </div>
+
+          <div class="sm:col-span-3 space-y-1">
+            <label for="postal" class="text-xs font-semibold text-neutral-500 uppercase tracking-wide">Postal / Zip Code</label>
+            <input
+              type="text"
+              id="postal"
+              name="postalCode"
+              [(ngModel)]="address.postalCode"
+              #postalCode="ngModel"
+              required
+              class="w-full rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm text-neutral-950 outline-none focus:border-violet-500"
+              placeholder="e.g. 97201"
+            />
+            @if (postalCode.invalid && (postalCode.dirty || postalCode.touched)) {
+              <span class="text-xs text-rose-500">Postal code is required.</span>
+            }
+          </div>
+
+          <div class="sm:col-span-3 space-y-1">
+            <label for="country" class="text-xs font-semibold text-neutral-500 uppercase tracking-wide">Country</label>
+            <input
+              type="text"
+              id="country"
+              name="country"
+              [(ngModel)]="address.country"
+              #country="ngModel"
+              required
+              class="w-full rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm text-neutral-950 outline-none focus:border-violet-500"
+              placeholder="e.g. United States"
+            />
+            @if (country.invalid && (country.dirty || country.touched)) {
+              <span class="text-xs text-rose-500">Country is required.</span>
+            }
+          </div>
+
+          <div class="sm:col-span-3 space-y-1">
+            <label for="phone" class="text-xs font-semibold text-neutral-500 uppercase tracking-wide">Phone Number</label>
+            <input
+              type="tel"
+              id="phone"
+              name="phone"
+              [(ngModel)]="address.phone"
+              #phone="ngModel"
+              required
+              class="w-full rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm text-neutral-950 outline-none focus:border-violet-500"
+              placeholder="e.g. (503) 555-0199"
+            />
+            @if (phone.invalid && (phone.dirty || phone.touched)) {
+              <span class="text-xs text-rose-500">Phone number is required.</span>
+            }
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          [disabled]="checkoutForm.invalid"
+          class="w-full rounded-xl bg-violet-600 py-3.5 text-sm font-semibold text-white shadow-md hover:bg-violet-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          Authorize Transaction
+        </button>
+      </form>
+    </div>
+
+    <!-- Cart items review card -->
+    <div class="lg:col-span-5">
+      <div class="rounded-3xl border border-neutral-100 bg-neutral-50/50 p-6 space-y-6 shadow-sm">
+        <h3 class="text-lg font-bold text-neutral-900">Your Selection</h3>
+        
+        <div class="divide-y divide-neutral-200 overflow-y-auto max-h-[300px] pr-2">
+          @for (item of cartService.items(); track item.product.id) {
+            <div class="flex items-center gap-4 py-3">
+              <div class="h-14 w-14 flex-shrink-0 overflow-hidden rounded-lg bg-neutral-100 border border-neutral-200">
+                <img [src]="item.product.images[0]" [alt]="item.product.name" class="h-full w-full object-cover object-center" />
+              </div>
+              <div class="flex-grow min-w-0">
+                <h4 class="text-xs font-bold text-neutral-900 truncate">{{ item.product.name }}</h4>
+                <p class="text-[10px] text-neutral-400">Qty: {{ item.quantity }} &bull; {{ item.product.price | customCurrency }} each</p>
+              </div>
+              <span class="text-xs font-bold text-neutral-950">{{ (item.product.price * item.quantity) | customCurrency }}</span>
+            </div>
+          }
+        </div>
+
+        <div class="border-t border-neutral-200 pt-4 space-y-2 text-sm">
+          <div class="flex justify-between text-neutral-500">
+            <span>Subtotal</span>
+            <span class="font-semibold text-neutral-900">{{ cartService.totalPrice() | customCurrency }}</span>
+          </div>
+          <div class="flex justify-between text-neutral-500">
+            <span>Complimentary Delivery</span>
+            <span class="font-semibold text-green-600">Complimentary</span>
+          </div>
+          <div class="border-t border-neutral-200 pt-4 flex justify-between text-base font-bold text-neutral-950">
+            <span>Total Amount</span>
+            <span>{{ cartService.totalPrice() | customCurrency }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

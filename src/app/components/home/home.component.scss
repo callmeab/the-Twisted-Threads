@@ -1,0 +1,133 @@
+// ============================================================
+// Home Component — Premium Stylesheet
+// ============================================================
+
+:host {
+  display: block;
+}
+
+// 1. Hero Slideshow Container & Styles
+swiper-container {
+  width: 100%;
+  height: 100%;
+
+  // Overrides for standard Swiper pagination indicators
+  --swiper-pagination-bullet-inactive-color: rgba(254, 254, 254, 0.4);
+  --swiper-pagination-bullet-inactive-opacity: 0.5;
+  --swiper-theme-color: var(--color-gold);
+
+  ::ng-deep {
+    .swiper-pagination {
+      bottom: var(--space-12) !important;
+      
+      .swiper-pagination-bullet {
+        width: 8px;
+        height: 8px;
+        transition: width var(--transition-normal), border-radius var(--transition-normal);
+        
+        &.swiper-pagination-bullet-active {
+          width: 24px;
+          border-radius: var(--radius-full);
+          background-color: var(--color-gold) !important;
+        }
+      }
+    }
+  }
+}
+
+// 2. Buttons Styling
+.btn-primary-luxury {
+  background-color: var(--color-gold) !important;
+  color: var(--color-purple) !important;
+  border: 1px solid var(--color-gold) !important;
+  box-shadow: var(--shadow-gold) !important;
+  text-decoration: none;
+
+  &:hover {
+    background-color: var(--color-gold-light) !important;
+    border-color: var(--color-gold-light) !important;
+    box-shadow: 0 10px 25px rgba(212, 175, 55, 0.3) !important;
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.btn-outline-luxury {
+  background-color: rgba(254, 254, 254, 0.05) !important;
+  color: var(--color-pearl) !important;
+  border: 1px solid rgba(254, 254, 254, 0.2) !important;
+  text-decoration: none;
+
+  &:hover {
+    background-color: rgba(254, 254, 254, 0.12) !important;
+    border-color: var(--color-pearl) !important;
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+// 3. Scroll Down Arrow Indicator
+.scroll-arrow-box {
+  width: 26px;
+  height: 44px;
+  border-radius: var(--radius-full);
+  border: 1.5px solid rgba(254, 254, 254, 0.4);
+  position: relative;
+  display: flex;
+  justify-content: center;
+  margin-top: var(--space-1);
+  transition: border-color var(--transition-fast);
+
+  // Animated bouncing cursor dot
+  .scroll-dot {
+    width: 5px;
+    height: 8px;
+    border-radius: var(--radius-full);
+    background-color: var(--color-gold);
+    position: absolute;
+    top: 8px;
+    animation: scrollScroll 2s infinite ease-in-out;
+  }
+}
+
+button:hover {
+  .scroll-arrow-box {
+    border-color: var(--color-gold);
+  }
+}
+
+@keyframes scrollScroll {
+  0% {
+    opacity: 0;
+    transform: translateY(0);
+  }
+  20% {
+    opacity: 1;
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(12px);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+}
+
+// 4. Parallax Background transitions
+swiper-slide div {
+  will-change: transform;
+}
+
+// Material Icons adjustment inside grids
+mat-icon {
+  width: 20px;
+  height: 20px;
+  font-size: 20px;
+}

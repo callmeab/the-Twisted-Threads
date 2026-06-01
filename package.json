@@ -11,13 +11,21 @@
   "private": true,
   "packageManager": "npm@11.11.0",
   "dependencies": {
+    "@angular/animations": "^21.2.15",
+    "@angular/cdk": "^21.2.13",
     "@angular/common": "^21.2.0",
     "@angular/compiler": "^21.2.0",
     "@angular/core": "^21.2.0",
     "@angular/forms": "^21.2.0",
+    "@angular/material": "^21.2.13",
     "@angular/platform-browser": "^21.2.0",
     "@angular/router": "^21.2.0",
+    "@ng-bootstrap/ng-bootstrap": "^20.0.0",
+    "bootstrap": "^5.3.8",
+    "ng-gallery": "^12.0.0",
+    "ngx-toastr": "^20.0.5",
     "rxjs": "~7.8.0",
+    "swiper": "^12.2.0",
     "tslib": "^2.3.0"
   },
   "devDependencies": {
@@ -28,6 +36,7 @@
     "jsdom": "^28.0.0",
     "postcss": "^8.5.3",
     "prettier": "^3.8.1",
+    "sass": "^1.100.0",
     "tailwindcss": "^4.1.12",
     "typescript": "~5.9.2",
     "vitest": "^4.0.8"
