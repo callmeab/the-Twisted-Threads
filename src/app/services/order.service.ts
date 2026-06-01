@@ -116,6 +116,13 @@ export class OrderService {
     }));
   }
 
+  public setPaymentStatus(orderId: string, status: PaymentStatus): OrderModel | undefined {
+    return this.updateOrder(orderId, order => ({
+      ...order,
+      paymentStatus: status,
+    }));
+  }
+
   public sendOrderConfirmationEmail(orderId: string): boolean {
     const order = this.getOrderById(orderId);
     if (!order) {

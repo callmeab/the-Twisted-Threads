@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ProductService } from '../../services/product.service';
+import { SeoService } from '../../services/seo.service';
+import { productSchema, breadcrumbSchema, reviewSchema } from '../../services/seo-schemas';
 import { CartService } from '../../services/cart.service';
 import { ReviewService } from '../../services/review.service';
 import { CustomCurrencyPipe } from '../../pipes/custom-currency.pipe';
@@ -14,6 +16,7 @@ import { ProductReviewsComponent } from '../product-reviews/product-reviews.comp
 import { ProductDetailSkeletonComponent } from '../shared/skeletons/product-detail-skeleton.component';
 import { ProductImageGalleryComponent } from '../shared/product-image-gallery/product-image-gallery.component';
 import { OptimizedImageComponent } from '../shared/optimized-image/optimized-image.component';
+import { WhatsappShareComponent } from '../shared/whatsapp-share/whatsapp-share.component';
 
 @Component({
   selector: 'app-product-detail',
@@ -29,6 +32,8 @@ import { OptimizedImageComponent } from '../shared/optimized-image/optimized-ima
     ProductDetailSkeletonComponent,
     ProductImageGalleryComponent,
     OptimizedImageComponent,
+    // WhatsApp share
+    WhatsappShareComponent,
   ],
   templateUrl: './product-detail.component.html',
   styleUrls: ['./product-detail.component.scss'],
@@ -38,6 +43,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly productService = inject(ProductService);
+  private readonly seo = inject(SeoService);
   private readonly cartService = inject(CartService);
   private readonly reviewService = inject(ReviewService);
   private readonly toastr = inject(ToastrService);
@@ -134,6 +140,27 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
       );
 
       this.loadTimer = setTimeout(() => this.isPageLoading.set(false), 450);
+
+      // update SEO metadata for this product
+      const pageUrl = typeof window !== 'undefined' ? window.location.href : '';
+      this.seo.setMeta({
+        title: `${prod.name} — The Twisted Threads`,
+        description: prod.shortDescription || prod.description || `Buy ${prod.name} at The Twisted Threads.`,
+        image: prod.images?.[0] || '/assets/social/social-preview.svg',
+        url: pageUrl,
+        canonical: pageUrl,
+      });
+
+      // Add product JSON-LD
+      this.seo.addJsonLd(productSchema(prod, pageUrl));
+
+      // Breadcrumb JSON-LD
+      const breadcrumbItems = [
+        { name: 'Home', url: window.location.origin + '/' },
+        { name: prod.category || 'Products', url: window.location.origin + '/products' },
+        { name: prod.name, url: pageUrl }
+      ];
+      this.seo.addJsonLd(breadcrumbSchema(breadcrumbItems));
     });
   }
 

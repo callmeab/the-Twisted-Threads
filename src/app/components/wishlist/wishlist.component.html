@@ -12,6 +12,7 @@
           <mat-icon>share</mat-icon>
           {{ isSharing() ? 'Sharing…' : 'Share wishlist' }}
         </button>
+        <app-whatsapp-share type="wishlist" [wishlistNames]="wishlistNames">WhatsApp</app-whatsapp-share>
         <button type="button" class="btn-text" (click)="clearWishlist()">Clear all</button>
       </div>
     }

@@ -44,7 +44,7 @@
           (click)="selectThumb(i)"
           [attr.aria-label]="'Show image ' + (i + 1)"
         >
-          <img [src]="img" [alt]="" loading="lazy" />
+          <img [src]="img" [alt]="productName() + ' thumbnail ' + (i + 1)" loading="lazy" />
         </button>
       }
     </div>

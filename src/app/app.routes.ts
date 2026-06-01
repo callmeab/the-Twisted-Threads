@@ -1,10 +1,12 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './guards/auth.guard';
+import { adminAuthGuard } from './guards/admin-auth.guard';
 
 export const routes: Routes = [
   {
     path: '',
     loadComponent: () => import('./components/home/home.component').then(m => m.HomeComponent),
+    data: { title: 'Home — The Twisted Threads', description: 'Discover handmade, sustainable fashion and curated collections at The Twisted Threads.' }
   },
   {
     path: 'search',
@@ -13,10 +15,13 @@ export const routes: Routes = [
   {
     path: 'products',
     loadComponent: () => import('./components/products/products.component').then(m => m.ProductsComponent),
+    data: { title: 'Products — The Twisted Threads', description: 'Browse our full collection of handcrafted fashion and sustainable garments.' }
   },
   {
     path: 'products/:id',
     loadComponent: () => import('./components/product-detail/product-detail.component').then(m => m.ProductDetailComponent),
+    // Product page will update metadata at runtime with product-specific data
+    data: { title: 'Product — The Twisted Threads', description: 'Product details and specifications.' }
   },
   {
     path: 'cart',
@@ -38,10 +43,12 @@ export const routes: Routes = [
   {
     path: 'about',
     loadComponent: () => import('./components/about/about.component').then(m => m.AboutComponent),
+    data: { title: 'About Us — The Twisted Threads', description: 'Learn about our story, craftsmanship, and commitment to sustainability.' }
   },
   {
     path: 'contact',
     loadComponent: () => import('./components/contact/contact.component').then(m => m.ContactComponent),
+    data: { title: 'Contact — The Twisted Threads', description: 'Contact our concierge team for orders, custom pieces, or enquiries.' }
   },
   {
     path: 'faq',
@@ -58,6 +65,15 @@ export const routes: Routes = [
   {
     path: 'not-found',
     loadComponent: () => import('./components/not-found/not-found.component').then(m => m.NotFoundComponent),
+  },
+  {
+    path: 'admin',
+    children: [
+      { path: 'login', loadComponent: () => import('./components/admin/login.component').then(m => m.AdminLoginComponent) },
+      { path: '', loadComponent: () => import('./components/admin/dashboard.component').then(m => m.AdminDashboardComponent), canActivate: [adminAuthGuard] },
+      { path: 'orders', loadComponent: () => import('./components/admin/orders.component').then(m => m.AdminOrdersComponent), canActivate: [adminAuthGuard] },
+      { path: 'orders/:id', loadComponent: () => import('./components/admin/order-detail.component').then(m => m.AdminOrderDetailComponent), canActivate: [adminAuthGuard] },
+    ]
   },
   {
     path: '**',

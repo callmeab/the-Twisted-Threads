@@ -246,7 +246,8 @@
     <div class="cta-bar fade-section no-print" style="--fade-delay: 440ms">
       <a routerLink="/products" class="btn btn-primary">Continue shopping</a>
       <button type="button" class="btn btn-secondary" (click)="scrollToOrderDetails()">View order details</button>
-      <button type="button" class="btn btn-outline" (click)="downloadInvoice()">Download invoice</button>
+        <button type="button" class="btn btn-outline" (click)="downloadInvoice()">Download invoice</button>
+        <app-whatsapp-share type="order" [orderNumber]="currentOrder.orderNumber">WhatsApp</app-whatsapp-share>
     </div>
 
     <!-- Printable invoice -->

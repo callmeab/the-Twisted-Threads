@@ -104,7 +104,7 @@
 
           <div class="share-row">
             <span>Share</span>
-            <a [href]="getWhatsAppUrl()" target="_blank" rel="noreferrer" class="share-pill whatsapp">WhatsApp</a>
+            <app-whatsapp-share type="product" [productName]="prod.name" [productUrl]="shareUrl">WhatsApp</app-whatsapp-share>
             <a [href]="getFacebookUrl()" target="_blank" rel="noreferrer" class="share-pill facebook">Facebook</a>
             <a [href]="getPinterestUrl()" target="_blank" rel="noreferrer" class="share-pill pinterest">Pinterest</a>
           </div>
