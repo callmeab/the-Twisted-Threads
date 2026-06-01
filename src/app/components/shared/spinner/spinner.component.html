@@ -1,0 +1,27 @@
+<div
+  class="spinner-root"
+  [class.spinner-root--sm]="size() === 'sm'"
+  [class.spinner-root--lg]="size() === 'lg'"
+  role="status"
+  aria-live="polite"
+  aria-label="Loading"
+>
+  @switch (variant()) {
+    @case ('dots') {
+      <div class="spinner-dots">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    }
+    @case ('brand') {
+      <div class="spinner-brand">
+        <div class="spinner-brand-ring"></div>
+        <span class="spinner-brand-logo" aria-hidden="true">TT</span>
+      </div>
+    }
+    @default {
+      <div class="spinner-ring"></div>
+    }
+  }
+</div>

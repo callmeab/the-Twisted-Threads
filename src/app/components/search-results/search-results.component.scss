@@ -1,0 +1,59 @@
+@import '../products/products.component.scss';
+
+.did-you-mean-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: rgba(245, 241, 232, 0.95);
+  border-bottom: 1px solid rgba(183, 110, 121, 0.15);
+  font-size: 0.875rem;
+  color: var(--color-charcoal, #2c2c2c);
+
+  mat-icon {
+    color: var(--color-rose-gold, #b76e79);
+    font-size: 1.25rem;
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+}
+
+.did-you-mean-link {
+  border: none;
+  background: none;
+  padding: 0;
+  font-weight: 700;
+  color: var(--color-rose-gold, #b76e79);
+  text-decoration: underline;
+  cursor: pointer;
+
+  &:hover {
+    color: var(--color-purple, #4a2c3e);
+  }
+}
+
+.no-results-state {
+  .chip-btn {
+    padding: 0.4rem 0.85rem;
+    border-radius: 999px;
+    border: 1px solid rgba(183, 110, 121, 0.25);
+    background: #fff;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-charcoal, #2c2c2c);
+    cursor: pointer;
+    transition:
+      background 0.2s,
+      border-color 0.2s;
+
+    &:hover {
+      background: var(--color-cream, #f5f1e8);
+      border-color: var(--color-rose-gold, #b76e79);
+    }
+  }
+}
+
+.suggestion-chips {
+  padding-top: 0.5rem;
+}

@@ -1,165 +1,604 @@
-<div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 space-y-8">
-  <!-- Title Header -->
-  <div class="border-b border-neutral-100 pb-5">
-    <h1 class="text-3xl font-extrabold tracking-tight text-neutral-900 sm:text-4xl">Checkout Atelier</h1>
-    <p class="mt-2 text-sm text-neutral-500">Provide shipping coordinates to finalize your order.</p>
-  </div>
+<div class="checkout-page">
 
-  <div class="grid grid-cols-1 gap-x-12 gap-y-8 lg:grid-cols-12">
-    <!-- Billing/Shipping Form -->
-    <div class="lg:col-span-7">
-      <form #checkoutForm="ngForm" (ngSubmit)="onSubmit(checkoutForm.valid)" class="space-y-6">
-        <h3 class="text-lg font-bold text-neutral-900">Shipping Coordinates</h3>
-        
-        <div class="grid grid-cols-1 gap-y-4 gap-x-4 sm:grid-cols-6">
-          <div class="sm:col-span-6 space-y-1">
-            <label for="name" class="text-xs font-semibold text-neutral-500 uppercase tracking-wide">Full Recipient Name</label>
-            <input
-              type="text"
-              id="name"
-              name="fullName"
-              [(ngModel)]="address.fullName"
-              #fullName="ngModel"
-              required
-              class="w-full rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm text-neutral-950 outline-none focus:border-violet-500"
-              placeholder="e.g. Eleanor Vance"
-            />
-            @if (fullName.invalid && (fullName.dirty || fullName.touched)) {
-              <span class="text-xs text-rose-500">Recipient name is required.</span>
-            }
-          </div>
-
-          <div class="sm:col-span-6 space-y-1">
-            <label for="address" class="text-xs font-semibold text-neutral-500 uppercase tracking-wide">Street Address</label>
-            <input
-              type="text"
-              id="address"
-              name="addressLine1"
-              [(ngModel)]="address.addressLine1"
-              #addressLine1="ngModel"
-              required
-              class="w-full rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm text-neutral-950 outline-none focus:border-violet-500"
-              placeholder="e.g. 104 Twisted Thread Blvd"
-            />
-            @if (addressLine1.invalid && (addressLine1.dirty || addressLine1.touched)) {
-              <span class="text-xs text-rose-500">Street address is required.</span>
-            }
-          </div>
-
-          <div class="sm:col-span-3 space-y-1">
-            <label for="city" class="text-xs font-semibold text-neutral-500 uppercase tracking-wide">City</label>
-            <input
-              type="text"
-              id="city"
-              name="city"
-              [(ngModel)]="address.city"
-              #city="ngModel"
-              required
-              class="w-full rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm text-neutral-950 outline-none focus:border-violet-500"
-              placeholder="e.g. Portland"
-            />
-            @if (city.invalid && (city.dirty || city.touched)) {
-              <span class="text-xs text-rose-500">City is required.</span>
-            }
-          </div>
-
-          <div class="sm:col-span-3 space-y-1">
-            <label for="postal" class="text-xs font-semibold text-neutral-500 uppercase tracking-wide">Postal / Zip Code</label>
-            <input
-              type="text"
-              id="postal"
-              name="postalCode"
-              [(ngModel)]="address.postalCode"
-              #postalCode="ngModel"
-              required
-              class="w-full rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm text-neutral-950 outline-none focus:border-violet-500"
-              placeholder="e.g. 97201"
-            />
-            @if (postalCode.invalid && (postalCode.dirty || postalCode.touched)) {
-              <span class="text-xs text-rose-500">Postal code is required.</span>
-            }
-          </div>
-
-          <div class="sm:col-span-3 space-y-1">
-            <label for="country" class="text-xs font-semibold text-neutral-500 uppercase tracking-wide">Country</label>
-            <input
-              type="text"
-              id="country"
-              name="country"
-              [(ngModel)]="address.country"
-              #country="ngModel"
-              required
-              class="w-full rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm text-neutral-950 outline-none focus:border-violet-500"
-              placeholder="e.g. United States"
-            />
-            @if (country.invalid && (country.dirty || country.touched)) {
-              <span class="text-xs text-rose-500">Country is required.</span>
-            }
-          </div>
-
-          <div class="sm:col-span-3 space-y-1">
-            <label for="phone" class="text-xs font-semibold text-neutral-500 uppercase tracking-wide">Phone Number</label>
-            <input
-              type="tel"
-              id="phone"
-              name="phone"
-              [(ngModel)]="address.phone"
-              #phone="ngModel"
-              required
-              class="w-full rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm text-neutral-950 outline-none focus:border-violet-500"
-              placeholder="e.g. (503) 555-0199"
-            />
-            @if (phone.invalid && (phone.dirty || phone.touched)) {
-              <span class="text-xs text-rose-500">Phone number is required.</span>
-            }
-          </div>
+  <!-- PROCESSING OVERLAY -->
+  @if (isProcessing) {
+    <div class="processing-overlay" role="status" aria-live="polite">
+      <div class="processing-box">
+        <div class="luxury-spinner">
+          <div class="spinner-ring spinner-ring-outer"></div>
+          <div class="spinner-ring spinner-ring-inner"></div>
+          <div class="spinner-diamond"></div>
         </div>
-
-        <button
-          type="submit"
-          [disabled]="checkoutForm.invalid"
-          class="w-full rounded-xl bg-violet-600 py-3.5 text-sm font-semibold text-white shadow-md hover:bg-violet-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          Authorize Transaction
-        </button>
-      </form>
+        <h3>Processing Your Order</h3>
+        <p>Please wait while we securely place your order…</p>
+      </div>
     </div>
+  }
 
-    <!-- Cart items review card -->
-    <div class="lg:col-span-5">
-      <div class="rounded-3xl border border-neutral-100 bg-neutral-50/50 p-6 space-y-6 shadow-sm">
-        <h3 class="text-lg font-bold text-neutral-900">Your Selection</h3>
-        
-        <div class="divide-y divide-neutral-200 overflow-y-auto max-h-[300px] pr-2">
-          @for (item of cartService.items(); track item.product.id) {
-            <div class="flex items-center gap-4 py-3">
-              <div class="h-14 w-14 flex-shrink-0 overflow-hidden rounded-lg bg-neutral-100 border border-neutral-200">
-                <img [src]="item.product.images[0]" [alt]="item.product.name" class="h-full w-full object-cover object-center" />
-              </div>
-              <div class="flex-grow min-w-0">
-                <h4 class="text-xs font-bold text-neutral-900 truncate">{{ item.product.name }}</h4>
-                <p class="text-[10px] text-neutral-400">Qty: {{ item.quantity }} &bull; {{ item.product.price | customCurrency }} each</p>
-              </div>
-              <span class="text-xs font-bold text-neutral-950">{{ (item.product.price * item.quantity) | customCurrency }}</span>
-            </div>
-          }
+  <!-- SUCCESS OVERLAY -->
+  @if (isSuccess) {
+    <div class="success-overlay" role="status" aria-live="polite">
+      <div class="success-box">
+        <div class="success-circle">
+          <svg class="checkmark-svg" viewBox="0 0 52 52">
+            <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
+            <path class="checkmark-check" fill="none" d="M14 26 l8 8 l16-16"/>
+          </svg>
         </div>
+        <h3>Order Placed!</h3>
+        <p>Redirecting you to your order confirmation…</p>
+      </div>
+    </div>
+  }
 
-        <div class="border-t border-neutral-200 pt-4 space-y-2 text-sm">
-          <div class="flex justify-between text-neutral-500">
-            <span>Subtotal</span>
-            <span class="font-semibold text-neutral-900">{{ cartService.totalPrice() | customCurrency }}</span>
-          </div>
-          <div class="flex justify-between text-neutral-500">
-            <span>Complimentary Delivery</span>
-            <span class="font-semibold text-green-600">Complimentary</span>
-          </div>
-          <div class="border-t border-neutral-200 pt-4 flex justify-between text-base font-bold text-neutral-950">
-            <span>Total Amount</span>
-            <span>{{ cartService.totalPrice() | customCurrency }}</span>
-          </div>
+  <!-- TERMS MODAL -->
+  @if (showTermsModal) {
+    <div class="modal-backdrop" (click)="showTermsModal = false">
+      <div class="modal-box" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h3>Terms & Conditions</h3>
+          <button class="modal-close-btn" (click)="showTermsModal = false">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <div class="modal-body">
+          <h4>1. Introduction</h4>
+          <p>Welcome to The Twisted Threads. By placing an order with us, you agree to the following terms and conditions. Please read them carefully before completing your purchase.</p>
+
+          <h4>2. Orders & Payments</h4>
+          <p>All orders are subject to availability. For Cash on Delivery orders, a handling fee of PKR 150 applies. For bank transfers, payment must be confirmed before dispatch. The Twisted Threads reserves the right to cancel any order at its discretion.</p>
+
+          <h4>3. Shipping & Delivery</h4>
+          <p>We offer complimentary standard delivery across Pakistan. Estimated delivery time is 3–7 business days depending on location. Delivery timelines are estimates and may vary.</p>
+
+          <h4>4. Returns & Exchanges</h4>
+          <p>Items may be returned or exchanged within 7 days of delivery provided they are unused, unwashed, and in original packaging. Sale items are final and non-returnable.</p>
+
+          <h4>5. Gift Wrapping</h4>
+          <p>A gift wrapping service is available for an additional PKR 200. This includes premium wrapping paper and a ribbon. Gift messages are printed on a complimentary card.</p>
+
+          <h4>6. Limitation of Liability</h4>
+          <p>The Twisted Threads is not liable for any indirect or consequential loss arising from the use of our products or services. Our total liability shall not exceed the purchase price of the relevant order.</p>
+
+          <h4>7. Governing Law</h4>
+          <p>These terms are governed by the laws of Pakistan. Any disputes shall be subject to the exclusive jurisdiction of the courts of Karachi.</p>
+        </div>
+        <div class="modal-footer">
+          <button class="modal-accept-btn" (click)="agreeToTerms = true; showTermsModal = false">
+            I Accept Terms & Conditions
+          </button>
         </div>
       </div>
     </div>
+  }
+
+  <header class="checkout-header">
+    <span class="eyebrow">Checkout • Step {{ currentStep }} of 3</span>
+    @if (currentStep === 1) {
+      <h1>Customer Information</h1>
+      <p>Complete your personal details and shipping address before moving to payment method selection.</p>
+    } @else if (currentStep === 2) {
+      <h1>Payment Method Selection</h1>
+      <p>Choose your preferred payment method and provide payment verification details.</p>
+    } @else if (currentStep === 3) {
+      <h1>Review & Confirm Order</h1>
+      <p>Double-check your shipping details, payment selection, and cart items before placing your order.</p>
+    }
+  </header>
+
+  <div class="checkout-steps" aria-label="Checkout progress">
+    <div class="step" [class.active]="currentStep === 1" [class.completed]="currentStep > 1" (click)="currentStep = 1">
+      <span class="step-num">
+        @if (currentStep > 1) { ✓ } @else { 1 }
+      </span>
+      Customer Info
+    </div>
+    <span class="step-divider" [class.completed]="currentStep > 1"></span>
+    <div class="step" [class.active]="currentStep === 2" [class.completed]="currentStep > 2" (click)="currentStep > 1 ? (currentStep = 2) : null">
+      <span class="step-num">
+        @if (currentStep > 2) { ✓ } @else { 2 }
+      </span>
+      Payment Method
+    </div>
+    <span class="step-divider" [class.completed]="currentStep > 2"></span>
+    <div class="step" [class.active]="currentStep === 3">
+      <span class="step-num">3</span>
+      Review & Confirm
+    </div>
+  </div>
+
+  <div class="checkout-grid">
+    <section class="form-card">
+
+      <!-- ===================== STEP 1 ===================== -->
+      @if (currentStep === 1) {
+        <form #checkoutForm="ngForm" (ngSubmit)="onNext(checkoutForm)" novalidate class="form-grid animate-fade-in">
+          <div class="form-section full">
+            <div class="form-section-title">Personal Details</div>
+            <div class="form-grid">
+              <div class="form-field" [class.has-error]="fullName.invalid && (fullName.dirty || fullName.touched)">
+                <input id="fullName" name="fullName" type="text" [(ngModel)]="address.fullName" (ngModelChange)="persistChanges()" #fullName="ngModel" required placeholder=" " />
+                <label for="fullName">Full Name</label>
+                @if (fullName.invalid && (fullName.dirty || fullName.touched)) {
+                  <span class="field-error">Full name is required.</span>
+                }
+              </div>
+
+              <div class="form-field" [class.has-error]="email.invalid && (email.dirty || email.touched)">
+                <input id="email" name="email" type="email" [(ngModel)]="address.email" (ngModelChange)="persistChanges()" #email="ngModel" required placeholder=" " />
+                <label for="email">Email Address</label>
+                @if (email.invalid && (email.dirty || email.touched)) {
+                  @if (email.hasError('required')) { <span class="field-error">Email is required.</span> }
+                  @if (email.hasError('email')) { <span class="field-error">Enter a valid email address.</span> }
+                }
+              </div>
+
+              <div class="form-field" [class.has-error]="phone.invalid && (phone.dirty || phone.touched)">
+                <input id="phone" name="phone" type="tel" [(ngModel)]="address.phone" (ngModelChange)="persistChanges()" #phone="ngModel" required [pattern]="phonePattern" placeholder=" " />
+                <label for="phone">Phone Number</label>
+                @if (phone.invalid && (phone.dirty || phone.touched)) {
+                  @if (phone.hasError('required')) { <span class="field-error">Primary phone is required.</span> }
+                  @if (phone.hasError('pattern')) { <span class="field-error">Use Pakistan phone format (e.g., 0300 1234567).</span> }
+                }
+              </div>
+
+              <div class="form-field" [class.has-error]="alternativePhone.invalid && (alternativePhone.dirty || alternativePhone.touched)">
+                <input id="alternativePhone" name="alternativePhone" type="tel" [(ngModel)]="address.alternativePhone" (ngModelChange)="persistChanges()" #alternativePhone="ngModel" [pattern]="phonePattern" placeholder=" " />
+                <label for="alternativePhone">Alternative Phone (Optional)</label>
+                @if (alternativePhone.invalid && (alternativePhone.dirty || alternativePhone.touched)) {
+                  <span class="field-error">Alternative phone must use Pakistan format.</span>
+                }
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section full">
+            <div class="form-section-title">Shipping Address</div>
+            <div class="form-grid">
+              <div class="form-field full" [class.has-error]="addressLine1.invalid && (addressLine1.dirty || addressLine1.touched)">
+                <input id="addressLine1" name="addressLine1" type="text" [(ngModel)]="address.addressLine1" (ngModelChange)="persistChanges()" #addressLine1="ngModel" required placeholder=" " />
+                <label for="addressLine1">Address Line 1</label>
+                @if (addressLine1.invalid && (addressLine1.dirty || addressLine1.touched)) {
+                  <span class="field-error">Address line 1 is required.</span>
+                }
+              </div>
+
+              <div class="form-field full">
+                <input id="addressLine2" name="addressLine2" type="text" [(ngModel)]="address.addressLine2" (ngModelChange)="persistChanges()" placeholder=" " />
+                <label for="addressLine2">Address Line 2 (Optional)</label>
+              </div>
+
+              <div class="form-field" [class.has-error]="city.invalid && (city.dirty || city.touched)">
+                <select id="city" name="city" [(ngModel)]="address.city" (ngModelChange)="persistChanges()" #city="ngModel" required [class.has-value]="address.city !== ''">
+                  <option value="" disabled></option>
+                  @for (cityName of cities; track cityName) { <option [value]="cityName">{{ cityName }}</option> }
+                </select>
+                <label for="city">City</label>
+                @if (city.invalid && (city.dirty || city.touched)) { <span class="field-error">Please choose a city.</span> }
+              </div>
+
+              <div class="form-field" [class.has-error]="stateProvince.invalid && (stateProvince.dirty || stateProvince.touched)">
+                <select id="stateProvince" name="stateProvince" [(ngModel)]="address.stateProvince" (ngModelChange)="persistChanges()" #stateProvince="ngModel" required [class.has-value]="address.stateProvince !== ''">
+                  <option value="" disabled></option>
+                  @for (region of provinces; track region) { <option [value]="region">{{ region }}</option> }
+                </select>
+                <label for="stateProvince">State / Province</label>
+                @if (stateProvince.invalid && (stateProvince.dirty || stateProvince.touched)) { <span class="field-error">Province is required.</span> }
+              </div>
+
+              <div class="form-field" [class.has-error]="postalCode.invalid && (postalCode.dirty || postalCode.touched)">
+                <input id="postalCode" name="postalCode" type="text" [(ngModel)]="address.postalCode" (ngModelChange)="persistChanges()" #postalCode="ngModel" required placeholder=" " />
+                <label for="postalCode">Postal Code</label>
+                @if (postalCode.invalid && (postalCode.dirty || postalCode.touched)) { <span class="field-error">Postal code is required.</span> }
+              </div>
+
+              <div class="form-field disabled-field">
+                <input id="country" name="country" type="text" [ngModel]="address.country" readonly placeholder=" " />
+                <label for="country">Country</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="checkbox-container full">
+            <label class="custom-checkbox">
+              <input type="checkbox" name="billingSameAsShipping" [(ngModel)]="billingSameAsShipping" (ngModelChange)="persistChanges()" />
+              <span class="checkmark"></span>
+              Billing address same as shipping
+            </label>
+          </div>
+
+          <button type="submit" [disabled]="checkoutForm.invalid" class="submit-btn">Next</button>
+        </form>
+      }
+
+      <!-- ===================== STEP 2 ===================== -->
+      @if (currentStep === 2) {
+        <div class="payment-selection-step animate-fade-in">
+          <div class="form-section-title">Select Payment Method</div>
+
+          <div class="payment-methods-grid">
+            <label class="payment-method-card" [class.selected]="paymentMethod === 'COD'">
+              <input type="radio" name="paymentMethod" value="COD" [(ngModel)]="paymentMethod" (ngModelChange)="persistChanges()" />
+              <div class="payment-card-content">
+                <div class="radio-indicator"></div>
+                <div class="payment-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                </div>
+                <div class="payment-text">
+                  <span class="payment-title">Cash on Delivery (COD)</span>
+                  <span class="payment-desc">Pay with cash when your package is delivered to your address.</span>
+                  <span class="payment-badge">COD Fee: {{ 150 | customCurrency }}</span>
+                </div>
+              </div>
+            </label>
+
+            <label class="payment-method-card" [class.selected]="paymentMethod === 'BankTransfer'">
+              <input type="radio" name="paymentMethod" value="BankTransfer" [(ngModel)]="paymentMethod" (ngModelChange)="persistChanges()" />
+              <div class="payment-card-content">
+                <div class="radio-indicator"></div>
+                <div class="payment-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="22" width="20" height="2"></rect><path d="M5 22V11m14 11V11M12 22V11M2 11l10-8 10 8"></path><path d="M7 6h10"></path></svg>
+                </div>
+                <div class="payment-text">
+                  <span class="payment-title">Bank Transfer / Advance Payment</span>
+                  <span class="payment-desc">Transfer order amount to our bank account and upload transaction receipt.</span>
+                </div>
+              </div>
+            </label>
+          </div>
+
+          <div class="bank-details-wrapper" [class.expanded]="paymentMethod === 'BankTransfer'">
+            <div class="bank-details-card">
+              <div class="bank-card-header">
+                <h3>Our Bank Account Details</h3>
+                <p>Transfer the total order amount to the account listed below. Click any field to copy.</p>
+              </div>
+              <div class="bank-fields-grid">
+                @for (field of [
+                  {label: 'Bank Name', value: bankDetails.bankName},
+                  {label: 'Account Title', value: bankDetails.accountTitle},
+                  {label: 'Account Number', value: bankDetails.accountNumber},
+                  {label: 'IBAN', value: bankDetails.iban},
+                  {label: 'Branch Code', value: bankDetails.branchCode}
+                ]; track field.label) {
+                  <div class="bank-field">
+                    <span class="bank-label">{{ field.label }}</span>
+                    <div class="bank-value-wrapper">
+                      <span class="bank-value">{{ field.value }}</span>
+                      <button class="copy-btn" (click)="copyBankDetail(field.value, field.label)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                      </button>
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+
+            <div class="upload-section">
+              <h4>Upload Payment Receipt</h4>
+              <p class="upload-subtext">Please upload a screenshot or document of your transaction receipt (max 5MB, JPG, PNG, PDF).</p>
+              <div class="dropzone" [class.dragover]="isDragging" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)" (drop)="onDrop($event)" (click)="fileInput.click()">
+                <input type="file" #fileInput class="hidden-file-input" accept="image/png, image/jpeg, application/pdf" (change)="onFileSelected($event)" />
+                @if (!receiptFile) {
+                  <div class="dropzone-content">
+                    <div class="upload-cloud-icon">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21.2 15c.5-1.2.8-2.5.8-3.8 0-4.5-3.6-8.2-8-8.2-3.8 0-7 2.6-7.9 6.2C2.7 10 0 12.7 0 16c0 3.3 2.7 6 6 6h14c2.2 0 4-1.8 4-4 0-1.3-.6-2.5-1.8-3z"></path><polyline points="16 12 12 8 8 12"></polyline><line x1="12" y1="8" x2="12" y2="18"></line></svg>
+                    </div>
+                    <span class="dropzone-title">Drag & Drop receipt or <strong>Browse</strong></span>
+                    <span class="dropzone-note">Accepted formats: JPG, PNG, PDF</span>
+                  </div>
+                } @else {
+                  <div class="file-preview-card" (click)="$event.stopPropagation()">
+                    @if (receiptFileType && receiptFileType.startsWith('image/')) {
+                      <div class="preview-img-wrapper"><img [src]="receiptFile" alt="Receipt Preview" /></div>
+                    } @else {
+                      <div class="preview-pdf-wrapper">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#d32f2f" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                      </div>
+                    }
+                    <div class="preview-details">
+                      <span class="file-name">{{ receiptFileName }}</span>
+                      <button class="remove-btn" (click)="removeReceipt()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                        Remove Receipt
+                      </button>
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+
+            <div class="whatsapp-alt-card">
+              <div class="whatsapp-text">
+                <h5>Alternative receipt sharing</h5>
+                <p>Can't upload here? Send your payment screenshot to our staff directly via WhatsApp.</p>
+              </div>
+              <button class="whatsapp-btn" (click)="sendReceiptViaWhatsApp()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.335-1.662c1.746.953 3.71 1.455 5.703 1.458h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                Send Receipt via WhatsApp
+              </button>
+            </div>
+          </div>
+
+          <div class="wizard-actions">
+            <button type="button" class="back-btn" (click)="onBack()">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+              Back
+            </button>
+            <button type="button" class="submit-btn" [disabled]="!paymentMethod || (paymentMethod === 'BankTransfer' && !receiptFile)" (click)="onNext(null!)">
+              Continue
+            </button>
+          </div>
+        </div>
+      }
+
+      <!-- ===================== STEP 3 ===================== -->
+      @if (currentStep === 3) {
+        <div class="order-review-step animate-fade-in">
+          <div class="form-section-title">Review Your Order</div>
+
+          <!-- Full Order Items List -->
+          <div class="review-cart-section">
+            <div class="review-cart-header">
+              <h4>Order Items ({{ cartService.items().length }})</h4>
+            </div>
+            <div class="review-cart-items">
+              @for (item of cartService.items(); track item.product.id) {
+                <div class="review-cart-item">
+                  <img [src]="item.product.images[0]" [alt]="item.product.name" />
+                  <div class="review-cart-item-info">
+                    <span class="review-item-name">{{ item.product.name }}</span>
+                    <span class="review-item-meta">{{ item.product.category }} · Size {{ item.selectedSize || 'N/A' }}</span>
+                  </div>
+                  <div class="review-cart-item-pricing">
+                    <span class="review-item-qty">× {{ item.quantity }}</span>
+                    <span class="review-item-price">{{ (item.product.price * item.quantity) | customCurrency }}</span>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+
+          <div class="review-sections-grid">
+            <!-- Shipping Details Review -->
+            <div class="review-block">
+              <div class="review-block-header">
+                <h4>1. Shipping details</h4>
+                <button type="button" class="edit-link-btn" (click)="currentStep = 1">Edit</button>
+              </div>
+              <div class="review-content-card">
+                <p><strong>Name:</strong> {{ address.fullName }}</p>
+                <p><strong>Email:</strong> {{ address.email }}</p>
+                <p><strong>Phone:</strong> {{ address.phone }}</p>
+                @if (address.alternativePhone) {
+                  <p><strong>Alt. Phone:</strong> {{ address.alternativePhone }}</p>
+                }
+                <p><strong>Address:</strong> {{ address.addressLine1 }}{{ address.addressLine2 ? ', ' + address.addressLine2 : '' }}</p>
+                <p><strong>City & Province:</strong> {{ address.city }}, {{ address.stateProvince }} {{ address.postalCode }}</p>
+                <p><strong>Country:</strong> {{ address.country }}</p>
+              </div>
+            </div>
+
+            <!-- Payment Review -->
+            <div class="review-block">
+              <div class="review-block-header">
+                <h4>2. Payment method</h4>
+                <button type="button" class="edit-link-btn" (click)="currentStep = 2">Edit</button>
+              </div>
+              <div class="review-content-card">
+                @if (paymentMethod === 'COD') {
+                  <div class="payment-review-badge cod-badge">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+                    Cash on Delivery
+                  </div>
+                  <p class="review-subtext">A COD handling fee of {{ 150 | customCurrency }} has been added.</p>
+                } @else {
+                  <div class="payment-review-badge bank-badge">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="22" width="20" height="2"></rect><path d="M5 22V11m14 11V11M12 22V11M2 11l10-8 10 8"></path></svg>
+                    Bank Transfer
+                  </div>
+                  <p class="review-subtext">Advance payment to Habib Bank Limited.</p>
+                  @if (receiptFile) {
+                    <div class="review-receipt-preview">
+                      <span class="preview-label">Receipt:</span>
+                      <div class="receipt-thumbnail-wrapper">
+                        @if (receiptFileType && receiptFileType.startsWith('image/')) {
+                          <img [src]="receiptFile" alt="Receipt" />
+                        } @else {
+                          <div class="pdf-icon-placeholder">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d32f2f" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                            <span class="pdf-tag">PDF</span>
+                          </div>
+                        }
+                        <span class="receipt-name-text">{{ receiptFileName }}</span>
+                      </div>
+                    </div>
+                  }
+                }
+              </div>
+            </div>
+          </div>
+
+          <!-- Order Notes & Gift Options -->
+          <div class="order-customizations-card">
+            <div class="customizations-header">
+              <h4>Order Customizations</h4>
+              <p>Add a special note or gift wrap options for your order.</p>
+            </div>
+
+            <div class="notes-field">
+              <label for="orderNotes" class="notes-label">Special Instructions (Optional)</label>
+              <textarea
+                id="orderNotes"
+                name="orderNotes"
+                [(ngModel)]="orderNotes"
+                (ngModelChange)="persistChanges()"
+                rows="3"
+                maxlength="500"
+                placeholder="Any delivery instructions, special requests, or notes for the packing team…"
+                class="notes-textarea"
+              ></textarea>
+              <span class="char-count">{{ orderNotes.length }}/500</span>
+            </div>
+
+            <div class="gift-options-row">
+              <label class="custom-checkbox gift-checkbox">
+                <input type="checkbox" name="giftWrap" [(ngModel)]="giftWrap" (ngModelChange)="persistChanges()" />
+                <span class="checkmark"></span>
+                <div class="gift-checkbox-text">
+                  <strong>Premium Gift Wrapping</strong>
+                  <span>Luxury wrapping paper, satin ribbon, and a complimentary ribbon seal.</span>
+                </div>
+                <span class="gift-fee-tag">+ {{ 200 | customCurrency }}</span>
+              </label>
+
+              <label class="custom-checkbox gift-checkbox" style="margin-top: 0.75rem;">
+                <input type="checkbox" name="isGift" [(ngModel)]="isGift" (ngModelChange)="persistChanges()" />
+                <span class="checkmark"></span>
+                <div class="gift-checkbox-text">
+                  <strong>Include a Gift Message</strong>
+                  <span>We'll print your personal message on a complimentary card.</span>
+                </div>
+                <span class="gift-fee-tag free-tag">Free</span>
+              </label>
+            </div>
+
+            @if (isGift) {
+              <div class="gift-message-expander animate-fade-in">
+                <label for="giftMessage" class="notes-label">Gift Message</label>
+                <textarea
+                  id="giftMessage"
+                  name="giftMessage"
+                  [(ngModel)]="giftMessage"
+                  (ngModelChange)="persistChanges()"
+                  rows="3"
+                  maxlength="200"
+                  placeholder="Write your heartfelt message here…"
+                  class="notes-textarea"
+                ></textarea>
+                <span class="char-count">{{ giftMessage.length }}/200</span>
+              </div>
+            }
+          </div>
+
+          <!-- Terms & Conditions -->
+          <div class="consent-section" id="terms-consent-section">
+            <div class="consent-header">
+              <h4>Terms & Consent</h4>
+              <p>Please review and accept our terms before placing your order.</p>
+            </div>
+
+            <div class="consent-checkboxes">
+              <label class="custom-checkbox consent-checkbox" [class.consent-required]="!agreeToTerms">
+                <input type="checkbox" name="agreeToTerms" [(ngModel)]="agreeToTerms" />
+                <span class="checkmark"></span>
+                <span class="consent-text">
+                  I have read and agree to the
+                  <button type="button" class="terms-link-btn" (click)="showTermsModal = true">Terms & Conditions</button>
+                </span>
+              </label>
+
+              <label class="custom-checkbox consent-checkbox" [class.consent-required]="!agreeToPrivacy">
+                <input type="checkbox" name="agreeToPrivacy" [(ngModel)]="agreeToPrivacy" />
+                <span class="checkmark"></span>
+                <span class="consent-text">
+                  I agree to the <strong>Privacy Policy</strong> and consent to processing of my personal data for order fulfillment.
+                </span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Place Order Actions -->
+          <div class="wizard-actions place-order-actions">
+            <button type="button" class="back-btn" (click)="onBack()">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+              Back
+            </button>
+
+            <button
+              type="button"
+              class="submit-btn order-place-btn"
+              [disabled]="!agreeToTerms || !agreeToPrivacy || isProcessing"
+              (click)="onPlaceOrder()"
+            >
+              @if (isProcessing) {
+                <span class="btn-spinner"></span>
+                Processing…
+              } @else {
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                Place Order · {{ grandTotal | customCurrency }}
+              }
+            </button>
+          </div>
+        </div>
+      }
+    </section>
+
+    <!-- ===================== SIDEBAR ===================== -->
+    <aside class="summary-card sticky-panel">
+      <div class="summary-header">
+        <span class="eyebrow">Order Summary</span>
+        <h2>{{ cartService.items().length }} {{ cartService.items().length === 1 ? 'item' : 'items' }} in cart</h2>
+      </div>
+
+      <div class="order-items">
+        @for (item of cartService.items(); track item.product.id) {
+          <div class="order-item">
+            <img src="{{ item.product.images[0] }}" alt="{{ item.product.name }}" />
+            <div>
+              <span class="product-name">{{ item.product.name }}</span>
+              <span class="product-meta">Qty {{ item.quantity }} · {{ item.product.price | customCurrency }} each</span>
+            </div>
+            <span class="product-total">{{ (item.product.price * item.quantity) | customCurrency }}</span>
+          </div>
+        }
+      </div>
+
+      <div class="summary-divider"></div>
+
+      <div class="summary-row">
+        <span>Subtotal</span>
+        <strong>{{ cartService.totalPrice() | customCurrency }}</strong>
+      </div>
+
+      @if (paymentMethod === 'COD') {
+        <div class="summary-row summary-fee-row">
+          <span>COD Fee</span>
+          <strong>{{ 150 | customCurrency }}</strong>
+        </div>
+      }
+
+      @if (giftWrap) {
+        <div class="summary-row summary-fee-row">
+          <span>Gift Wrapping</span>
+          <strong>{{ 200 | customCurrency }}</strong>
+        </div>
+      }
+
+      <div class="summary-row">
+        <span>Shipping</span>
+        <strong class="free-shipping-tag">Complimentary</strong>
+      </div>
+
+      <div class="summary-divider"></div>
+
+      <div class="summary-row summary-total">
+        <span>Total</span>
+        <strong>{{ grandTotal | customCurrency }}</strong>
+      </div>
+
+      @if (currentStep === 3 && (agreeToTerms && agreeToPrivacy)) {
+        <button type="button" class="sidebar-place-btn" [disabled]="isProcessing" (click)="onPlaceOrder()">
+          @if (isProcessing) {
+            <span class="btn-spinner sidebar-spinner"></span>
+            Processing…
+          } @else {
+            Place Order
+          }
+        </button>
+      }
+
+      <p class="summary-note">Your order data is stored locally and restored if you refresh this page.</p>
+    </aside>
   </div>
 </div>

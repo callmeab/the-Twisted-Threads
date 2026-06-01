@@ -1,47 +1,245 @@
-<div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 space-y-16">
-  <!-- Hero Headline -->
-  <div class="text-center max-w-3xl mx-auto space-y-4">
-    <span class="text-xs font-bold text-violet-600 uppercase tracking-widest">Our Heritage</span>
-    <h1 class="text-4xl font-extrabold tracking-tight text-neutral-900 sm:text-5xl">The Legacy of Weaving Twisted Fibers</h1>
-    <p class="text-lg text-neutral-500 leading-relaxed">
-      For generations, our atelier has blended traditional craftsmanship with organic luxury. We design premium home textiles and everyday apparel built to endure.
-    </p>
-  </div>
+<div class="about-page">
+  <!-- 1. Hero -->
+  <section class="about-hero" aria-labelledby="about-hero-heading">
+    <div
+      class="hero-bg"
+      [style.background-image]="'url(' + heroImage + ')'"
+      [style.transform]="'translateY(' + scrollY() * 0.35 + 'px)'"
+    ></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content reveal">
+      <span class="hero-eyebrow">The Twisted Threads</span>
+      <h1 id="about-hero-heading">Our Story</h1>
+      <p class="hero-lead">
+        Where ancient weaving traditions meet contemporary jewelry—each twisted thread tells a story of patience, beauty, and human hands.
+      </p>
+      <a routerLink="/products" class="hero-cta">Explore the collection</a>
+    </div>
+    <button type="button" class="scroll-hint" (click)="scrollToStory()" aria-label="Scroll to story">
+      <span class="scroll-line"></span>
+    </button>
+  </section>
 
-  <!-- Detail Grid Section -->
-  <div class="grid grid-cols-1 gap-12 lg:grid-cols-2 items-center">
-    <div class="space-y-6">
-      <h2 class="text-2xl font-bold tracking-tight text-neutral-900 sm:text-3xl">Purity of Fiber, Integrity of Design</h2>
-      <p class="text-neutral-600 leading-relaxed text-sm">
-        At The Twisted Threads, we believe that luxury is not just seen; it is felt. Every product in our atelier begins its journey as raw, carefully selected natural fibers. From premium organic merino wool to organic flax linen, our commitment to natural sourcing guarantees a pure skin feel and durable resilience.
-      </p>
-      <p class="text-neutral-600 leading-relaxed text-sm">
-        Our signature double-weave technique, where twisted threads of contrasting colors are interlaced together, creates deep, dimensional patterns that celebrate the organic imperfections of traditional craftsmanship.
-      </p>
-      <div class="pt-4">
-        <a routerLink="/products" class="rounded-xl bg-neutral-900 px-5 py-3 text-xs font-semibold text-white hover:bg-neutral-800 transition-colors shadow-sm">
-          Explore Our Collection
-        </a>
+  <!-- 2. Brand story -->
+  <section class="brand-story" id="brand-story">
+    <div class="story-grid">
+      <div class="story-image-wrap reveal">
+        <img [src]="founderImage" alt="Founder at the jewelry workbench" loading="lazy" class="story-image" />
+        <div class="story-image-accent" aria-hidden="true"></div>
+      </div>
+
+      <div class="story-content">
+        <div class="reveal">
+          <span class="section-eyebrow">Founded 2018</span>
+          <h2>A thread pulled from tradition</h2>
+        </div>
+
+        <div class="story-block reveal">
+          <h3>The founder&apos;s journey</h3>
+          <p>
+            Amara Elahi grew up watching her grandmother twist silk and gold filaments on a wooden loom in Lahore. What began as childhood curiosity became a lifelong pursuit: to carry that rhythm of hand and heart into jewelry worn every day.
+          </p>
+          <p>
+            After years studying textile conservation in Europe, she returned home to open a small atelier—naming it <strong>The Twisted Threads</strong> for the signature technique that defines every piece we make.
+          </p>
+        </div>
+
+        <div class="mission-vision reveal">
+          <article class="mv-card">
+            <h3>Our mission</h3>
+            <p>
+              To create handmade jewelry that honors artisan skill, celebrates natural materials, and connects wearers to the makers behind each piece.
+            </p>
+          </article>
+          <article class="mv-card">
+            <h3>Our vision</h3>
+            <p>
+              A world where luxury means transparency, sustainability, and craft—a wardrobe of heirlooms built slowly and worn proudly.
+            </p>
+          </article>
+        </div>
+
+        <div class="story-block reveal">
+          <h3>Why handmade jewelry</h3>
+          <p>
+            Machine-made pieces can mimic appearance, but never the soul. Handmade jewelry carries subtle variations—the slight asymmetry of a hand-hammered surface, the warmth of metal shaped over flame. These imperfections are signatures, not flaws.
+          </p>
+        </div>
+
+        <div class="story-block philosophy reveal">
+          <h3>Craftsmanship philosophy</h3>
+          <blockquote>
+            &ldquo;We do not rush the twist. Every coil is set with intention, every stone seated with respect. Jewelry should outlive trends—it should gather stories.&rdquo;
+          </blockquote>
+          <p class="philosophy-attribution">— Amara Elahi, Founder</p>
+        </div>
       </div>
     </div>
+  </section>
 
-    <div class="grid grid-cols-2 gap-4">
-      <div class="rounded-2xl border border-neutral-100 bg-neutral-50/50 p-6 space-y-2 shadow-sm text-center">
-        <span class="block text-3xl font-extrabold text-violet-600">100%</span>
-        <span class="block text-xs font-semibold uppercase tracking-wider text-neutral-500">Natural Fibers</span>
-      </div>
-      <div class="rounded-2xl border border-neutral-100 bg-neutral-50/50 p-6 space-y-2 shadow-sm text-center">
-        <span class="block text-3xl font-extrabold text-violet-600">Zero</span>
-        <span class="block text-xs font-semibold uppercase tracking-wider text-neutral-500">Synthetic Blends</span>
-      </div>
-      <div class="rounded-2xl border border-neutral-100 bg-neutral-50/50 p-6 space-y-2 shadow-sm text-center">
-        <span class="block text-3xl font-extrabold text-violet-600">Hand</span>
-        <span class="block text-xs font-semibold uppercase tracking-wider text-neutral-500">Finished Border</span>
-      </div>
-      <div class="rounded-2xl border border-neutral-100 bg-neutral-50/50 p-6 space-y-2 shadow-sm text-center">
-        <span class="block text-3xl font-extrabold text-violet-600">Pure</span>
-        <span class="block text-xs font-semibold uppercase tracking-wider text-neutral-500">Organic Flax</span>
-      </div>
+  <!-- 3. Values -->
+  <section class="values-section" aria-labelledby="values-heading">
+    <div class="section-header reveal">
+      <span class="section-eyebrow">What we stand for</span>
+      <h2 id="values-heading">Our values</h2>
+      <p class="section-intro">The principles woven into every piece that leaves our atelier.</p>
     </div>
-  </div>
+
+    <div class="values-grid">
+      @for (value of values; track value.title) {
+        <article class="value-card reveal">
+          <div class="value-icon" [attr.data-icon]="value.icon" aria-hidden="true">
+            @switch (value.icon) {
+              @case ('quality') {
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+              }
+              @case ('authenticity') {
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                </svg>
+              }
+              @case ('sustainability') {
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064" />
+                </svg>
+              }
+              @case ('heritage') {
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              }
+              @case ('community') {
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+              }
+              @default {
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                </svg>
+              }
+            }
+          </div>
+          <h3>{{ value.title }}</h3>
+          <p>{{ value.description }}</p>
+        </article>
+      }
+    </div>
+  </section>
+
+  <!-- 4. The process -->
+  <section class="process-section" aria-labelledby="process-heading">
+    <div class="process-parallax" [style.transform]="'translateY(' + scrollY() * 0.08 + 'px)'" aria-hidden="true"></div>
+
+    <div class="section-header reveal">
+      <span class="section-eyebrow">From sketch to heirloom</span>
+      <h2 id="process-heading">The process</h2>
+      <p class="section-intro">How our artisans transform raw materials into jewelry you will treasure for decades.</p>
+    </div>
+
+    <div class="workshop-gallery reveal">
+      @for (img of workshopGallery; track img; let i = $index) {
+        <div class="gallery-item" [style.--gallery-delay]="i * 80 + 'ms'">
+          <img [src]="img" [alt]="'Workshop moment ' + (i + 1)" loading="lazy" />
+        </div>
+      }
+    </div>
+
+    <ol class="process-steps">
+      @for (step of processSteps; track step.step) {
+        <li class="process-step reveal" [class.process-step-reverse]="step.step % 2 === 0">
+          <div class="process-step-image hover-zoom">
+            <img [src]="step.image" [alt]="step.title" loading="lazy" />
+            <span class="step-number">{{ step.step }}</span>
+          </div>
+          <div class="process-step-content">
+            <h3>{{ step.title }}</h3>
+            <p>{{ step.description }}</p>
+          </div>
+        </li>
+      }
+    </ol>
+  </section>
+
+  <!-- 5. Team -->
+  <section class="team-section" aria-labelledby="team-heading">
+    <div class="section-header reveal">
+      <span class="section-eyebrow">The makers</span>
+      <h2 id="team-heading">Meet the team</h2>
+      <p class="section-intro">Passionate artisans and storytellers behind The Twisted Threads.</p>
+    </div>
+
+    <div class="team-grid">
+      @for (member of team; track member.name) {
+        <article class="team-card reveal hover-lift">
+          <div class="team-photo-wrap">
+            <img [src]="member.image" [alt]="member.name" loading="lazy" class="team-photo" />
+          </div>
+          <div class="team-info">
+            <h3>{{ member.name }}</h3>
+            <span class="team-role">{{ member.role }}</span>
+            <p>{{ member.bio }}</p>
+          </div>
+        </article>
+      }
+    </div>
+  </section>
+
+  <!-- 6. Testimonials -->
+  <section class="testimonials-section" aria-labelledby="testimonials-heading">
+    <div class="section-header reveal">
+      <span class="section-eyebrow">Kind words</span>
+      <h2 id="testimonials-heading">What our patrons say</h2>
+    </div>
+
+    <div class="testimonials-carousel reveal">
+      <swiper-container
+        slides-per-view="1"
+        space-between="24"
+        loop="true"
+        autoplay='{"delay": 5500, "disableOnInteraction": false}'
+        pagination="true"
+        breakpoints='{"768": {"slidesPerView": 2}, "1024": {"slidesPerView": 2}}'
+        class="testimonials-swiper"
+      >
+        @for (t of testimonials; track t.name) {
+          <swiper-slide>
+            <article class="testimonial-card">
+              <div class="testimonial-stars" aria-label="{{ t.rating }} out of 5 stars">
+                @for (star of starsArray(t.rating); track star) {
+                  <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                  </svg>
+                }
+              </div>
+              <blockquote>&ldquo;{{ t.quote }}&rdquo;</blockquote>
+              <footer class="testimonial-footer">
+                <img [src]="t.image" [alt]="t.name" class="testimonial-avatar" />
+                <div>
+                  <cite>{{ t.name }}</cite>
+                  <span>{{ t.location }} · {{ t.product }}</span>
+                </div>
+              </footer>
+            </article>
+          </swiper-slide>
+        }
+      </swiper-container>
+    </div>
+  </section>
+
+  <!-- 7. CTA -->
+  <section class="about-cta reveal" aria-labelledby="cta-heading">
+    <div class="cta-parallax" [style.transform]="'translateY(' + scrollY() * 0.12 + 'px)'" aria-hidden="true"></div>
+    <div class="cta-overlay"></div>
+    <div class="cta-content">
+      <span class="section-eyebrow cta-eyebrow">Your story awaits</span>
+      <h2 id="cta-heading">Start your journey</h2>
+      <p>
+        Discover handcrafted pieces made to be worn, gifted, and passed down. Find the twist that speaks to you.
+      </p>
+      <a routerLink="/products" class="cta-shop-btn">Shop now</a>
+    </div>
+  </section>
 </div>

@@ -1,12 +1,20 @@
-import { Product } from './product.model';
+import { ProductModel } from './product.model';
 
 export interface CartItem {
-  product: Product;
+  id: string;
+  product: ProductModel;
   quantity: number;
+  selectedSize: string;
+  selectedColor: string;
+  addedAt: Date;
 }
 
-export interface Cart {
+export interface CartModel {
   items: CartItem[];
-  totalItems: number;
-  totalPrice: number;
+  subtotal: number;
+  tax: number;
+  shipping: number;
+  total: number;
 }
+
+export type Cart = CartModel;

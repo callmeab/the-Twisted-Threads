@@ -1,0 +1,25 @@
+@if (isOpen()) {
+  <div class="bottom-sheet-backdrop" (click)="onBackdropClick()" aria-hidden="true"></div>
+  <div
+    class="bottom-sheet-panel"
+    role="dialog"
+    aria-modal="true"
+    [attr.aria-label]="title() || 'Panel'"
+    (click)="$event.stopPropagation()"
+  >
+    @if (showHandle()) {
+      <div class="bottom-sheet-handle" aria-hidden="true"></div>
+    }
+    @if (title()) {
+      <div class="bottom-sheet-header">
+        <h2 class="bottom-sheet-title">{{ title() }}</h2>
+        <button type="button" class="bottom-sheet-close" (click)="close()" aria-label="Close">
+          <span class="material-icons">close</span>
+        </button>
+      </div>
+    }
+    <div class="bottom-sheet-body">
+      <ng-content />
+    </div>
+  </div>
+}

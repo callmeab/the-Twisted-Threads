@@ -1,0 +1,99 @@
+<div class="product-gallery">
+  <div class="gallery-pill">
+    @if (badges().isNew) {
+      <span class="pill pill-new">New Arrival</span>
+    }
+    @if (badges().discount) {
+      <span class="pill pill-sale">{{ badges().discount }}% OFF</span>
+    }
+    <span class="pill pill-stock" [class.pill-in]="badges().inStock !== false" [class.pill-out]="badges().inStock === false">
+      {{ badges().inStock !== false ? 'In Stock' : 'Out of Stock' }}
+    </span>
+  </div>
+
+  <div class="carousel-wrap">
+    <swiper-container
+      #swiperEl
+      class="product-swiper"
+      slides-per-view="1"
+      space-between="0"
+      pagination="true"
+      pagination-clickable="true"
+      speed="400"
+    >
+      @for (img of images(); track img; let i = $index) {
+        <swiper-slide>
+          <button type="button" class="slide-btn" (click)="openGallery(i)" [attr.aria-label]="'View image ' + (i + 1)">
+            <img [src]="img" [alt]="productName() + ' image ' + (i + 1)" />
+          </button>
+        </swiper-slide>
+      }
+    </swiper-container>
+    <button type="button" class="expand-btn" (click)="openGallery()" aria-label="Open fullscreen gallery">
+      <span class="material-icons">fullscreen</span>
+    </button>
+  </div>
+
+  @if (images().length > 1) {
+    <div class="thumb-strip hide-mobile-carousel-dots">
+      @for (img of images(); track img; let i = $index) {
+        <button
+          type="button"
+          class="thumb-btn"
+          [class.active]="activeIndex() === i"
+          (click)="selectThumb(i)"
+          [attr.aria-label]="'Show image ' + (i + 1)"
+        >
+          <img [src]="img" [alt]="" />
+        </button>
+      }
+    </div>
+  }
+</div>
+
+@if (fullscreenOpen()) {
+  <div class="fullscreen-gallery" role="dialog" aria-modal="true" aria-label="Product images">
+    <div class="fullscreen-top">
+      <span class="fullscreen-counter">{{ activeIndex() + 1 }} / {{ images().length }}</span>
+      <button type="button" class="fullscreen-close" (click)="closeFullscreen()" aria-label="Close">
+        <span class="material-icons">close</span>
+      </button>
+    </div>
+
+    <div
+      class="fullscreen-stage"
+      (touchstart)="onFullscreenSwipeStart($event); onFullscreenTouchStart($event)"
+      (touchmove)="onFullscreenTouchMove($event)"
+      (touchend)="onFullscreenSwipeEnd($event); onFullscreenTouchEnd($event)"
+    >
+      <button type="button" class="nav-arrow nav-prev" (click)="fullscreenPrev()" aria-label="Previous image">
+        <span class="material-icons">chevron_left</span>
+      </button>
+
+      <img
+        class="fullscreen-image"
+        [src]="images()[activeIndex()]"
+        [alt]="productName()"
+        [style.transform]="fullscreenTransform()"
+      />
+
+      <button type="button" class="nav-arrow nav-next" (click)="fullscreenNext()" aria-label="Next image">
+        <span class="material-icons">chevron_right</span>
+      </button>
+    </div>
+
+    <p class="pinch-hint">Pinch to zoom · Swipe for more images</p>
+
+    <div class="fullscreen-dots">
+      @for (img of images(); track img; let i = $index) {
+        <button
+          type="button"
+          class="dot"
+          [class.active]="activeIndex() === i"
+          (click)="goToSlide(i)"
+          [attr.aria-label]="'Image ' + (i + 1)"
+        ></button>
+      }
+    </div>
+  </div>
+}

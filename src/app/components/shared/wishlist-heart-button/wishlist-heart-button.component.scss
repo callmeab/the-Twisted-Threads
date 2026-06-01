@@ -1,0 +1,108 @@
+.wishlist-heart {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  transition:
+    transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
+    background-color 0.2s,
+    color 0.2s,
+    box-shadow 0.2s;
+
+  mat-icon {
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  &--floating {
+    width: 36px;
+    height: 36px;
+    background-color: rgba(254, 254, 254, 0.92);
+    color: var(--color-charcoal, #2c2c2c);
+    border-radius: 50%;
+    box-shadow: var(--shadow-soft, 0 2px 8px rgba(0, 0, 0, 0.08));
+    z-index: 5;
+
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
+
+    &:hover {
+      transform: scale(1.1);
+      color: #e11d48;
+      background-color: var(--color-pearl, #fefefe);
+    }
+  }
+
+  &--inline {
+    min-width: auto;
+    padding: 0.85rem 1.25rem;
+    border-radius: var(--radius-md, 0.5rem);
+    border: 1px solid var(--color-charcoal, #2c2c2c);
+    background: transparent;
+    color: var(--color-charcoal, #2c2c2c);
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    gap: 0.35rem;
+
+    mat-icon {
+      font-size: 1.1rem;
+      width: 1.1rem;
+      height: 1.1rem;
+    }
+
+    &:hover {
+      border-color: var(--color-rose-gold, #b76e79);
+      color: var(--color-rose-gold, #b76e79);
+    }
+  }
+
+  &--active {
+    color: #e11d48;
+
+    &.wishlist-heart--floating {
+      background-color: var(--color-pearl, #fefefe);
+    }
+
+    &.wishlist-heart--inline {
+      border-color: #e11d48;
+      background: rgba(225, 29, 72, 0.06);
+    }
+  }
+
+  &--pop {
+    animation: wishlist-heart-pop 0.45s ease-out;
+
+    mat-icon {
+      animation: wishlist-icon-pop 0.45s ease-out;
+    }
+  }
+}
+
+@keyframes wishlist-heart-pop {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.25);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes wishlist-icon-pop {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}

@@ -1,5 +1,5 @@
 import { Component, OnInit, inject, signal, computed } from '@angular/core';
-import { RouterLink, ActivatedRoute } from '@angular/router';
+import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -14,7 +14,11 @@ import { CartService } from '../../services/cart.service';
 import { CustomCurrencyPipe } from '../../pipes/custom-currency.pipe';
 import { ToastrService } from 'ngx-toastr';
 import { ProductModel } from '../../models/product.model';
-import { listStaggerAnimation, skeletonShimmerAnimation } from '../../animations/animations';
+import { ProductQuickViewService } from '../../services/product-quick-view.service';
+import { WishlistHeartButtonComponent } from '../shared/wishlist-heart-button/wishlist-heart-button.component';
+import { listStaggerAnimation } from '../../animations/animations';
+import { ProductCardSkeletonComponent } from '../shared/skeletons/product-card-skeleton.component';
+import { BottomSheetComponent } from '../shared/bottom-sheet/bottom-sheet.component';
 
 @Component({
   selector: 'app-products',
@@ -31,9 +35,12 @@ import { listStaggerAnimation, skeletonShimmerAnimation } from '../../animations
     MatCardModule,
     MatIconModule,
     MatExpansionModule,
-    CustomCurrencyPipe
+    CustomCurrencyPipe,
+    WishlistHeartButtonComponent,
+    ProductCardSkeletonComponent,
+    BottomSheetComponent,
   ],
-  animations: [listStaggerAnimation, skeletonShimmerAnimation],
+  animations: [listStaggerAnimation],
   templateUrl: './products.component.html',
   styleUrl: './products.component.scss'
 })
@@ -42,6 +49,8 @@ export class ProductsComponent implements OnInit {
   private readonly cartService = inject(CartService);
   private readonly toastr = inject(ToastrService);
   private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly quickViewService = inject(ProductQuickViewService);
 
   // Filter Selection Signals
   selectedCategories = signal<Set<string>>(new Set());
@@ -55,15 +64,13 @@ export class ProductsComponent implements OnInit {
   currentPage = signal<number>(1);
   pageSize = 8;
   isLoading = signal<boolean>(false);
-  isMobileFilterOpen = signal<boolean>(false);
+  filterSheetOpen = signal<boolean>(false);
 
   // Unique filters lists dynamically compiled from database
   availableCategories = ['Apparel', 'Home Decor', 'Accessories', 'Jewelry'];
   availableMaterials = ['Wool', 'Linen', 'Cotton', 'Cashmere', 'Rose Gold', 'Gold', 'Amethyst', 'Pearl', 'Silver', 'Silk'];
   availableColors = ['Charcoal', 'Cream', 'Oatmeal', 'Sage', 'Terracotta', 'Indigo Blue', 'Purple', 'Gold', 'Pearl White', 'Rose Gold', 'White Gold', 'Beige', 'Slate Blue', 'Pink'];
   availableSizes = ['S', 'M', 'L', 'XL', 'Standard', 'One Size', '6', '7', '8', '9', '18" Chain', '30mm Diameter'];
-
-  skeletons = Array(6).fill(0);
 
   ngOnInit(): void {
     // Read category and search query parameters from router URL
@@ -73,15 +80,21 @@ export class ProductsComponent implements OnInit {
       const categoryParam = params['category'];
       const searchParam = params['search'];
 
+      if (searchParam) {
+        void this.router.navigate(['/search'], { queryParams: { q: searchParam } });
+        return;
+      }
+
       this.clearAllFiltersSilently();
 
       if (categoryParam) {
         this.selectedCategories.update(set => new Set(set).add(categoryParam));
       }
 
+      const delay = categoryParam ? 500 : 0;
       setTimeout(() => {
         this.isLoading.set(false);
-      }, 6000 ? 500 : 0); // Short shimmer loader
+      }, delay); // Short shimmer loader
     });
   }
 
@@ -246,10 +259,19 @@ export class ProductsComponent implements OnInit {
     event.stopPropagation();
     event.preventDefault();
     this.cartService.addToCart(product);
-    this.toastr.success(`${product.name} added to cart.`, 'Cart Updated');
   }
 
-  toggleMobileFilter() {
-    this.isMobileFilterOpen.update(prev => !prev);
+  openQuickView(product: ProductModel, event: Event): void {
+    event.stopPropagation();
+    event.preventDefault();
+    this.quickViewService.open(product);
+  }
+
+  openFilterSheet(): void {
+    this.filterSheetOpen.set(true);
+  }
+
+  closeFilterSheet(): void {
+    this.filterSheetOpen.set(false);
   }
 }

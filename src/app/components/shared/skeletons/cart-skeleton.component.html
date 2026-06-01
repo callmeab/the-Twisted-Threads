@@ -1,0 +1,41 @@
+<div class="cart-skeleton">
+  <div class="skeleton-block skeleton-block--pill cart-skeleton-title"></div>
+  <div class="skeleton-block skeleton-line cart-skeleton-sub"></div>
+
+  <div class="cart-skeleton-grid">
+    <section class="cart-skeleton-list">
+      <div class="skeleton-table-head">
+        @for (col of [1, 2, 3, 4]; track col) {
+          <div class="skeleton-block skeleton-line skeleton-head-cell"></div>
+        }
+      </div>
+
+      @for (row of rows(); track row) {
+        <div class="cart-skeleton-row">
+          <div class="skeleton-row-product">
+            <div class="skeleton-block skeleton-block--rounded skeleton-row-img"></div>
+            <div class="skeleton-row-text">
+              <div class="skeleton-block skeleton-line skeleton-line--name"></div>
+              <div class="skeleton-block skeleton-line skeleton-line--variant"></div>
+            </div>
+          </div>
+          <div class="skeleton-block skeleton-line skeleton-cell"></div>
+          <div class="skeleton-block skeleton-block--rounded skeleton-qty"></div>
+          <div class="skeleton-block skeleton-line skeleton-cell"></div>
+        </div>
+      }
+    </section>
+
+    <aside class="cart-skeleton-summary">
+      <div class="skeleton-block skeleton-line skeleton-summary-title"></div>
+      <div class="skeleton-block skeleton-line skeleton-summary-note"></div>
+      @for (line of [1, 2, 3, 4]; track line) {
+        <div class="skeleton-summary-row">
+          <div class="skeleton-block skeleton-line skeleton-summary-label"></div>
+          <div class="skeleton-block skeleton-line skeleton-summary-value"></div>
+        </div>
+      }
+      <div class="skeleton-block skeleton-block--pill skeleton-checkout-btn"></div>
+    </aside>
+  </div>
+</div>

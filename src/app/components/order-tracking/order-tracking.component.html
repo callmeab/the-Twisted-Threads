@@ -1,0 +1,241 @@
+<div class="tracking-page">
+  <header class="tracking-header fade-in">
+    <p class="eyebrow">Order tracking</p>
+    <h1>Track your order</h1>
+    <p class="subtitle">Enter your order number and the email used at checkout to view live status updates.</p>
+  </header>
+
+  <section class="tracking-form-card fade-in" style="--delay: 80ms">
+    <form #trackForm="ngForm" (ngSubmit)="onTrack(trackForm)" novalidate>
+      <div class="form-grid">
+        <div class="form-field">
+          <label for="orderNumber">Order number</label>
+          <input
+            id="orderNumber"
+            name="orderNumber"
+            type="text"
+            [(ngModel)]="orderNumber"
+            required
+            placeholder="e.g. TTH-2026-0001"
+            autocomplete="off"
+            #orderNumberCtrl="ngModel"
+          />
+          @if (orderNumberCtrl.invalid && orderNumberCtrl.touched) {
+            <span class="field-error">Order number is required</span>
+          }
+        </div>
+
+        <div class="form-field">
+          <label for="email">Email address</label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            [(ngModel)]="email"
+            required
+            email
+            placeholder="you@example.com"
+            autocomplete="email"
+            #emailCtrl="ngModel"
+          />
+          @if (emailCtrl.invalid && emailCtrl.touched) {
+            <span class="field-error">A valid email is required</span>
+          }
+        </div>
+      </div>
+
+      <button type="submit" class="track-btn" [disabled]="isSearching">
+        @if (isSearching) {
+          <span class="btn-spinner" aria-hidden="true"></span>
+          Searching…
+        } @else {
+          Track order
+        }
+      </button>
+    </form>
+  </section>
+
+  @if (hasSearched && errorMessage && !foundOrder) {
+    <section class="error-card fade-in" role="alert" style="--delay: 120ms">
+      <div class="error-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </div>
+      <h2>Order not found</h2>
+      <p>{{ errorMessage }}</p>
+      <p class="error-hint">
+        Tip: Use the exact order number from your confirmation email (e.g. <strong>TTH-2026-0001</strong>).
+      </p>
+      <a routerLink="/contact" class="error-link">Contact customer service</a>
+    </section>
+  }
+
+  @if (foundOrder; as order) {
+    <section
+      class="results-section"
+      [class.results-visible]="resultsVisible()"
+      aria-live="polite"
+    >
+      <div class="results-summary fade-in" style="--delay: 0ms">
+        <div class="summary-top">
+          <div>
+            <span class="summary-label">Order</span>
+            <span class="summary-order-number">{{ order.orderNumber }}</span>
+          </div>
+          <span class="current-status-badge">{{ currentStepLabel }}</span>
+        </div>
+
+        <div class="progress-wrap">
+          <div class="progress-bar">
+            <div class="progress-fill" [style.width.%]="progressPercent"></div>
+          </div>
+          <span class="progress-label">{{ progressPercent }}% complete</span>
+        </div>
+
+        <p class="estimated-delivery">
+          Estimated delivery:
+          <strong>{{ order.estimatedDelivery | date:'fullDate' }}</strong>
+        </p>
+
+        <a class="email-notify-link" [href]="emailNotificationsUrl">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+          </svg>
+          Request email shipping updates
+        </a>
+      </div>
+
+      @if (isBankTransfer) {
+        <div class="bank-transfer-panel fade-in" style="--delay: 100ms">
+          <h3>Payment verification</h3>
+          <p class="verification-status" [class.verified]="order.paymentStatus === 'VERIFIED' || order.paymentStatus === 'PAID'">
+            Status: <strong>{{ order.paymentStatus }}</strong>
+          </p>
+          <p class="verification-message">{{ paymentVerificationMessage }}</p>
+
+          @if (order.paymentProof) {
+            <div class="receipt-preview">
+              <span class="receipt-label">Uploaded receipt · {{ order.paymentProof.fileName }}</span>
+              @if (receiptIsImage) {
+                <img [src]="order.paymentProof.fileData" [alt]="order.paymentProof.fileName" class="receipt-image" />
+              } @else {
+                <a [href]="order.paymentProof.fileData" target="_blank" rel="noopener noreferrer" class="receipt-pdf-link">
+                  View receipt ({{ order.paymentProof.fileName }})
+                </a>
+              }
+              <span class="receipt-meta">
+                Uploaded {{ order.paymentProof.uploadedAt | date:'medium' }} via {{ order.paymentProof.uploadMethod }}
+              </span>
+            </div>
+          }
+        </div>
+      }
+
+      <div class="timeline-card fade-in" style="--delay: 180ms">
+        <h3>Shipment progress</h3>
+        <ol class="status-timeline">
+          @for (step of timelineSteps; track step.id) {
+            <li
+              class="timeline-item"
+              [class.completed]="step.completed"
+              [class.active]="step.active"
+            >
+              <span class="timeline-marker" aria-hidden="true">
+                @if (step.completed) {
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                }
+              </span>
+              <div class="timeline-content">
+                <span class="timeline-label">{{ step.label }}</span>
+                @if (step.timestamp && step.completed) {
+                  <time class="timeline-time">{{ step.timestamp | date:'medium' }}</time>
+                }
+                @if (step.detail) {
+                  <span class="timeline-detail">{{ step.detail }}</span>
+                }
+              </div>
+            </li>
+          }
+        </ol>
+      </div>
+
+      <div class="details-card fade-in" style="--delay: 260ms">
+        <button
+          type="button"
+          class="details-toggle"
+          (click)="toggleDetails()"
+          [attr.aria-expanded]="detailsExpanded"
+        >
+          <span>Order details</span>
+          <svg
+            class="chevron"
+            [class.expanded]="detailsExpanded"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            aria-hidden="true"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+
+        @if (detailsExpanded) {
+          <div class="details-body details-expand">
+            <table class="details-table">
+              <thead>
+                <tr>
+                  <th>Item</th>
+                  <th>Qty</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (item of order.items; track item.id) {
+                  <tr>
+                    <td>
+                      <span class="item-name">{{ item.product.name }}</span>
+                      <span class="item-meta">{{ item.selectedSize || 'Standard' }} · {{ item.selectedColor || 'Default' }}</span>
+                    </td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{ (item.product.price * item.quantity) | customCurrency }}</td>
+                  </tr>
+                }
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="2">Subtotal</td>
+                  <td>{{ order.subtotal | customCurrency }}</td>
+                </tr>
+                <tr>
+                  <td colspan="2">Shipping &amp; fees</td>
+                  <td>{{ order.shippingCost | customCurrency }}</td>
+                </tr>
+                <tr class="total-row">
+                  <td colspan="2">Grand total</td>
+                  <td>{{ order.total | customCurrency }}</td>
+                </tr>
+              </tfoot>
+            </table>
+
+            <div class="ship-to">
+              <h4>Ship to</h4>
+              <p>{{ order.shippingAddress.fullName }}</p>
+              <p>{{ order.shippingAddress.addressLine1 }}</p>
+              <p>{{ order.shippingAddress.city }}, {{ order.shippingAddress.postalCode }}</p>
+              <p>{{ order.shippingAddress.country }}</p>
+            </div>
+          </div>
+        }
+      </div>
+
+      <div class="results-actions fade-in" style="--delay: 340ms">
+        <button type="button" class="btn-outline" (click)="resetSearch()">Track another order</button>
+        <a routerLink="/products" class="btn-primary">Continue shopping</a>
+      </div>
+    </section>
+  }
+</div>

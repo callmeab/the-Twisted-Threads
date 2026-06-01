@@ -1,0 +1,11 @@
+<button
+  type="button"
+  [class]="'wishlist-heart wishlist-heart--' + variant() + ' ' + buttonClass()"
+  [class.wishlist-heart--active]="isInWishlist()"
+  [class.wishlist-heart--pop]="isAnimating()"
+  [attr.aria-label]="ariaLabel()"
+  [attr.aria-pressed]="isInWishlist()"
+  (click)="toggle($event)"
+>
+  <mat-icon>{{ isInWishlist() ? 'favorite' : 'favorite_border' }}</mat-icon>
+</button>

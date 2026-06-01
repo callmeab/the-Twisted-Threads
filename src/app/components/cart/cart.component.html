@@ -1,116 +1,202 @@
-<div class="cart-page">
+<div class="cart-page mobile-sticky-bar-space">
 
-  <!-- Page Header -->
+  @if (isPageLoading()) {
+    <app-cart-skeleton [rowCount]="skeletonRowCount()" />
+  } @else {
+
   <div class="cart-header">
-    <h1>Shopping Bag</h1>
-    <p>Review your chosen luxury pieces before checking out.</p>
+    <div>
+      <p class="eyebrow">Shopping Bag</p>
+      <h1>Your cart</h1>
+    </div>
+    <p class="cart-intro">Review your selected items before you complete your purchase.</p>
   </div>
 
-  @if (cartService.items().length > 0) {
+  @if (hasItems) {
+    <div class="cart-actions">
+      <button class="update-cart-btn" type="button" (click)="refreshCart()">
+        Update Cart
+      </button>
+      <a class="continue-link" routerLink="/products">Continue Shopping</a>
+    </div>
+
     <div class="cart-grid">
-
-      <!-- ── Cart Items List ── -->
-      <div>
-        <div class="cart-list">
-          @for (item of cartService.items(); track item.product.id) {
-            <div class="cart-item">
-
-              <!-- Thumbnail -->
-              <div class="item-image">
-                <img [src]="item.product.images[0]" [alt]="item.product.name" />
+      <section class="cart-list-section">
+        <!-- Mobile swipeable cards -->
+        <div class="cart-list-mobile show-mobile-only">
+          @for (item of cartService.items(); track item.id) {
+            <div class="swipe-cart-wrap" [class.removing]="removingItem() === item.id">
+              <div class="swipe-delete-bg">
+                <span class="material-icons">delete</span>
+                Delete
               </div>
-
-              <!-- Info -->
-              <div class="item-info">
-                <span class="item-category">{{ item.product.category }}</span>
-                <a class="item-name" [routerLink]="['/products', item.product.id]">
-                  {{ item.product.name }}
+              <article
+                class="cart-item-mobile"
+                [style.transform]="swipeTransform(item.id)"
+                (touchstart)="onSwipeStart(item.id, $event)"
+                (touchmove)="onSwipeMove(item.id, $event)"
+                (touchend)="onSwipeEnd(item.id, $event)"
+              >
+                <a [routerLink]="['/products', item.product.id]" class="item-image">
+                  <img [src]="item.product.images[0]" [alt]="item.product.name" />
                 </a>
-                <span class="item-unit-price">{{ item.product.price | customCurrency }} per piece</span>
-              </div>
-
-              <!-- Quantity controls -->
-              <div class="qty-control">
-                <button class="qty-btn" (click)="decreaseQty(item.product.id, item.quantity)">−</button>
-                <span class="qty-value">{{ item.quantity }}</span>
-                <button class="qty-btn" (click)="increaseQty(item.product.id, item.quantity, item.product.stockQuantity)">+</button>
-              </div>
-
-              <!-- Subtotal + Remove -->
-              <div class="item-price-col">
-                <span class="item-subtotal">{{ (item.product.price * item.quantity) | customCurrency }}</span>
-                <button class="remove-btn" (click)="removeItem(item.product.id, item.product.name)">
-                  Remove
-                </button>
-              </div>
-
+                <div class="item-info">
+                  <a [routerLink]="['/products', item.product.id]" class="item-name">{{ item.product.name }}</a>
+                  <p class="item-variant">{{ item.selectedSize || 'Standard' }} · {{ item.selectedColor || 'Default' }}</p>
+                  <p class="item-price-mobile">{{ item.product.price | customCurrency }}</p>
+                  <div class="qty-cell qty-cell--mobile">
+                    <button class="qty-btn" type="button" (click)="decreaseQty(item.id, item.quantity)" aria-label="Decrease">−</button>
+                    <span class="qty-value">{{ item.quantity }}</span>
+                    <button class="qty-btn" type="button" (click)="increaseQty(item.id, item.quantity, item.product.stockQuantity)" aria-label="Increase">+</button>
+                  </div>
+                </div>
+                <div class="item-subtotal-mobile">
+                  {{ (item.product.price * item.quantity) | customCurrency }}
+                </div>
+              </article>
             </div>
+          }
+          <p class="swipe-hint">Swipe left on an item to remove</p>
+        </div>
+
+        <div class="cart-list-desktop hide-on-mobile">
+        <div class="cart-table-head">
+          <span>Product</span>
+          <span>Price</span>
+          <span>Qty</span>
+          <span>Subtotal</span>
+          <span></span>
+        </div>
+
+        <div class="cart-list">
+          @for (item of cartService.items(); track item.id) {
+            <article
+              class="cart-item"
+              [class.removing]="removingItem() === item.id"
+            >
+              <div class="item-meta">
+                <div class="item-image">
+                  <img [src]="item.product.images[0]" [alt]="item.product.name" />
+                </div>
+                <div class="item-info">
+                  <a [routerLink]="['/products', item.product.id]" class="item-name">
+                    {{ item.product.name }}
+                  </a>
+                  <p class="item-variant">
+                    {{ item.selectedSize || 'Standard size' }} · {{ item.selectedColor || 'Default color' }}
+                  </p>
+                </div>
+              </div>
+
+              <span class="item-cell item-price">{{ item.product.price | customCurrency }}</span>
+
+              <div class="item-cell qty-cell">
+                <button class="qty-btn" type="button" (click)="decreaseQty(item.id, item.quantity)">−</button>
+                <span class="qty-value">{{ item.quantity }}</span>
+                <button class="qty-btn" type="button" (click)="increaseQty(item.id, item.quantity, item.product.stockQuantity)">+</button>
+              </div>
+
+              <span class="item-cell item-subtotal">{{ (item.product.price * item.quantity) | customCurrency }}</span>
+
+              <button
+                class="remove-btn"
+                type="button"
+                (click)="removeItem(item.id, item.product.name)"
+              >
+                Remove
+              </button>
+            </article>
           }
         </div>
 
-        <!-- Footer row -->
-        <div class="cart-footer-row">
-          <button class="clear-btn" (click)="clearCart()">Clear Bag</button>
-          <a class="continue-link" routerLink="/products">
-            Continue Shopping
-            <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
-            </svg>
-          </a>
+        <div class="cart-footer-row hide-on-mobile">
+          <button class="clear-btn" type="button" (click)="clearCart()">Clear Bag</button>
+          <a class="continue-link" routerLink="/products">Continue Shopping</a>
         </div>
-      </div>
+        </div>
+      </section>
 
-      <!-- ── Order Summary ── -->
-      <div class="summary-card">
-        <h3>Order Summary</h3>
-
-        <div class="summary-rows">
-          <div class="summary-row">
-            <span class="label">Selected Pieces</span>
-            <span class="value">{{ cartService.totalItems() }} items</span>
-          </div>
-          <div class="summary-row shipping">
-            <span class="label">Shipping</span>
-            <span class="value">Complimentary</span>
-          </div>
-          <div class="summary-row total">
-            <span class="label">Total</span>
-            <span class="value">{{ cartService.totalPrice() | customCurrency }}</span>
-          </div>
+      <aside class="summary-card summary-card--desktop" [class.updated]="recentlyUpdated()">
+        <div class="summary-top">
+          <span class="summary-label">Order summary</span>
+          <p class="summary-note">Estimated totals based on items in your bag.</p>
         </div>
 
-        <a class="checkout-btn" routerLink="/checkout">
-          Proceed to Checkout
-        </a>
-
-        <div class="secure-badges">
-          <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-          </svg>
-          Secure &amp; Encrypted Checkout
+        <div class="summary-row">
+          <span>Subtotal</span>
+          <strong>{{ cartService.subtotal() | customCurrency }}</strong>
         </div>
-      </div>
 
+        <div class="summary-row">
+          <span>Estimated shipping</span>
+          <strong>{{ cartService.shipping() | customCurrency }}</strong>
+        </div>
+
+        <div class="summary-row total-row">
+          <span>Total</span>
+          <strong>{{ cartService.total() | customCurrency }}</strong>
+        </div>
+
+        <div class="promo-group">
+          <label for="promoCode">Promo code</label>
+          <div class="promo-row">
+            <input
+              id="promoCode"
+              type="text"
+              [value]="promoCode()"
+              (input)="promoCode.set($any($event.target).value)"
+              placeholder="Enter code"
+            />
+            <button type="button" class="apply-btn" (click)="applyPromo()">Apply</button>
+          </div>
+        </div>
+
+        <a class="checkout-btn hide-on-mobile" routerLink="/checkout">Proceed to Checkout</a>
+
+        <p class="secure-copy">Secure checkout with encrypted payment.</p>
+      </aside>
     </div>
+
+    <div class="cart-mobile-sticky show-mobile-only">
+      <div class="sticky-total">
+        <span class="sticky-total-label">Total</span>
+        <strong>{{ cartService.total() | customCurrency }}</strong>
+      </div>
+      <a class="sticky-checkout-btn" routerLink="/checkout">Checkout</a>
+    </div>
+
+    @if (hasRecommendations) {
+      <section class="recommended-section">
+        <div class="recommended-header">
+          <h2>You may also like</h2>
+          <p>Complete your look with these curated recommendations.</p>
+        </div>
+        <div class="recommended-list">
+          @for (product of recommendedProducts(); track product.id) {
+            <a class="recommended-card" [routerLink]="['/products', product.id]">
+              <img [src]="product.mainImage" [alt]="product.name" />
+              <div>
+                <span class="recommended-name">{{ product.name }}</span>
+                <span class="recommended-price">{{ product.price | customCurrency }}</span>
+              </div>
+            </a>
+          }
+        </div>
+      </section>
+    }
 
   } @else {
-    <!-- Empty State -->
     <div class="empty-state">
-      <svg class="empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-          d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+      <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M6 7h12l1 11H5L6 7z" />
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 7V5a3 3 0 016 0v2" />
       </svg>
-      <h3>Your shopping bag is empty</h3>
-      <p>Discover our handcrafted pieces and fill it with something beautiful.</p>
-      <a class="shop-btn" routerLink="/products">
-        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
-        </svg>
-        Shop New Arrivals
-      </a>
+      <h2>Your cart is empty</h2>
+      <p>Find something special from our collection and add it to your bag.</p>
+      <a class="shop-btn" routerLink="/products">Continue Shopping</a>
     </div>
+  }
+
   }
 
 </div>

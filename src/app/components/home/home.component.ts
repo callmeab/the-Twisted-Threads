@@ -3,7 +3,6 @@ import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ProductService } from '../../services/product.service';
 import { CartService } from '../../services/cart.service';
-import { CustomCurrencyPipe } from '../../pipes/custom-currency.pipe';
 import { register } from 'swiper/element/bundle';
 import { FeaturedProductsComponent } from '../featured-products/featured-products.component';
 
@@ -13,7 +12,7 @@ register();
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterLink, CustomCurrencyPipe, FeaturedProductsComponent],
+  imports: [CommonModule, RouterLink, FeaturedProductsComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'

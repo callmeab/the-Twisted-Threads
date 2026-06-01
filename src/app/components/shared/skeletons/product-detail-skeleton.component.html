@@ -1,0 +1,44 @@
+<div class="detail-skeleton">
+  <div class="skeleton-block skeleton-block--pill skeleton-back"></div>
+
+  <div class="detail-skeleton-grid">
+    <div class="skeleton-gallery">
+      <div class="skeleton-block skeleton-block--rounded skeleton-main-image"></div>
+      <div class="skeleton-thumbs">
+        @for (i of [1, 2, 3, 4]; track i) {
+          <div class="skeleton-block skeleton-block--rounded skeleton-thumb"></div>
+        }
+      </div>
+    </div>
+
+    <div class="skeleton-info">
+      <div class="skeleton-block skeleton-line skeleton-line--xs"></div>
+      <div class="skeleton-block skeleton-line skeleton-line--title"></div>
+      <div class="skeleton-block skeleton-line skeleton-line--price"></div>
+      <div class="skeleton-stars">
+        @for (i of [1, 2, 3, 4, 5]; track i) {
+          <div class="skeleton-block skeleton-block--circle skeleton-star"></div>
+        }
+      </div>
+      @for (i of [1, 2, 3]; track i) {
+        <div class="skeleton-block skeleton-line skeleton-line--full"></div>
+      }
+      <div class="skeleton-chips">
+        @for (i of [1, 2, 3]; track i) {
+          <div class="skeleton-block skeleton-block--pill skeleton-chip"></div>
+        }
+      </div>
+      <div class="skeleton-actions">
+        <div class="skeleton-block skeleton-block--rounded skeleton-qty"></div>
+        <div class="skeleton-block skeleton-block--pill skeleton-btn-primary"></div>
+        <div class="skeleton-block skeleton-block--circle skeleton-btn-icon"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="skeleton-tabs">
+    @for (i of [1, 2, 3, 4]; track i) {
+      <div class="skeleton-block skeleton-block--pill skeleton-tab"></div>
+    }
+  </div>
+</div>

@@ -1,0 +1,124 @@
+@if (isOpen()) {
+  <div
+    class="mobile-menu-overlay"
+    (click)="onOverlayClick()"
+    aria-hidden="true"
+  ></div>
+}
+
+<aside
+  #drawer
+  class="mobile-menu-drawer"
+  [class.mobile-menu-drawer--open]="isOpen()"
+  role="dialog"
+  aria-modal="true"
+  [attr.aria-hidden]="!isOpen()"
+  aria-label="Navigation menu"
+  (touchstart)="onDrawerTouchStart($event)"
+  (touchend)="onDrawerTouchEnd($event)"
+>
+  <div class="drawer-header">
+    <span class="drawer-brand font-heading">Menu</span>
+    <button type="button" class="drawer-close" (click)="close()" aria-label="Close menu">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div class="drawer-search">
+    <app-search-bar [alwaysVisible]="true" />
+  </div>
+
+  <div class="drawer-quick-actions">
+    <button type="button" class="quick-action-btn" (click)="openAccount()">
+      <mat-icon>person_outline</mat-icon>
+      <span>Login</span>
+    </button>
+    <a
+      routerLink="/wishlist"
+      class="quick-action-btn"
+      (click)="onNavClick()"
+      matBadge="{{ wishlistService.count() }}"
+      matBadgeColor="accent"
+      [matBadgeHidden]="wishlistService.count() === 0"
+    >
+      <mat-icon>{{ wishlistService.count() > 0 ? 'favorite' : 'favorite_border' }}</mat-icon>
+      <span>Wishlist</span>
+    </a>
+    <a
+      routerLink="/cart"
+      class="quick-action-btn"
+      (click)="onNavClick()"
+      matBadge="{{ cartService.totalItems() }}"
+      matBadgeColor="primary"
+      [matBadgeHidden]="cartService.totalItems() === 0"
+    >
+      <mat-icon>shopping_bag</mat-icon>
+      <span>Cart</span>
+    </a>
+  </div>
+
+  <nav class="drawer-nav" aria-label="Main">
+    @for (link of primaryLinks; track link.route) {
+      <a
+        [routerLink]="link.route"
+        [queryParams]="link.queryParams"
+        routerLinkActive="drawer-link--active"
+        [routerLinkActiveOptions]="{ exact: link.exact ?? false }"
+        class="drawer-link"
+        (click)="onNavClick()"
+      >
+        <mat-icon class="drawer-link-icon">{{ link.icon }}</mat-icon>
+        <span>{{ link.label }}</span>
+        <mat-icon class="drawer-link-chevron">chevron_right</mat-icon>
+      </a>
+    }
+  </nav>
+
+  <div class="drawer-mega">
+    <p class="drawer-mega-label">Collections</p>
+
+    @for (category of megaMenu; track category.id) {
+      <div class="mega-accordion" [class.mega-accordion--open]="isCategoryExpanded(category.id)">
+        <button
+          type="button"
+          class="mega-accordion-trigger"
+          (click)="toggleCategory(category)"
+          [attr.aria-expanded]="isCategoryExpanded(category.id)"
+        >
+          <mat-icon class="mega-icon">{{ category.icon }}</mat-icon>
+          <span>{{ category.label }}</span>
+          <mat-icon class="mega-chevron">expand_more</mat-icon>
+        </button>
+
+        <div class="mega-accordion-panel" [attr.aria-hidden]="!isCategoryExpanded(category.id)">
+          <div class="mega-accordion-inner">
+          <ul class="mega-sub-list">
+            <li>
+              <a
+                [routerLink]="['/products']"
+                [queryParams]="{ category: category.label }"
+                class="mega-sub-link mega-sub-link--all"
+                (click)="onNavClick()"
+              >
+                Shop all {{ category.label }}
+              </a>
+            </li>
+            @for (sub of category.subcategories; track sub.label) {
+              <li>
+                <a
+                  [routerLink]="['/products']"
+                  [queryParams]="subcategoryQuery(sub)"
+                  class="mega-sub-link"
+                  (click)="onNavClick()"
+                >
+                  {{ sub.label }}
+                </a>
+              </li>
+            }
+          </ul>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</aside>

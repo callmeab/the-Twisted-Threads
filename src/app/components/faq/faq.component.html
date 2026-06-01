@@ -1,0 +1,176 @@
+<div class="faq-page">
+  <header class="faq-hero reveal">
+    <span class="hero-eyebrow">Help center</span>
+    <h1>Frequently asked questions</h1>
+    <p>Find answers about orders, payments, returns, and our handcrafted collections.</p>
+  </header>
+
+  <div class="faq-toolbar reveal" style="--delay: 60ms">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+      </svg>
+      <input
+        type="search"
+        [ngModel]="searchQuery()"
+        (ngModelChange)="onSearchInput($event)"
+        placeholder="Search questions…"
+        aria-label="Search FAQs"
+      />
+      @if (searchQuery()) {
+        <button type="button" class="search-clear" (click)="clearSearch()" aria-label="Clear search">×</button>
+      }
+    </div>
+
+    <button type="button" class="expand-all-btn" (click)="expandOrCollapseAll()" [disabled]="!hasSearchResults()">
+      {{ allExpanded() ? 'Collapse all' : 'Expand all' }}
+    </button>
+  </div>
+
+  @if (!hasSearchResults()) {
+    <div class="no-results reveal" role="status">
+      <p>No questions match &ldquo;{{ searchQuery() }}&rdquo;. Try another keyword or <a routerLink="/contact">contact us</a>.</p>
+    </div>
+  } @else {
+    <div class="faq-layout">
+      <!-- Sidebar -->
+      <nav class="faq-sidebar reveal" style="--delay: 100ms" aria-label="FAQ categories">
+        <span class="sidebar-label">Categories</span>
+        <ul>
+          @for (cat of filteredCategories(); track cat.id) {
+            <li>
+              <button
+                type="button"
+                class="sidebar-link"
+                [class.active]="activeCategoryId() === cat.id"
+                (click)="scrollToCategory(cat.id)"
+              >
+                <span class="sidebar-icon" [attr.data-icon]="cat.icon" aria-hidden="true">
+                  @switch (cat.icon) {
+                    @case ('orders') {
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                      </svg>
+                    }
+                    @case ('payment') {
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                      </svg>
+                    }
+                    @case ('returns') {
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                      </svg>
+                    }
+                    @case ('product') {
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v13m0-13V6a4 4 0 00-4-4H8.8a4 4 0 00-3.6 2.3L2 8m10 0h6.5a2 2 0 012 1.34l1.5 4.5a1 1 0 01-.95 1.32H14" />
+                      </svg>
+                    }
+                    @default {
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                      </svg>
+                    }
+                  }
+                </span>
+                <span class="sidebar-text">{{ cat.title }}</span>
+                <span class="sidebar-count">{{ cat.questions.length }}</span>
+              </button>
+            </li>
+          }
+        </ul>
+      </nav>
+
+      <!-- Main content -->
+      <div class="faq-content">
+        @for (category of filteredCategories(); track category.id) {
+          <section
+            [id]="category.id"
+            class="faq-category-section reveal"
+            [attr.data-category-id]="category.id"
+          >
+            <header class="category-header">
+              <span class="category-icon" [attr.data-icon]="category.icon" aria-hidden="true">
+                @switch (category.icon) {
+                  @case ('orders') {
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                    </svg>
+                  }
+                  @case ('payment') {
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                    </svg>
+                  }
+                  @case ('returns') {
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                  }
+                  @case ('product') {
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v13m0-13V6a4 4 0 00-4-4H8.8a4 4 0 00-3.6 2.3L2 8m10 0h6.5a2 2 0 012 1.34l1.5 4.5a1 1 0 01-.95 1.32H14" />
+                    </svg>
+                  }
+                  @default {
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                  }
+                }
+              </span>
+              <h2>{{ category.title }}</h2>
+            </header>
+
+            <div class="accordion-list" role="list">
+              @for (item of category.questions; track item.id) {
+                <article
+                  class="accordion-item"
+                  [class.expanded]="isExpanded(item.id)"
+                  role="listitem"
+                >
+                  <button
+                    type="button"
+                    class="accordion-trigger"
+                    (click)="toggleQuestion(item.id)"
+                    [attr.aria-expanded]="isExpanded(item.id)"
+                    [attr.aria-controls]="'answer-' + item.id"
+                    [id]="'question-' + item.id"
+                  >
+                    <span class="question-text">{{ item.question }}</span>
+                    <span class="accordion-icon" aria-hidden="true"></span>
+                  </button>
+                  @if (isExpanded(item.id)) {
+                    <div
+                      class="accordion-panel"
+                      [id]="'answer-' + item.id"
+                      role="region"
+                      [attr.aria-labelledby]="'question-' + item.id"
+                    >
+                      <p>{{ item.answer }}</p>
+                      @if (item.id === 'os-5') {
+                        <a routerLink="/track-order" class="inline-link">Go to order tracking →</a>
+                      }
+                    </div>
+                  }
+                </article>
+              }
+            </div>
+          </section>
+        }
+      </div>
+    </div>
+  }
+
+  <section class="faq-cta reveal">
+    <div class="cta-inner">
+      <h2>Still have questions?</h2>
+      <p>Our concierge team is happy to help with orders, custom pieces, and care advice.</p>
+      <div class="cta-actions">
+        <a routerLink="/contact" class="cta-primary">Contact us</a>
+        <a routerLink="/products" class="cta-secondary">Browse shop</a>
+      </div>
+    </div>
+  </section>
+</div>

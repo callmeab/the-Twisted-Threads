@@ -1,0 +1,237 @@
+.product-gallery {
+  position: relative;
+}
+
+.gallery-pill {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.pill {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.35rem 0.65rem;
+  border-radius: 999px;
+}
+
+.pill-new {
+  background: var(--color-rose-gold, #b76e79);
+  color: #fff;
+}
+
+.pill-sale {
+  background: var(--color-gold, #d4af37);
+  color: var(--color-purple, #4a2c3e);
+}
+
+.pill-in {
+  background: rgba(34, 197, 94, 0.15);
+  color: #16a34a;
+}
+
+.pill-out {
+  background: rgba(239, 68, 68, 0.12);
+  color: #dc2626;
+}
+
+.carousel-wrap {
+  position: relative;
+  border-radius: 1.25rem;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid rgba(183, 110, 121, 0.12);
+}
+
+.product-swiper {
+  width: 100%;
+  aspect-ratio: 1;
+  --swiper-pagination-color: var(--color-rose-gold, #b76e79);
+  --swiper-pagination-bullet-size: 8px;
+  --swiper-pagination-bottom: 12px;
+}
+
+.slide-btn {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: zoom-in;
+}
+
+.slide-btn img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.expand-btn {
+  position: absolute;
+  bottom: 2.5rem;
+  right: 0.75rem;
+  z-index: 2;
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--color-charcoal, #2c2c2c);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.thumb-strip {
+  display: flex;
+  gap: 0.65rem;
+  margin-top: 0.85rem;
+  overflow-x: auto;
+  padding-bottom: 0.25rem;
+  -webkit-overflow-scrolling: touch;
+}
+
+.thumb-btn {
+  flex-shrink: 0;
+  width: 4rem;
+  height: 4rem;
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  cursor: pointer;
+  background: none;
+
+  &.active {
+    border-color: var(--color-rose-gold, #b76e79);
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+@media (max-width: 768px) {
+  .thumb-strip.hide-mobile-carousel-dots {
+    display: none;
+  }
+}
+
+.fullscreen-gallery {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  background: #000;
+  display: flex;
+  flex-direction: column;
+}
+
+.fullscreen-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.fullscreen-counter {
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+.fullscreen-close {
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fullscreen-stage {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  touch-action: none;
+}
+
+.fullscreen-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  transition: transform 0.05s linear;
+  transform-origin: center center;
+}
+
+.nav-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &.nav-prev {
+    left: 0.5rem;
+  }
+
+  &.nav-next {
+    right: 0.5rem;
+  }
+}
+
+.pinch-hint {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.75rem;
+  margin: 0;
+  padding: 0.5rem;
+}
+
+.fullscreen-dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem 1rem calc(1rem + env(safe-area-inset-bottom, 0px));
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: none;
+  padding: 0;
+  background: rgba(255, 255, 255, 0.35);
+  cursor: pointer;
+
+  &.active {
+    background: var(--color-rose-gold, #b76e79);
+    transform: scale(1.2);
+  }
+}

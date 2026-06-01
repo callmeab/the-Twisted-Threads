@@ -1,0 +1,151 @@
+<div class="quick-view-dialog" [@dialogEnter] role="dialog" aria-modal="true" [attr.aria-label]="'Quick view: ' + product.name">
+  <button type="button" class="close-btn" (click)="close()" aria-label="Close quick view">
+    <mat-icon>close</mat-icon>
+  </button>
+
+  @if (showFlyAnimation()) {
+    <img
+      class="fly-to-cart-img"
+      [src]="activeImage"
+      alt=""
+      [@flyToCart]
+      aria-hidden="true"
+    />
+  }
+
+  <div class="quick-view-grid">
+    <!-- Gallery -->
+    <div class="gallery-col">
+      <div
+        class="main-image-wrap"
+        [class.zoomed]="isZoomed()"
+        (click)="toggleZoom()"
+        (mousemove)="onImageMouseMove($event)"
+        (mouseleave)="onImageMouseLeave()"
+      >
+        <img
+          [src]="activeImage"
+          [alt]="product.name"
+          class="main-image"
+          [style.transform-origin]="zoomOrigin()"
+        />
+        <span class="zoom-hint">{{ isZoomed() ? 'Click to exit zoom' : 'Click to zoom' }}</span>
+      </div>
+
+      @if (images.length > 1) {
+        <div class="thumbnails" role="tablist" aria-label="Product images">
+          @for (img of images; track img; let i = $index) {
+            <button
+              type="button"
+              class="thumb"
+              [class.active]="activeImageIndex() === i"
+              (click)="selectImage(i); $event.stopPropagation()"
+              [attr.aria-selected]="activeImageIndex() === i"
+              role="tab"
+            >
+              <img [src]="img" [alt]="product.name + ' thumbnail ' + (i + 1)" />
+            </button>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Details -->
+    <div class="details-col">
+      <span class="category">{{ product.category }}</span>
+      <h2 class="product-name">{{ product.name }}</h2>
+
+      <div class="price-row">
+        <span class="price">{{ product.price | customCurrency }}</span>
+        @if (product.originalPrice > product.price) {
+          <span class="original-price">{{ product.originalPrice | customCurrency }}</span>
+          <span class="discount-badge">-{{ product.discount }}%</span>
+        }
+      </div>
+
+      <div class="rating-row">
+        @for (star of [1, 2, 3, 4, 5]; track star) {
+          <mat-icon class="star" [class.filled]="star <= roundedRating">star</mat-icon>
+        }
+        <span>{{ product.rating }} ({{ product.reviewCount }} reviews)</span>
+      </div>
+
+      <p class="description">{{ product.description }}</p>
+
+      @if (!product.inStock) {
+        <p class="out-of-stock">Currently out of stock</p>
+      }
+
+      @if (hasSizes) {
+        <div class="option-group">
+          <span class="option-label">Size</span>
+          <div class="option-chips">
+            @for (size of product.sizes; track size) {
+              <button
+                type="button"
+                class="chip"
+                [class.selected]="selectedSize() === size"
+                (click)="selectedSize.set(size)"
+              >
+                {{ size }}
+              </button>
+            }
+          </div>
+        </div>
+      }
+
+      @if (hasColors) {
+        <div class="option-group">
+          <span class="option-label">Color</span>
+          <div class="option-chips">
+            @for (color of product.colors; track color) {
+              <button
+                type="button"
+                class="chip"
+                [class.selected]="selectedColor() === color"
+                (click)="selectedColor.set(color)"
+              >
+                {{ color }}
+              </button>
+            }
+          </div>
+        </div>
+      }
+
+      <div class="option-group">
+        <span class="option-label">Quantity</span>
+        <div class="qty-control">
+          <button type="button" (click)="decreaseQty()" [disabled]="quantity() <= 1" aria-label="Decrease quantity">−</button>
+          <span>{{ quantity() }}</span>
+          <button type="button" (click)="increaseQty()" [disabled]="quantity() >= product.stockQuantity" aria-label="Increase quantity">+</button>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button
+          type="button"
+          class="add-cart-btn"
+          [class.success]="addSuccess()"
+          [disabled]="!product.inStock || isAdding()"
+          (click)="addToCart()"
+        >
+          @if (isAdding()) {
+            <span class="btn-spinner" aria-hidden="true"></span>
+            Adding…
+          } @else if (addSuccess()) {
+            <mat-icon>check</mat-icon>
+            Added!
+          } @else {
+            <mat-icon>shopping_bag</mat-icon>
+            Add to cart
+          }
+        </button>
+
+        <button type="button" class="details-link" (click)="viewFullDetails()">
+          View full details
+          <mat-icon>arrow_forward</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

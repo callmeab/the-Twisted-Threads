@@ -1,0 +1,14 @@
+<button
+  type="button"
+  class="hamburger-btn"
+  [class.hamburger-btn--open]="isOpen()"
+  (click)="onClick()"
+  [attr.aria-expanded]="isOpen()"
+  [attr.aria-label]="isOpen() ? 'Close menu' : ariaLabel()"
+>
+  <span class="hamburger-lines" aria-hidden="true">
+    <span class="line line-top"></span>
+    <span class="line line-mid"></span>
+    <span class="line line-bot"></span>
+  </span>
+</button>

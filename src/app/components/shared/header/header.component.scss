@@ -137,7 +137,21 @@
   }
 }
 
-// 4. Expanding Search bar styling
+// 4. Intelligent search bar
+.header-search-wrap {
+  position: relative;
+  z-index: 60;
+
+  &--mobile {
+    max-width: 12rem;
+
+    @media (min-width: 400px) {
+      max-width: 14rem;
+    }
+  }
+}
+
+// Legacy search container (unused — kept for reference)
 .search-container {
   position: relative;
   border-radius: var(--radius-full);
@@ -234,51 +248,8 @@
   }
 }
 
-// 5. Mobile responsive Drawer
-.mobile-drawer {
-  background-color: rgba(254, 254, 254, 0.96);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-left: 1px solid rgba(183, 110, 121, 0.08);
-
-  .dark-mode & {
-    background-color: rgba(18, 13, 16, 0.96);
-    border-left: 1px solid rgba(212, 175, 55, 0.08);
-  }
-
-  .mobile-nav-link {
-    color: var(--color-charcoal);
-    text-decoration: none;
-    font-size: var(--font-size-lg);
-    letter-spacing: 0.15em;
-    padding: var(--space-2) 0;
-    border-bottom: 1px solid rgba(44, 44, 44, 0.04);
-    transition: color var(--transition-fast);
-
-    &:hover, &.active-nav-link {
-      color: var(--color-rose-gold);
-      border-bottom-color: var(--color-rose-gold);
-    }
-  }
-
-  .mobile-sub-link {
-    color: var(--color-charcoal-soft);
-    text-decoration: none;
-    font-size: var(--font-size-sm);
-    letter-spacing: 0.1em;
-    padding-left: var(--space-4);
-    position: relative;
-    transition: color var(--transition-fast);
-
-    &::before {
-      content: '•';
-      position: absolute;
-      left: var(--space-1);
-      color: var(--color-rose-gold);
-    }
-
-    &:hover {
-      color: var(--color-rose-gold);
-    }
-  }
+// 5. Hamburger sits above drawer
+:host ::ng-deep app-hamburger-button {
+  position: relative;
+  z-index: 101;
 }

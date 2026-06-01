@@ -1,0 +1,14 @@
+@if (visible()) {
+  <div
+    class="global-loader"
+    [class.global-loader--out]="fadingOut()"
+    role="alertdialog"
+    aria-busy="true"
+    aria-label="Loading"
+  >
+    <div class="global-loader-card">
+      <app-spinner variant="brand" size="lg" />
+      <p class="global-loader-text">{{ loader.message() }}</p>
+    </div>
+  </div>
+}

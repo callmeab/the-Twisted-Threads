@@ -1,0 +1,43 @@
+@if (!hidden()) {
+  <nav class="bottom-nav" aria-label="Mobile bottom navigation">
+    @for (item of items; track item.label) {
+      @if (item.action === 'categories') {
+        <button
+          type="button"
+          class="bottom-nav-item"
+          (click)="onItemClick(item, $event)"
+          [attr.aria-label]="item.label"
+        >
+          <mat-icon>{{ item.icon }}</mat-icon>
+          <span>{{ item.label }}</span>
+        </button>
+      } @else if (isCartItem(item)) {
+        <a
+          [routerLink]="item.route"
+          routerLinkActive="bottom-nav-item--active"
+          [routerLinkActiveOptions]="{ exact: false }"
+          class="bottom-nav-item"
+          matBadge="{{ cartCount() }}"
+          matBadgeColor="primary"
+          [matBadgeHidden]="cartCount() === 0"
+          [attr.aria-label]="item.label"
+        >
+          <mat-icon>{{ item.icon }}</mat-icon>
+          <span>{{ item.label }}</span>
+        </a>
+      } @else {
+        <a
+          [routerLink]="item.route"
+          routerLinkActive="bottom-nav-item--active"
+          [routerLinkActiveOptions]="{ exact: item.exact ?? false }"
+          class="bottom-nav-item"
+          (click)="onItemClick(item, $event)"
+          [attr.aria-label]="item.label"
+        >
+          <mat-icon>{{ item.icon }}</mat-icon>
+          <span>{{ item.label }}</span>
+        </a>
+      }
+    }
+  </nav>
+}

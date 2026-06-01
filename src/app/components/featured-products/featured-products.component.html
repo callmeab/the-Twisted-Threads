@@ -17,18 +17,7 @@
 
     <!-- 2. Skeleton Shimmer Loader (While loading) -->
     @if (isLoading()) {
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-        @for (skeleton of skeletons; track $index) {
-          <mat-card class="skeleton-card overflow-hidden border border-neutral-100 bg-white" @skeletonShimmerAnimation>
-            <div class="skeleton-image shimmer w-full h-80 bg-neutral-100"></div>
-            <mat-card-content class="p-5 space-y-3">
-              <div class="skeleton-line shimmer w-1/3 h-3 bg-neutral-200 rounded"></div>
-              <div class="skeleton-line shimmer w-3/4 h-4 bg-neutral-200 rounded"></div>
-              <div class="skeleton-line shimmer w-1/2 h-4 bg-neutral-200 rounded"></div>
-            </mat-card-content>
-          </mat-card>
-        }
-      </div>
+      <app-product-card-skeleton [count]="4" />
     }
 
     <!-- 3. Product Cards Grid (Custom CSS Grid) -->
@@ -50,9 +39,15 @@
               
               <!-- Hover Overlay & Quick View Link -->
               <div class="absolute inset-0 bg-neutral-950/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                <a [routerLink]="['/products', product.id]" class="quick-view-btn shadow-medium flex items-center justify-center bg-pearl text-charcoal hover:bg-gold hover:text-purple transition-all duration-300" title="Quick View">
+                <button
+                  type="button"
+                  (click)="openQuickView(product, $event)"
+                  class="quick-view-btn shadow-medium flex items-center justify-center bg-pearl text-charcoal hover:bg-gold hover:text-purple transition-all duration-300"
+                  title="Quick view"
+                  aria-label="Quick view {{ product.name }}"
+                >
                   <mat-icon>visibility</mat-icon>
-                </a>
+                </button>
               </div>
 
               <!-- Top Left Badges ("New", "Sale") -->
@@ -62,14 +57,10 @@
                 </span>
               }
 
-              <!-- Wishlist Trigger (Top Right) -->
-              <button 
-                (click)="toggleWishlist(product, $event)" 
-                class="absolute top-4 right-4 wishlist-btn shadow-soft flex items-center justify-center cursor-pointer border-none rounded-full"
-                [ngClass]="{ 'active': wishlistedIds().has(product.id) }"
-                title="Add to Wishlist">
-                <mat-icon>{{ wishlistedIds().has(product.id) ? 'favorite' : 'favorite_border' }}</mat-icon>
-              </button>
+              <app-wishlist-heart-button
+                [product]="product"
+                buttonClass="absolute top-4 right-4 shadow-soft"
+              />
 
               <!-- Slide-Up Add to Cart (Appears on Hover) -->
               <button 

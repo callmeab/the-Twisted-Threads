@@ -1,0 +1,91 @@
+<div
+  class="search-bar-root"
+  [class.search-bar-root--expanded]="isExpanded() || alwaysVisible()"
+  [class.search-bar-root--mobile]="alwaysVisible()"
+>
+  <form class="search-form" (submit)="onSubmit($event)">
+    @if (!alwaysVisible()) {
+      <button
+        type="button"
+        class="search-toggle"
+        (click)="toggleExpand()"
+        [attr.aria-expanded]="isExpanded()"
+        aria-label="Toggle search"
+      >
+        <mat-icon>{{ isExpanded() ? 'close' : 'search' }}</mat-icon>
+      </button>
+    }
+
+    <div class="search-input-wrap" [class.visible]="isExpanded() || alwaysVisible()">
+      @if (alwaysVisible()) {
+        <mat-icon class="search-leading-icon">search</mat-icon>
+      }
+      <input
+        #searchInput
+        type="search"
+        class="search-input"
+        [formControl]="searchControl"
+        placeholder="Search jewelry, decor, apparel…"
+        (focus)="onFocus()"
+        (keydown)="onKeydown($event)"
+        autocomplete="off"
+        aria-label="Search products"
+        [attr.aria-expanded]="isOpen()"
+        aria-controls="search-autocomplete"
+        role="combobox"
+      />
+      @if (isLoading()) {
+        <span class="search-spinner" aria-hidden="true"></span>
+      }
+    </div>
+  </form>
+
+  @if (isOpen() && (suggestions().length > 0 || !searchControl.value)) {
+    <div id="search-autocomplete" class="search-dropdown" role="listbox">
+      @for (item of suggestions(); track item.id; let i = $index) {
+        @if (i === 0 || suggestions()[i - 1].type !== item.type) {
+          <div class="dropdown-section-label">{{ sectionLabel(item.type) }}</div>
+        }
+
+        <button
+          type="button"
+          class="dropdown-item"
+          [class.active]="isActive(i)"
+          role="option"
+          [attr.aria-selected]="isActive(i)"
+          (click)="selectSuggestion(item)"
+          (mouseenter)="activeIndex.set(i)"
+        >
+          @if (item.imageUrl) {
+            <img [src]="item.imageUrl" [alt]="" class="item-thumb" />
+          } @else {
+            <span class="item-icon" [attr.data-type]="item.type">
+              @switch (item.type) {
+                @case ('recent') { <mat-icon>history</mat-icon> }
+                @case ('popular') { <mat-icon>trending_up</mat-icon> }
+                @case ('category') { <mat-icon>category</mat-icon> }
+                @case ('price-range') { <mat-icon>payments</mat-icon> }
+                @default { <mat-icon>search</mat-icon> }
+              }
+            </span>
+          }
+
+          <span class="item-text">
+            <span class="item-label" [innerHTML]="item.label | highlightSearch: currentQuery()"></span>
+            @if (item.sublabel) {
+              <span class="item-sublabel">{{ item.sublabel }}</span>
+            }
+          </span>
+
+          @if (item.product) {
+            <span class="item-price">{{ item.product.price | customCurrency }}</span>
+          }
+        </button>
+      }
+
+      @if (!isLoading() && searchControl.value && suggestions().length === 0) {
+        <div class="dropdown-empty">No suggestions — press Enter to search</div>
+      }
+    </div>
+  }
+</div>

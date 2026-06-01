@@ -7,6 +7,10 @@ export const routes: Routes = [
     loadComponent: () => import('./components/home/home.component').then(m => m.HomeComponent),
   },
   {
+    path: 'search',
+    loadComponent: () => import('./components/search-results/search-results.component').then(m => m.SearchResultsComponent),
+  },
+  {
     path: 'products',
     loadComponent: () => import('./components/products/products.component').then(m => m.ProductsComponent),
   },
@@ -28,12 +32,24 @@ export const routes: Routes = [
     loadComponent: () => import('./components/order-confirmation/order-confirmation.component').then(m => m.OrderConfirmationComponent),
   },
   {
+    path: 'track-order',
+    loadComponent: () => import('./components/order-tracking/order-tracking.component').then(m => m.OrderTrackingComponent),
+  },
+  {
     path: 'about',
     loadComponent: () => import('./components/about/about.component').then(m => m.AboutComponent),
   },
   {
     path: 'contact',
     loadComponent: () => import('./components/contact/contact.component').then(m => m.ContactComponent),
+  },
+  {
+    path: 'faq',
+    loadComponent: () => import('./components/faq/faq.component').then(m => m.FaqComponent),
+  },
+  {
+    path: 'wishlist',
+    loadComponent: () => import('./components/wishlist/wishlist.component').then(m => m.WishlistComponent),
   },
   {
     path: '**',

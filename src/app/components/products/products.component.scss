@@ -119,27 +119,25 @@
   }
 }
 
-// Mobile Filter Slide-Up Drawer Drawer
-@media (max-width: 1023px) {
-  .mobile-filter-wrapper {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 80vh;
-    background-color: var(--color-pearl);
-    border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
-    padding: var(--space-6);
-    z-index: 100;
-    transform: translateY(100%);
-    transition: transform var(--transition-normal) cubic-bezier(0.16, 1, 0.3, 1);
-    overflow-y: auto;
-    box-shadow: var(--shadow-strong);
+.filter-apply-btn {
+  width: 100%;
+  min-height: 48px;
+  margin-top: 1rem;
+  border: none;
+  border-radius: 999px;
+  background: var(--color-rose-gold);
+  color: var(--color-pearl);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+}
 
-    &.mobile-open {
-      transform: translateY(0);
-    }
-  }
+.filters-panel-content label {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
 }
 
 // 3. Grid & List Cards Styling

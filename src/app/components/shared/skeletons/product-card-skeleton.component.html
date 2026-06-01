@@ -1,0 +1,19 @@
+<div
+  class="product-card-skeleton-wrap"
+  [class.product-card-skeleton-wrap--list]="layout() === 'list'"
+>
+  @for (i of items(); track i) {
+    <article class="product-card-skeleton" [class.product-card-skeleton--list]="layout() === 'list'">
+      <div class="skeleton-block skeleton-block--rounded skeleton-image"></div>
+      <div class="skeleton-body">
+        <div class="skeleton-block skeleton-line skeleton-line--sm"></div>
+        <div class="skeleton-block skeleton-line skeleton-line--md"></div>
+        <div class="skeleton-block skeleton-line skeleton-line--lg"></div>
+        <div class="skeleton-footer">
+          <div class="skeleton-block skeleton-block--pill skeleton-price"></div>
+          <div class="skeleton-block skeleton-block--pill skeleton-button"></div>
+        </div>
+      </div>
+    </article>
+  }
+</div>

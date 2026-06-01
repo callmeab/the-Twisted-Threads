@@ -8,8 +8,10 @@ import { ProductService } from '../../services/product.service';
 import { CartService } from '../../services/cart.service';
 import { CustomCurrencyPipe } from '../../pipes/custom-currency.pipe';
 import { Product } from '../../models/product.model';
-import { listStaggerAnimation, skeletonShimmerAnimation } from '../../animations/animations';
-import { ToastrService } from 'ngx-toastr';
+import { listStaggerAnimation } from '../../animations/animations';
+import { ProductCardSkeletonComponent } from '../shared/skeletons/product-card-skeleton.component';
+import { ProductQuickViewService } from '../../services/product-quick-view.service';
+import { WishlistHeartButtonComponent } from '../shared/wishlist-heart-button/wishlist-heart-button.component';
 
 @Component({
   selector: 'app-featured-products',
@@ -20,24 +22,22 @@ import { ToastrService } from 'ngx-toastr';
     MatCardModule,
     MatButtonModule,
     MatIconModule,
-    CustomCurrencyPipe
+    CustomCurrencyPipe,
+    WishlistHeartButtonComponent,
+    ProductCardSkeletonComponent,
   ],
-  animations: [listStaggerAnimation, skeletonShimmerAnimation],
+  animations: [listStaggerAnimation],
   templateUrl: './featured-products.component.html',
   styleUrl: './featured-products.component.scss'
 })
 export class FeaturedProductsComponent implements OnInit {
   private readonly productService = inject(ProductService);
   private readonly cartService = inject(CartService);
-  private readonly toastr = inject(ToastrService);
+  private readonly quickViewService = inject(ProductQuickViewService);
 
   // States
   isLoading = signal<boolean>(true);
   products = signal<Product[]>([]);
-  wishlistedIds = signal<Set<string>>(new Set());
-
-  // Mock loading skeletons array
-  skeletons = Array(4).fill(0);
 
   ngOnInit(): void {
     // Fetch products and simulate network loading shimmer for 1.2s
@@ -56,21 +56,10 @@ export class FeaturedProductsComponent implements OnInit {
     this.cartService.addToCart(product);
   }
 
-  toggleWishlist(product: Product, event: Event) {
+  openQuickView(product: Product, event: Event): void {
     event.stopPropagation();
     event.preventDefault();
-    
-    this.wishlistedIds.update(set => {
-      const newSet = new Set(set);
-      if (newSet.has(product.id)) {
-        newSet.delete(product.id);
-        this.toastr.info(`${product.name} removed from wishlist.`);
-      } else {
-        newSet.add(product.id);
-        this.toastr.success(`${product.name} added to wishlist.`);
-      }
-      return newSet;
-    });
+    this.quickViewService.open(product);
   }
 
   // Resolve dynamic badges for product mockups

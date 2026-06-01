@@ -1,148 +1,118 @@
 <!-- Premium Sticky Header -->
-<header 
+<header
   [ngClass]="{ 'scrolled-header': isScrolled(), 'transparent-header': !isScrolled() }"
-  class="fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300">
-  
-  <div class="mx-auto flex h-20 items-center justify-between px-6 sm:px-8 lg:px-12 max-w-8xl">
-    
-    <!-- 1. Left: Elegant Logo -->
-    <a routerLink="/" class="flex items-center gap-2 logo-link">
-      <span class="font-heading tracking-widest text-2xl uppercase gradient-purple-rose font-bold">
+  class="fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300"
+>
+  <div class="mx-auto flex h-20 items-center justify-between px-4 sm:px-8 lg:px-12 max-w-8xl">
+    <!-- Logo -->
+    <a routerLink="/" class="flex items-center gap-2 logo-link shrink-0" (click)="mobileNav.close()">
+      <span class="font-heading tracking-widest text-xl sm:text-2xl uppercase gradient-purple-rose font-bold">
         The Twisted Threads
       </span>
     </a>
 
-    <!-- 2. Middle: Navigation Menu -->
+    <!-- Desktop navigation -->
     <nav class="hidden lg:flex items-center gap-8 text-sm uppercase tracking-widest font-semibold text-charcoal">
       <a routerLink="/" routerLinkActive="active-nav-link" [routerLinkActiveOptions]="{ exact: true }" class="nav-link">
         Home
       </a>
-      <a routerLink="/products" routerLinkActive="active-nav-link" class="nav-link">
-        Shop
-      </a>
-      
-      <!-- Collections Dropdown Menu Trigger -->
-      <button [matMenuTriggerFor]="collectionsMenu" class="nav-link flex items-center gap-1 border-none cursor-pointer bg-transparent">
-        Collections <mat-icon class="text-xs transition-transform duration-200">keyboard_arrow_down</mat-icon>
+      <a routerLink="/products" routerLinkActive="active-nav-link" class="nav-link">Shop</a>
+      <button
+        [matMenuTriggerFor]="collectionsMenu"
+        class="nav-link flex items-center gap-1 border-none cursor-pointer bg-transparent"
+      >
+        Collections
+        <mat-icon class="text-xs transition-transform duration-200">keyboard_arrow_down</mat-icon>
       </button>
-
-      <a routerLink="/about" routerLinkActive="active-nav-link" class="nav-link">
-        About
-      </a>
-      <a routerLink="/contact" routerLinkActive="active-nav-link" class="nav-link">
-        Contact
-      </a>
+      <a routerLink="/about" routerLinkActive="active-nav-link" class="nav-link">About</a>
+      <a routerLink="/contact" routerLinkActive="active-nav-link" class="nav-link">Contact</a>
     </nav>
 
-    <!-- 3. Right: Search & Actions -->
-    <div class="flex items-center gap-3 sm:gap-5">
-      
-      <!-- Expanding Search Bar -->
-      <div class="search-container flex items-center" [ngClass]="{ 'expanded': isSearchExpanded() }">
-        <form (submit)="onSearchSubmit($event)" class="flex items-center">
-          <input 
-            type="text" 
-            placeholder="Search our luxury craft..." 
-            [formControl]="searchControl"
-            [matAutocomplete]="auto"
-            class="search-input"
-            #searchInput>
-          
-          <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectProduct($event.option.value)">
-            @for (product of filteredProducts(); track product.id) {
-              <mat-option [value]="product" class="search-option">
-                <div class="flex items-center gap-3 py-1">
-                  <img [src]="product.images[0]" [alt]="product.name" class="w-10 h-10 object-cover rounded-md">
-                  <div class="flex flex-col">
-                    <span class="font-body text-xs font-semibold text-neutral-800 leading-tight">{{ product.name }}</span>
-                    <span class="font-serif text-[10px] text-rose-gold font-medium">{{ product.category }}</span>
-                  </div>
-                </div>
-              </mat-option>
-            }
-          </mat-autocomplete>
-
-          <button type="button" (click)="toggleSearch()" class="action-btn text-neutral-700">
-            <mat-icon>{{ isSearchExpanded() ? 'close' : 'search' }}</mat-icon>
-          </button>
-        </form>
+    <!-- Actions -->
+    <div class="flex items-center gap-2 sm:gap-4 shrink-0">
+      <div class="hidden sm:block header-search-wrap">
+        <app-search-bar />
       </div>
 
-      <!-- Account Trigger -->
-      <button [matMenuTriggerFor]="accountMenu" class="action-btn">
+      <button [matMenuTriggerFor]="accountMenu" class="action-btn hidden sm:inline-flex" aria-label="Account">
         <mat-icon>person_outline</mat-icon>
       </button>
 
-      <!-- Wishlist Badge -->
-      <button class="action-btn" matBadge="{{ wishlistCount() }}" matBadgeColor="accent" [matBadgeHidden]="wishlistCount() === 0">
-        <mat-icon>favorite_border</mat-icon>
-      </button>
+      <a
+        routerLink="/wishlist"
+        class="action-btn hidden sm:inline-flex"
+        matBadge="{{ wishlistService.count() }}"
+        matBadgeColor="accent"
+        [matBadgeHidden]="wishlistService.count() === 0"
+        aria-label="Wishlist"
+      >
+        <mat-icon>{{ wishlistService.count() > 0 ? 'favorite' : 'favorite_border' }}</mat-icon>
+      </a>
 
-      <!-- Cart Badge -->
-      <a routerLink="/cart" class="action-btn relative" matBadge="{{ cartService.totalItems() }}" matBadgeColor="primary" [matBadgeHidden]="cartService.totalItems() === 0">
+      <a
+        routerLink="/cart"
+        class="action-btn hidden sm:inline-flex"
+        matBadge="{{ cartService.totalItems() }}"
+        matBadgeColor="primary"
+        [matBadgeHidden]="cartService.totalItems() === 0"
+        aria-label="Cart"
+      >
         <mat-icon>shopping_bag</mat-icon>
       </a>
 
-      <!-- Mobile Responsive Hamburger Trigger -->
-      <button (click)="toggleMobileMenu()" class="action-btn lg:hidden z-50">
-        <mat-icon>{{ isMobileMenuOpen() ? 'close' : 'menu' }}</mat-icon>
-      </button>
+      <app-hamburger-button
+        class="lg:hidden"
+        [isOpen]="mobileNav.isOpen()"
+        (toggled)="toggleMobileMenu()"
+      />
     </div>
-  </div>
-
-  <!-- Mobile Drawer Overlay & Links -->
-  <div 
-    class="mobile-drawer fixed inset-y-0 right-0 z-40 w-full max-w-sm bg-pearl shadow-strong transform transition-transform duration-300 lg:hidden flex flex-col pt-24 px-8"
-    [ngClass]="{ 'translate-x-0': isMobileMenuOpen(), 'translate-x-full': !isMobileMenuOpen() }">
-    
-    <nav class="flex flex-col gap-6 text-lg uppercase tracking-widest font-semibold text-charcoal">
-      <a routerLink="/" routerLinkActive="active-nav-link" [routerLinkActiveOptions]="{ exact: true }" (click)="toggleMobileMenu()" class="mobile-nav-link">
-        Home
-      </a>
-      <a routerLink="/products" routerLinkActive="active-nav-link" (click)="toggleMobileMenu()" class="mobile-nav-link">
-        Shop
-      </a>
-      
-      <!-- Mobile Submenu Collections -->
-      <div class="flex flex-col gap-3">
-        <span class="text-xs tracking-widest text-neutral-400 font-bold uppercase mt-2">Collections</span>
-        <a routerLink="/products" [queryParams]="{ category: 'Home Decor' }" (click)="toggleMobileMenu()" class="mobile-sub-link">
-          Artisan Home Decor
-        </a>
-        <a routerLink="/products" [queryParams]="{ category: 'Accessories' }" (click)="toggleMobileMenu()" class="mobile-sub-link">
-          Luxurious Accessories
-        </a>
-        <a routerLink="/products" [queryParams]="{ category: 'Apparel' }" (click)="toggleMobileMenu()" class="mobile-sub-link">
-          Apparel Essentials
-        </a>
-      </div>
-
-      <a routerLink="/about" routerLinkActive="active-nav-link" (click)="toggleMobileMenu()" class="mobile-nav-link">
-        About
-      </a>
-      <a routerLink="/contact" routerLinkActive="active-nav-link" (click)="toggleMobileMenu()" class="mobile-nav-link">
-        Contact
-      </a>
-    </nav>
   </div>
 </header>
 
-<!-- Collections Submenu Declarations -->
+<app-mobile-menu />
+
+<!-- Collections desktop menu -->
 <mat-menu #collectionsMenu="matMenu" class="collections-dropdown-menu">
   <div class="px-3 py-2 flex flex-col gap-1">
-    <a routerLink="/products" [queryParams]="{ category: 'Home Decor' }" mat-menu-item class="menu-item-link font-body text-xs font-semibold">
-      <mat-icon class="text-rose-gold text-sm mr-2">home_work</mat-icon> Artisan Home Decor
+    <a
+      routerLink="/products"
+      [queryParams]="{ category: 'Home Decor' }"
+      mat-menu-item
+      class="menu-item-link font-body text-xs font-semibold"
+    >
+      <mat-icon class="text-rose-gold text-sm mr-2">home_work</mat-icon>
+      Artisan Home Decor
     </a>
-    <a routerLink="/products" [queryParams]="{ category: 'Accessories' }" mat-menu-item class="menu-item-link font-body text-xs font-semibold">
-      <mat-icon class="text-rose-gold text-sm mr-2">watch</mat-icon> Luxurious Accessories
+    <a
+      routerLink="/products"
+      [queryParams]="{ category: 'Accessories' }"
+      mat-menu-item
+      class="menu-item-link font-body text-xs font-semibold"
+    >
+      <mat-icon class="text-rose-gold text-sm mr-2">watch</mat-icon>
+      Luxurious Accessories
     </a>
-    <a routerLink="/products" [queryParams]="{ category: 'Apparel' }" mat-menu-item class="menu-item-link font-body text-xs font-semibold">
-      <mat-icon class="text-rose-gold text-sm mr-2">checkroom</mat-icon> Apparel Essentials
+    <a
+      routerLink="/products"
+      [queryParams]="{ category: 'Apparel' }"
+      mat-menu-item
+      class="menu-item-link font-body text-xs font-semibold"
+    >
+      <mat-icon class="text-rose-gold text-sm mr-2">checkroom</mat-icon>
+      Apparel Essentials
+    </a>
+    <a
+      routerLink="/products"
+      [queryParams]="{ category: 'Jewelry' }"
+      mat-menu-item
+      class="menu-item-link font-body text-xs font-semibold"
+    >
+      <mat-icon class="text-rose-gold text-sm mr-2">diamond</mat-icon>
+      Fine Jewelry
     </a>
   </div>
 </mat-menu>
 
-<!-- User Account Submenu Declarations -->
 <mat-menu #accountMenu="matMenu" class="account-dropdown-menu">
   <div class="px-3 py-2 flex flex-col gap-1 min-w-[200px]">
     <div class="border-b border-neutral-100 pb-2 mb-2 px-3">
@@ -150,10 +120,12 @@
       <span class="font-serif text-[10px] text-neutral-400">Unlock premium orders tracker</span>
     </div>
     <button mat-menu-item class="font-body text-xs font-semibold">
-      <mat-icon class="text-neutral-500 mr-2">lock_open</mat-icon> Login / Sign Up
+      <mat-icon class="text-neutral-500 mr-2">lock_open</mat-icon>
+      Login / Sign Up
     </button>
     <button mat-menu-item class="font-body text-xs font-semibold">
-      <mat-icon class="text-neutral-500 mr-2">settings</mat-icon> Preferences
+      <mat-icon class="text-neutral-500 mr-2">settings</mat-icon>
+      Preferences
     </button>
   </div>
 </mat-menu>

@@ -1,102 +1,334 @@
-<div class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8 space-y-10">
-  @if (orderService.currentOrder(); as order) {
-    <!-- Success Banner -->
-    <div class="text-center space-y-4">
-      <div class="inline-flex h-16 w-16 items-center justify-center rounded-full bg-green-50 text-green-600 border border-green-200">
-        <svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+<div class="confirmation-page" [class.page-ready]="pageReady">
+  <canvas #confettiCanvas class="confetti-canvas" aria-hidden="true"></canvas>
+
+  @if (order; as currentOrder) {
+    <!-- Success hero -->
+    <header class="confirmation-hero fade-section" style="--fade-delay: 0ms">
+      <div class="checkmark-wrap" aria-hidden="true">
+        <div class="checkmark-circle">
+          <svg class="checkmark-icon" viewBox="0 0 52 52">
+            <circle class="checkmark-circle-bg" cx="26" cy="26" r="24" fill="none" />
+            <path class="checkmark-check" fill="none" d="M14 27l8 8 16-18" />
+          </svg>
+        </div>
+      </div>
+
+      <p class="success-eyebrow">Order Placed Successfully!</p>
+      <h1 class="success-title">Thank you, {{ firstName }}!</h1>
+      <p class="success-subtitle">
+        Your order is confirmed. We have sent a confirmation to
+        <strong>{{ currentOrder.customerInfo.email }}</strong>.
+      </p>
+
+      <div class="order-number-badge">
+        <span class="order-number-label">Order number</span>
+        <span class="order-number-value">{{ currentOrder.orderNumber }}</span>
+        <button type="button" class="copy-order-btn" (click)="copyOrderNumber()">
+          @if (orderCopied) {
+            Copied!
+          } @else {
+            Copy
+          }
+        </button>
+      </div>
+    </header>
+
+  @if (isBankTransfer) {
+    <section class="bank-transfer-alert fade-section" style="--fade-delay: 120ms" role="status">
+      <div class="alert-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
       </div>
-      
-      <div class="space-y-1">
-        <span class="text-xs font-semibold text-green-600 uppercase tracking-widest">Transaction Confirmed</span>
-        <h1 class="text-3xl font-extrabold tracking-tight text-neutral-900 sm:text-4xl">Thank You for Your Patronage</h1>
-        <p class="text-sm text-neutral-500">Your order details are logged below under Receipt ID: <span class="font-bold text-neutral-900">{{ order.id }}</span></p>
+      <div>
+        <h2>Payment verification in progress</h2>
+        <p>
+          We received your bank transfer receipt. Our team will verify your payment within
+          <strong>24–48 business hours</strong>. You will receive an email once verification is complete.
+        </p>
+        <p class="alert-reminder">
+          Please keep your transfer receipt safe until your order status shows as confirmed.
+        </p>
       </div>
-    </div>
+    </section>
+  }
 
-    <!-- Receipt Card Details -->
-    <div class="rounded-3xl border border-neutral-100 bg-white p-6 shadow-sm divide-y divide-neutral-100 space-y-6">
-      <!-- Summary Details -->
-      <div class="grid grid-cols-2 gap-4 pb-6 text-xs sm:grid-cols-4">
-        <div>
-          <span class="font-medium text-neutral-400">Order Placed</span>
-          <p class="mt-1 font-bold text-neutral-900">{{ order.createdAt | date:'mediumDate' }}</p>
+    <!-- Order details -->
+    <section
+      id="order-details"
+      class="order-details-card fade-section"
+      style="--fade-delay: 200ms"
+      [class.order-details-expanded]="showOrderDetails"
+    >
+      <div class="card-header">
+        <h2>Order details</h2>
+        <span class="status-pill status-{{ currentOrder.status | lowercase }}">{{ currentOrder.status }}</span>
+      </div>
+
+      <div class="details-meta-grid">
+        <div class="meta-item">
+          <span class="meta-label">Placed on</span>
+          <span class="meta-value">{{ currentOrder.createdAt | date:'mediumDate' }}</span>
         </div>
-        <div>
-          <span class="font-medium text-neutral-400">Status</span>
-          <p class="mt-1 inline-flex items-center rounded-full bg-yellow-50 px-2.5 py-0.5 text-[10px] font-bold text-yellow-800 ring-1 ring-inset ring-yellow-600/20 uppercase">
-            {{ order.status }}
+        <div class="meta-item">
+          <span class="meta-label">Payment</span>
+          <span class="meta-value">{{ paymentMethodLabel }}</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Payment status</span>
+          <span class="meta-value">{{ currentOrder.paymentStatus }}</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Estimated delivery</span>
+          <span class="meta-value highlight">{{ currentOrder.estimatedDelivery | date:'mediumDate' }}</span>
+        </div>
+      </div>
+
+      <div class="delivery-timeline">
+        <div class="timeline-header">
+          <h3>Delivery timeline</h3>
+          <span class="timeline-days">~{{ estimatedDeliveryDays }} days</span>
+        </div>
+        <ol class="timeline-steps">
+          @for (step of timelineSteps; track step.label) {
+            <li class="timeline-step" [class.completed]="step.completed" [class.active]="step.active">
+              <span class="step-dot"></span>
+              <div class="step-content">
+                <span class="step-label">{{ step.label }}</span>
+                <span class="step-desc">{{ step.description }}</span>
+              </div>
+            </li>
+          }
+        </ol>
+      </div>
+
+      <div class="summary-table-wrap">
+        <h3>Order summary</h3>
+        <table class="summary-table">
+          <thead>
+            <tr>
+              <th scope="col">Item</th>
+              <th scope="col">Qty</th>
+              <th scope="col">Price</th>
+              <th scope="col" class="text-right">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (item of currentOrder.items; track item.id) {
+              <tr>
+                <td>
+                  <div class="item-cell">
+                    <img [src]="item.product.images[0]" [alt]="item.product.name" width="48" height="48" />
+                    <div>
+                      <span class="item-name">{{ item.product.name }}</span>
+                      <span class="item-variant">
+                        {{ item.selectedSize || 'Standard' }} · {{ item.selectedColor || 'Default' }}
+                      </span>
+                    </div>
+                  </div>
+                </td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.product.price | customCurrency }}</td>
+                <td class="text-right">{{ (item.product.price * item.quantity) | customCurrency }}</td>
+              </tr>
+            }
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="3">Subtotal</td>
+              <td class="text-right">{{ currentOrder.subtotal | customCurrency }}</td>
+            </tr>
+            <tr>
+              <td colspan="3">Shipping &amp; fees</td>
+              <td class="text-right">{{ currentOrder.shippingCost | customCurrency }}</td>
+            </tr>
+            <tr class="total-row">
+              <td colspan="3">Grand total</td>
+              <td class="text-right">{{ currentOrder.total | customCurrency }}</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+      <div class="shipping-payment-grid">
+        <div class="mini-card">
+          <h4>Ship to</h4>
+          <p class="strong">{{ currentOrder.shippingAddress.fullName }}</p>
+          <p>{{ currentOrder.shippingAddress.addressLine1 }}</p>
+          @if (currentOrder.shippingAddress.addressLine2) {
+            <p>{{ currentOrder.shippingAddress.addressLine2 }}</p>
+          }
+          <p>
+            {{ currentOrder.shippingAddress.city }}, {{ currentOrder.shippingAddress.stateProvince }}
+            {{ currentOrder.shippingAddress.postalCode }}
           </p>
+          <p>{{ currentOrder.shippingAddress.country }}</p>
         </div>
-        <div>
-          <span class="font-medium text-neutral-400">Carrier Method</span>
-          <p class="mt-1 font-bold text-neutral-900">Complementary</p>
-        </div>
-        <div>
-          <span class="font-medium text-neutral-400">Grand Total</span>
-          <p class="mt-1 font-extrabold text-violet-600 text-sm">{{ order.totalAmount | customCurrency }}</p>
-        </div>
-      </div>
-
-      <!-- Items Ordered -->
-      <div class="py-6 space-y-4">
-        <h3 class="text-sm font-bold text-neutral-900">Items Ordered</h3>
-        
-        <div class="divide-y divide-neutral-100">
-          @for (item of order.items; track item.product.id) {
-            <div class="flex items-center gap-4 py-3">
-              <div class="h-12 w-12 flex-shrink-0 overflow-hidden rounded-lg bg-neutral-50 border border-neutral-200">
-                <img [src]="item.product.images[0]" [alt]="item.product.name" class="h-full w-full object-cover object-center" />
-              </div>
-              <div class="flex-grow min-w-0">
-                <h4 class="text-xs font-bold text-neutral-900 truncate">{{ item.product.name }}</h4>
-                <p class="text-[10px] text-neutral-400">Qty: {{ item.quantity }} &bull; {{ item.product.price | customCurrency }} each</p>
-              </div>
-              <span class="text-xs font-bold text-neutral-950">{{ (item.product.price * item.quantity) | customCurrency }}</span>
-            </div>
+        <div class="mini-card">
+          <h4>Payment confirmed</h4>
+          <p class="strong">{{ paymentMethodLabel }}</p>
+          @if (isBankTransfer) {
+            <p class="muted">Receipt uploaded via {{ currentOrder.paymentProof?.uploadMethod ?? 'website' }}</p>
+          } @else {
+            <p class="muted">Pay when your package arrives</p>
+          }
+          @if (currentOrder.orderNotes) {
+            <p class="notes"><span>Notes:</span> {{ currentOrder.orderNotes }}</p>
           }
         </div>
       </div>
+    </section>
 
-      <!-- Shipping coordinates summary -->
-      <div class="pt-6 text-xs grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-          <h3 class="text-sm font-bold text-neutral-900 mb-2">Shipping Destination</h3>
-          <p class="font-bold text-neutral-800">{{ order.shippingAddress.fullName }}</p>
-          <p class="text-neutral-500 mt-1">{{ order.shippingAddress.addressLine1 }}</p>
-          <p class="text-neutral-500">{{ order.shippingAddress.city }}, {{ order.shippingAddress.postalCode }}</p>
-          <p class="text-neutral-500">{{ order.shippingAddress.country }}</p>
+    <!-- Information cards -->
+    <div class="info-cards fade-section" style="--fade-delay: 320ms">
+      <article class="info-card">
+        <div class="info-card-icon whats-next" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+          </svg>
         </div>
+        <h3>What&apos;s next</h3>
+        <ul>
+          <li>Confirmation email sent to {{ currentOrder.customerInfo.email }}</li>
+          @if (isBankTransfer) {
+            <li>Payment verification within 24–48 business hours</li>
+          }
+          <li>Order processing begins after confirmation</li>
+          <li>Shipping notification when your package is dispatched</li>
+        </ul>
+      </article>
+
+      <article class="info-card">
+        <div class="info-card-icon track" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+        </div>
+        <h3>Track your order</h3>
+        <p>Save your order number <strong>{{ currentOrder.orderNumber }}</strong> to check status anytime.</p>
+        <a
+          class="card-action-btn"
+          [routerLink]="['/track-order']"
+          [queryParams]="{ order: currentOrder.orderNumber, email: currentOrder.customerInfo.email }"
+        >
+          Track this order
+        </a>
+        <button type="button" class="card-link-btn" (click)="copyOrderNumber()">Copy order number</button>
+      </article>
+
+      <article class="info-card">
+        <div class="info-card-icon help" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 4h.008v.008H12V16z" />
+          </svg>
+        </div>
+        <h3>Need help?</h3>
+        <ul class="contact-list">
+          <li>
+            <span>Email</span>
+            <a [href]="'mailto:' + supportEmail">{{ supportEmail }}</a>
+          </li>
+          <li>
+            <span>Phone</span>
+            <a [href]="'tel:' + supportPhone">{{ supportPhone }}</a>
+          </li>
+        </ul>
+        <a class="card-action-btn whatsapp" [href]="whatsAppSupportUrl" target="_blank" rel="noopener noreferrer">
+          Chat on WhatsApp
+        </a>
+        <a routerLink="/faq" class="card-link-btn">Visit FAQ</a>
+        <a routerLink="/contact" class="card-link-btn">Contact us</a>
+      </article>
+    </div>
+
+    <!-- CTAs -->
+    <div class="cta-bar fade-section no-print" style="--fade-delay: 440ms">
+      <a routerLink="/products" class="btn btn-primary">Continue shopping</a>
+      <button type="button" class="btn btn-secondary" (click)="scrollToOrderDetails()">View order details</button>
+      <button type="button" class="btn btn-outline" (click)="downloadInvoice()">Download invoice</button>
+    </div>
+
+    <!-- Printable invoice -->
+    <section id="invoice-print" class="invoice-print-area" aria-hidden="true">
+      <div class="invoice-header">
         <div>
-          <h3 class="text-sm font-bold text-neutral-900 mb-2">Contact Details</h3>
-          <p class="text-neutral-500">Phone: <span class="font-bold text-neutral-800">{{ order.shippingAddress.phone }}</span></p>
-          <p class="text-neutral-500 mt-2 leading-relaxed">A shipment confirmation email will be dispatched once our weaving atelier registers and packs your package.</p>
+          <h1>The Twisted Threads</h1>
+          <p>Order Invoice</p>
+        </div>
+        <div class="invoice-meta">
+          <p><strong>Order:</strong> {{ currentOrder.orderNumber }}</p>
+          <p><strong>Date:</strong> {{ currentOrder.createdAt | date:'mediumDate' }}</p>
+          <p><strong>Status:</strong> {{ currentOrder.status }}</p>
         </div>
       </div>
-    </div>
 
-    <div class="flex items-center justify-center gap-4">
-      <a routerLink="/products" class="rounded-xl bg-neutral-950 px-6 py-3 text-sm font-semibold text-white hover:bg-neutral-800 transition-colors shadow-sm">
-        Continue Shopping
-      </a>
-      <button (click)="clearOrderState()" class="text-sm font-semibold text-neutral-400 hover:text-neutral-900 transition-colors">
-        Clear Receipt View
-      </button>
-    </div>
+      <div class="invoice-parties">
+        <div>
+          <h2>Bill to</h2>
+          <p>{{ currentOrder.customerInfo.fullName }}</p>
+          <p>{{ currentOrder.customerInfo.email }}</p>
+          <p>{{ currentOrder.customerInfo.phone }}</p>
+        </div>
+        <div>
+          <h2>Ship to</h2>
+          <p>{{ currentOrder.shippingAddress.fullName }}</p>
+          <p>{{ currentOrder.shippingAddress.addressLine1 }}</p>
+          <p>
+            {{ currentOrder.shippingAddress.city }}, {{ currentOrder.shippingAddress.postalCode }}
+          </p>
+        </div>
+      </div>
+
+      <table class="invoice-table">
+        <thead>
+          <tr>
+            <th>Description</th>
+            <th>Qty</th>
+            <th>Unit</th>
+            <th>Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of currentOrder.items; track item.id) {
+            <tr>
+              <td>{{ item.product.name }}</td>
+              <td>{{ item.quantity }}</td>
+              <td>{{ item.product.price | customCurrency }}</td>
+              <td>{{ (item.product.price * item.quantity) | customCurrency }}</td>
+            </tr>
+          }
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="3">Subtotal</td>
+            <td>{{ currentOrder.subtotal | customCurrency }}</td>
+          </tr>
+          <tr>
+            <td colspan="3">Shipping &amp; fees</td>
+            <td>{{ currentOrder.shippingCost | customCurrency }}</td>
+          </tr>
+          <tr>
+            <td colspan="3"><strong>Total</strong></td>
+            <td><strong>{{ currentOrder.total | customCurrency }}</strong></td>
+          </tr>
+        </tfoot>
+      </table>
+
+      <p class="invoice-footer">
+        Payment: {{ paymentMethodLabel }} · Thank you for shopping with The Twisted Threads.
+      </p>
+    </section>
   } @else {
-    <!-- Fallback State -->
-    <div class="text-center py-20 border border-dashed border-neutral-200 rounded-3xl space-y-4">
-      <svg class="h-16 w-16 text-neutral-300 mx-auto stroke-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-      </svg>
-      <div class="space-y-1">
-        <p class="text-sm font-semibold text-neutral-900">No active receipt detected.</p>
-        <p class="text-xs text-neutral-400">If you have made a transaction, it has been saved to your account logs.</p>
+    <section class="empty-state fade-section">
+      <div class="empty-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
       </div>
-      <a routerLink="/" class="inline-flex rounded-lg bg-neutral-900 px-4 py-2 text-xs font-semibold text-white hover:bg-neutral-800 transition-colors">
-        Return to Storefront
-      </a>
-    </div>
+      <h1>No order found</h1>
+      <p>Place an order from checkout to see your confirmation here.</p>
+      <a routerLink="/products" class="btn btn-primary">Browse products</a>
+    </section>
   }
 </div>
