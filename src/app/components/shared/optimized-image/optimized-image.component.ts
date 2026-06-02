@@ -1,4 +1,5 @@
-import { Component, CommonModule, computed, input, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, computed, input, signal } from '@angular/core';
 
 @Component({
   selector: 'app-optimized-image',

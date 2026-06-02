@@ -48,7 +48,7 @@ export class CartService {
   private readonly cartSubject = new BehaviorSubject<CartModel>(this.buildCart());
   public readonly cart$: Observable<CartModel> = this.cartSubject.asObservable();
 
-  constructor(private toastr: ToastrService) {}
+  constructor(private toastr: ToastrService) { }
 
   private loadCartItems(): CartItem[] {
     try {
@@ -64,7 +64,10 @@ export class CartService {
         quantity: item.quantity || 1,
         selectedSize: item.selectedSize || '',
         selectedColor: item.selectedColor || '',
-        addedAt: item.addedAt ? new Date(item.addedAt) : new Date()
+        addedAt: item.addedAt ? new Date(item.addedAt) : new Date(),
+
+        name: (item.product as ProductModel)?.name ?? '',
+        price: (item.product as ProductModel)?.price ?? 0
       }));
     } catch {
       return [];
@@ -129,7 +132,9 @@ export class CartService {
         quantity: Math.min(quantity, product.stockQuantity),
         selectedSize,
         selectedColor,
-        addedAt: new Date()
+        addedAt: new Date(),
+        name: '',
+        price: 0
       };
       this.itemsSignal.set([...currentItems, item]);
       this.toastr.success(`${product.name} added to cart.`, 'Cart Updated');

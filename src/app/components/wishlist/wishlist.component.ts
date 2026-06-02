@@ -10,7 +10,6 @@ import { CartService } from '../../services/cart.service';
 import { ProductModel } from '../../models/product.model';
 import { CustomCurrencyPipe } from '../../pipes/custom-currency.pipe';
 import { WishlistHeartButtonComponent } from '../shared/wishlist-heart-button/wishlist-heart-button.component';
-import { WhatsappShareComponent } from '../shared/whatsapp-share/whatsapp-share.component';
 import { listStaggerAnimation } from '../../animations/animations';
 
 @Component({
@@ -22,7 +21,6 @@ import { listStaggerAnimation } from '../../animations/animations';
     MatCardModule,
     CustomCurrencyPipe,
     WishlistHeartButtonComponent,
-    WhatsappShareComponent,
   ],
   templateUrl: './wishlist.component.html',
   styleUrl: './wishlist.component.scss',
@@ -124,9 +122,5 @@ export class WishlistComponent implements OnInit {
     } finally {
       this.isSharing.set(false);
     }
-  }
-
-  protected get wishlistNames(): string[] {
-    return this.items().map(p => p.name);
   }
 }

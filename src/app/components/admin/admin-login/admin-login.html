@@ -1,0 +1,82 @@
+<div class="login-page">
+  <!-- Left decorative panel -->
+  <div class="login-art">
+    <div class="art-overlay"></div>
+    <div class="art-content">
+      <div class="art-logo">✦</div>
+      <h1 class="art-title">The Twisted Threads</h1>
+      <p class="art-subtitle">Admin Portal — Secure Access</p>
+    </div>
+  </div>
+
+  <!-- Right login panel -->
+  <div class="login-panel">
+    <div class="login-card">
+      <div class="login-header">
+        <div class="login-icon">
+          <mat-icon>admin_panel_settings</mat-icon>
+        </div>
+        <h2>Welcome Back</h2>
+        <p>Sign in to manage your store</p>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" class="login-form" novalidate>
+        <!-- Email -->
+        <div class="field-group">
+          <label for="admin-email">Email Address</label>
+          <div class="input-wrapper">
+            <mat-icon class="input-icon">mail_outline</mat-icon>
+            <input
+              id="admin-email"
+              type="email"
+              formControlName="email"
+              placeholder="admin@yourstore.com"
+              autocomplete="email"
+            />
+          </div>
+          @if (form.get('email')?.invalid && form.get('email')?.touched) {
+            <span class="field-error">Please enter a valid email address.</span>
+          }
+        </div>
+
+        <!-- Password -->
+        <div class="field-group">
+          <label for="admin-password">Password</label>
+          <div class="input-wrapper">
+            <mat-icon class="input-icon">lock_outline</mat-icon>
+            <input
+              id="admin-password"
+              [type]="showPassword ? 'text' : 'password'"
+              formControlName="password"
+              placeholder="••••••••"
+              autocomplete="current-password"
+            />
+            <button type="button" class="toggle-pass" (click)="showPassword = !showPassword" tabindex="-1">
+              <mat-icon>{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+          </div>
+          @if (form.get('password')?.invalid && form.get('password')?.touched) {
+            <span class="field-error">Password must be at least 6 characters.</span>
+          }
+        </div>
+
+        <!-- Error message -->
+        @if (errorMessage) {
+          <div class="error-banner">
+            <mat-icon>error_outline</mat-icon>
+            {{ errorMessage }}
+          </div>
+        }
+
+        <!-- Submit -->
+        <button type="submit" class="login-btn" [class.loading]="isLoading" [disabled]="isLoading">
+          @if (isLoading) {
+            <span class="spinner"></span> Signing In…
+          } @else {
+            <mat-icon>login</mat-icon> Sign In to Dashboard
+          }
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

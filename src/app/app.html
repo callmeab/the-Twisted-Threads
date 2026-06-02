@@ -2,21 +2,16 @@
 
 <div class="flex min-h-screen flex-col bg-white text-neutral-900 antialiased font-sans">
   <!-- Top Header Navigation -->
-  <header role="banner">
-    <app-header></app-header>
-  </header>
+  <app-header></app-header>
 
   <!-- Core Content Area with Active Router Outlet -->
-  <main id="main-content" class="app-main flex-grow" role="main">
+  <main class="app-main flex-grow">
     <router-outlet></router-outlet>
   </main>
 
   <!-- Sleek Footer Layout -->
-  <footer role="contentinfo">
-    <app-footer></app-footer>
-  </footer>
+  <app-footer></app-footer>
 
   <!-- Mobile bottom navigation -->
   <app-bottom-nav />
-    <app-whatsapp-floating></app-whatsapp-floating>
 </div>

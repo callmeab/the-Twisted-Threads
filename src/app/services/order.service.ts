@@ -116,11 +116,11 @@ export class OrderService {
     }));
   }
 
-  public setPaymentStatus(orderId: string, status: PaymentStatus): OrderModel | undefined {
-    return this.updateOrder(orderId, order => ({
-      ...order,
-      paymentStatus: status,
-    }));
+  public setPaymentStatus(
+    orderId: string,
+    paymentStatus: PaymentStatus
+  ): OrderModel | undefined {
+    return this.updateOrder(orderId, order => ({ ...order, paymentStatus }));
   }
 
   public sendOrderConfirmationEmail(orderId: string): boolean {

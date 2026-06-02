@@ -1,5 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { DatePipe } from '@angular/common';
@@ -19,7 +18,6 @@ export interface TrackingTimelineStep {
 @Component({
   selector: 'app-order-tracking',
   standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FormsModule, RouterLink, CustomCurrencyPipe, DatePipe],
   templateUrl: './order-tracking.component.html',
   styleUrl: './order-tracking.component.scss',
@@ -41,7 +39,7 @@ export class OrderTrackingComponent implements OnInit {
   protected errorMessage = '';
 
   public ngOnInit(): void {
-    this.route.queryParamMap.pipe(takeUntilDestroyed(this)).subscribe(params => {
+    this.route.queryParamMap.subscribe(params => {
       const order = params.get('order');
       const email = params.get('email');
       if (order) {

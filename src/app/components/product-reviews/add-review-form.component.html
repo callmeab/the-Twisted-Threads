@@ -1,7 +1,7 @@
 <div class="add-review-form">
   @if (submitSuccess()) {
     <div class="success-banner" role="status">
-      <span class="material-icons" aria-hidden="true">check_circle</span>
+      <span class="material-icons">check_circle</span>
       <div>
         <strong>Thank you for your review!</strong>
         <p>Your feedback has been submitted and will appear after our team approves it.</p>
@@ -11,7 +11,7 @@
   } @else {
     <h3 class="form-title">Write a review</h3>
     <p class="moderation-note">
-      <span class="material-icons" aria-hidden="true">info</span>
+      <span class="material-icons">info</span>
       Reviews are moderated and appear on this page after approval, typically within 1–2 business days.
     </p>
 
@@ -61,15 +61,15 @@
         <div class="image-upload-row">
           @for (preview of imagePreviews(); track $index) {
             <div class="preview-thumb">
-              <img [src]="preview" alt="Review upload preview" loading="lazy" />
+              <img [src]="preview" alt="Review upload preview" />
               <button type="button" class="remove-img" (click)="removeImage($index)" aria-label="Remove image">
-                <span class="material-icons" aria-hidden="true">close</span>
+                <span class="material-icons">close</span>
               </button>
             </div>
           }
           @if (imagePreviews().length < 4) {
             <label class="upload-btn">
-              <span class="material-icons" aria-hidden="true">add_a_photo</span>
+              <span class="material-icons">add_a_photo</span>
               <span>Add photo</span>
               <input type="file" accept="image/*" multiple hidden (change)="onImagesSelected($event)" />
             </label>

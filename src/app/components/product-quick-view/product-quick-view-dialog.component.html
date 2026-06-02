@@ -8,7 +8,6 @@
       class="fly-to-cart-img"
       [src]="activeImage"
       alt=""
-      loading="lazy"
       [@flyToCart]
       aria-hidden="true"
     />
@@ -27,7 +26,6 @@
         <img
           [src]="activeImage"
           [alt]="product.name"
-          loading="lazy"
           class="main-image"
           [style.transform-origin]="zoomOrigin()"
         />
@@ -45,7 +43,7 @@
               [attr.aria-selected]="activeImageIndex() === i"
               role="tab"
             >
-              <img [src]="img" [alt]="product.name + ' thumbnail ' + (i + 1)" loading="lazy" />
+              <img [src]="img" [alt]="product.name + ' thumbnail ' + (i + 1)" />
             </button>
           }
         </div>

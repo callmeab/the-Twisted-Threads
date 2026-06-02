@@ -3,14 +3,14 @@
     <app-product-detail-skeleton />
   } @else if (product(); as prod) {
     <a routerLink="/products" class="back-link">
-      <span class="material-icons" aria-hidden="true">arrow_back</span>
+      <span class="material-icons">arrow_back</span>
       Back to Shop
     </a>
 
     <div class="detail-grid">
       <section class="gallery-section">
         <app-product-image-gallery
-          [images]="prod.images?.length ? prod.images : [prod.mainImage]"
+          [images]="prod.images.length ? prod.images : [prod.mainImage]"
           [productName]="prod.name"
           [badges]="galleryBadges()"
         />
@@ -41,7 +41,7 @@
 
         <p class="product-description hide-on-mobile">{{ prod.longDescription || prod.description }}</p>
 
-        @if (prod.materials?.length) {
+        @if (prod.materials.length) {
           <div class="attribute-row">
             <span class="attribute-label">Material</span>
             <div class="chips-row">
@@ -52,7 +52,7 @@
           </div>
         }
 
-        @if (prod.sizes?.length) {
+        @if (prod.sizes.length) {
           <div class="attribute-row attribute-row--stack">
             <span class="attribute-label">Size</span>
             <div class="chips-row chips-row--touch">
@@ -69,7 +69,7 @@
           </div>
         }
 
-        @if (prod.colors?.length) {
+        @if (prod.colors.length) {
           <div class="attribute-row attribute-row--stack">
             <span class="attribute-label">Color</span>
             <div class="swatches-row swatches-row--touch">
@@ -104,7 +104,7 @@
 
           <div class="share-row">
             <span>Share</span>
-            <app-whatsapp-share type="product" [productName]="prod.name" [productUrl]="shareUrl">WhatsApp</app-whatsapp-share>
+            <a [href]="getWhatsAppUrl()" target="_blank" rel="noreferrer" class="share-pill whatsapp">WhatsApp</a>
             <a [href]="getFacebookUrl()" target="_blank" rel="noreferrer" class="share-pill facebook">Facebook</a>
             <a [href]="getPinterestUrl()" target="_blank" rel="noreferrer" class="share-pill pinterest">Pinterest</a>
           </div>
@@ -112,7 +112,7 @@
           <div class="accordion-panel">
             <button type="button" class="accordion-toggle touch-accordion" (click)="toggleAccordion('delivery')">
               <span>Delivery Information</span>
-              <span class="material-icons" aria-hidden="true">{{ openAccordion() === 'delivery' ? 'expand_less' : 'expand_more' }}</span>
+              <span class="material-icons">{{ openAccordion() === 'delivery' ? 'expand_less' : 'expand_more' }}</span>
             </button>
             @if (openAccordion() === 'delivery') {
               <div class="accordion-content">
@@ -124,7 +124,7 @@
           <div class="accordion-panel">
             <button type="button" class="accordion-toggle touch-accordion" (click)="toggleAccordion('returns')">
               <span>Return Policy</span>
-              <span class="material-icons" aria-hidden="true">{{ openAccordion() === 'returns' ? 'expand_less' : 'expand_more' }}</span>
+              <span class="material-icons">{{ openAccordion() === 'returns' ? 'expand_less' : 'expand_more' }}</span>
             </button>
             @if (openAccordion() === 'returns') {
               <div class="accordion-content">
@@ -159,9 +159,9 @@
         @if (selectedTab() === 'specs') {
           <div class="tab-content specs-list">
             <div><strong>Category:</strong> {{ prod.category }}</div>
-            <div><strong>Material:</strong> {{ prod.materials?.join(', ') }}</div>
-            <div><strong>Available sizes:</strong> {{ prod.sizes?.join(', ') }}</div>
-            <div><strong>Available colors:</strong> {{ prod.colors?.join(', ') }}</div>
+            <div><strong>Material:</strong> {{ prod.materials.join(', ') }}</div>
+            <div><strong>Available sizes:</strong> {{ prod.sizes.join(', ') }}</div>
+            <div><strong>Available colors:</strong> {{ prod.colors.join(', ') }}</div>
             <div><strong>Shipping:</strong> Free standard shipping for orders over $50</div>
             <div><strong>Warranty:</strong> 1-year craftsmanship guarantee</div>
           </div>
@@ -190,7 +190,7 @@
         <div class="mobile-section" [class.mobile-section--open]="isMobileSectionOpen(tab)">
           <button type="button" class="mobile-section-trigger" (click)="toggleMobileSection(tab)">
             <span>{{ mobileSectionLabel(tab) }}</span>
-            <span class="material-icons" aria-hidden="true">{{ isMobileSectionOpen(tab) ? 'expand_less' : 'expand_more' }}</span>
+            <span class="material-icons">{{ isMobileSectionOpen(tab) ? 'expand_less' : 'expand_more' }}</span>
           </button>
           <div class="mobile-section-panel">
             <div class="mobile-section-inner">
@@ -200,9 +200,9 @@
               @if (tab === 'specs') {
                 <div class="specs-list">
                   <div><strong>Category:</strong> {{ prod.category }}</div>
-                  <div><strong>Material:</strong> {{ prod.materials?.join(', ') }}</div>
-                  <div><strong>Sizes:</strong> {{ prod.sizes?.join(', ') }}</div>
-                  <div><strong>Colors:</strong> {{ prod.colors?.join(', ') }}</div>
+                  <div><strong>Material:</strong> {{ prod.materials.join(', ') }}</div>
+                  <div><strong>Sizes:</strong> {{ prod.sizes.join(', ') }}</div>
+                  <div><strong>Colors:</strong> {{ prod.colors.join(', ') }}</div>
                 </div>
               }
               @if (tab === 'care') {
@@ -229,13 +229,7 @@
       <div class="cards-row">
         @for (related of relatedProducts(); track related.id) {
           <a [routerLink]="['/products', related.id]" class="product-card">
-            <app-optimized-image
-              [src]="related.mainImage"
-              [alt]="related.name"
-              [imgClass]="'w-full h-full object-cover rounded-xl'"
-              [width]="600"
-              [height]="600"
-            />
+            <img [src]="related.mainImage" [alt]="related.name" />
             <div class="card-info">
               <span>{{ related.name }}</span>
               <strong>{{ related.price | customCurrency }}</strong>
@@ -253,13 +247,7 @@
         <div class="cards-row">
           @for (recent of recentlyViewed(); track recent.id) {
             <a [routerLink]="['/products', recent.id]" class="product-card">
-              <app-optimized-image
-                [src]="recent.mainImage"
-                [alt]="recent.name"
-                [imgClass]="'w-full h-full object-cover rounded-xl'"
-                [width]="600"
-                [height]="600"
-              />
+              <img [src]="recent.mainImage" [alt]="recent.name" />
               <div class="card-info">
                 <span>{{ recent.name }}</span>
                 <strong>{{ recent.price | customCurrency }}</strong>

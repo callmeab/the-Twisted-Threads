@@ -1,0 +1,72 @@
+<div class="dashboard-page">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div>
+      <h1>Dashboard</h1>
+      <p>Live snapshot of your store's inventory</p>
+    </div>
+    <a routerLink="/admin/products" class="btn-primary">
+      <mat-icon>add</mat-icon> Add Product
+    </a>
+  </div>
+
+  <!-- Stats Grid -->
+  <div class="stats-grid">
+    @for (card of cards(); track card.label) {
+      <div class="stat-card" [class]="'accent-' + card.color">
+        <div class="stat-icon">
+          <mat-icon>{{ card.icon }}</mat-icon>
+        </div>
+        <div class="stat-info">
+          <span class="stat-value">{{ card.value }}</span>
+          <span class="stat-label">{{ card.label }}</span>
+        </div>
+      </div>
+    }
+  </div>
+
+  <!-- Recent Products Table -->
+  <div class="section-card">
+    <div class="section-header">
+      <h2>Recent Products</h2>
+      <a routerLink="/admin/products" class="btn-ghost">View All →</a>
+    </div>
+
+    <div class="table-wrapper">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Stock</th>
+            <th>Status</th>
+            <th>Added</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (p of recentProducts(); track p.id) {
+            <tr>
+              <td>
+                <div class="product-cell">
+                  <img [src]="p.images[0]" [alt]="p.name" class="product-thumb" />
+                  <span class="product-name">{{ p.name }}</span>
+                </div>
+              </td>
+              <td><span class="chip">{{ p.category }}</span></td>
+              <td class="price-cell">${{ p.price | number:'1.2-2' }}</td>
+              <td>{{ p.stockQuantity }}</td>
+              <td>
+                <span class="status-badge" [class.in-stock]="p.inStock" [class.out]="!p.inStock">
+                  {{ p.inStock ? 'In Stock' : 'Out of Stock' }}
+                </span>
+              </td>
+              <td class="date-cell">{{ p.createdAt | date:'MMM d, y' }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

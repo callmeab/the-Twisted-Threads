@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { OrderService } from '../../services/order.service';
 import { OrderModel } from '../../models/order.model';
 import { ToastrService } from 'ngx-toastr';
@@ -10,7 +10,7 @@ import { AdminAuditService } from '../../services/admin-audit.service';
 @Component({
   selector: 'app-admin-order-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, FormsModule],
   template: `
   <div class="admin-order-detail container-premium" *ngIf="order">
     <h1>Order {{ order.orderNumber }}</h1>

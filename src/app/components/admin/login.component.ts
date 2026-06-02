@@ -14,6 +14,10 @@ import { AdminAuthService } from '../../services/admin-auth.service';
     <h1>Admin Login</h1>
     <form #f="ngForm" (ngSubmit)="onSubmit(f)">
       <div class="form-field">
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" ngModel required />
+      </div>
+      <div class="form-field">
         <label for="password">Password</label>
         <input id="password" name="password" type="password" ngModel required minlength="6" />
       </div>
@@ -37,15 +41,16 @@ export class AdminLoginComponent {
     this.auth = adminAuth;
   }
 
-  onSubmit(form: NgForm) {
+  async onSubmit(form: NgForm) {
     if (!form.valid) return;
+    const email = (form.value.email || '').toString().trim();
     const password = (form.value.password || '').toString();
-    const ok = this.auth.login(password);
-    if (ok) {
+    try {
+      await this.auth.login(email, password);
       this.toastr.success('Welcome back.', 'Admin');
       const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/admin';
-      this.router.navigateByUrl(returnUrl);
-    } else {
+      await this.router.navigateByUrl(returnUrl);
+    } catch {
       this.toastr.error('Invalid password', 'Access Denied');
     }
   }

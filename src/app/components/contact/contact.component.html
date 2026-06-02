@@ -28,11 +28,6 @@
       }
 
       <form #contactForm="ngForm" (ngSubmit)="onSubmit(contactForm)" class="contact-form" novalidate>
-        <div class="sr-only" role="status" aria-live="polite">
-          @if (contactForm.invalid && (contactForm.touched || contactForm.submitted)) {
-            <span>There are errors in the form. Please check the highlighted fields.</span>
-          }
-        </div>
         <div class="form-row">
           <div class="form-field" [class.has-error]="fullName.invalid && fullName.touched">
             <label for="fullName">Name <span class="required">*</span></label>
@@ -47,9 +42,6 @@
               autocomplete="name"
               placeholder="Your full name"
             />
-            @if (fullName.touched) {
-              @if (fullName.valid) { <span class="field-status success">✓</span> } @else { <span class="field-status error">✕</span> }
-            }
             @if (fullName.invalid && fullName.touched) {
               @if (fullName.errors?.['required']) {
                 <span class="field-error">Name is required</span>
@@ -72,9 +64,6 @@
               autocomplete="email"
               placeholder="you@example.com"
             />
-            @if (email.touched) {
-              @if (email.valid) { <span class="field-status success">✓</span> } @else { <span class="field-status error">✕</span> }
-            }
             @if (email.invalid && email.touched) {
               @if (email.errors?.['required']) {
                 <span class="field-error">Email is required</span>
@@ -86,34 +75,6 @@
         </div>
 
         <div class="form-row">
-          <div class="form-field" [class.has-error]="confirmEmail.invalid && confirmEmail.touched">
-            <label for="confirmEmail">Confirm Email <span class="required">*</span></label>
-            <input
-              id="confirmEmail"
-              name="confirmEmail"
-              type="email"
-              [(ngModel)]="contactData.confirmEmail"
-              #confirmEmail="ngModel"
-              required
-              email
-              confirmEmailMatch="email"
-              autocomplete="email"
-              placeholder="Re-enter your email"
-            />
-            @if (confirmEmail.touched) {
-              @if (confirmEmail.valid) { <span class="field-status success">✓</span> } @else { <span class="field-status error">✕</span> }
-            }
-            @if (confirmEmail.invalid && confirmEmail.touched) {
-              @if (confirmEmail.errors?.['required']) {
-                <span class="field-error">Please confirm your email</span>
-              } @else if (confirmEmail.errors?.['email']) {
-                <span class="field-error">Please enter a valid email address</span>
-              } @else if (confirmEmail.errors?.['confirmEmailMatch']) {
-                <span class="field-error">Email addresses must match</span>
-              }
-            }
-          </div>
-
           <div class="form-field">
             <label for="phone">Phone <span class="optional">(optional)</span></label>
             <input
@@ -123,15 +84,8 @@
               [(ngModel)]="contactData.phone"
               #phone="ngModel"
               autocomplete="tel"
-              [pattern]="phonePattern"
-              placeholder="+92 300 1234567"
+              placeholder="+1 (555) 000-0000"
             />
-            @if (phone.touched) {
-              @if (phone.valid) { <span class="field-status success">✓</span> } @else { <span class="field-status error">✕</span> }
-            }
-            @if (phone.invalid && phone.touched) {
-              <span class="field-error">Please use a valid Pakistan phone number.</span>
-            }
           </div>
 
           <div class="form-field" [class.has-error]="subject.invalid && subject.touched">

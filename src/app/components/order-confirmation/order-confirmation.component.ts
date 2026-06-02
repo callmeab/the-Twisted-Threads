@@ -10,7 +10,6 @@ import {
 } from '@angular/core';
 import { isPlatformBrowser, DatePipe, DOCUMENT, LowerCasePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { WhatsappShareComponent } from '../shared/whatsapp-share/whatsapp-share.component';
 import { ToastrService } from 'ngx-toastr';
 import { OrderService } from '../../services/order.service';
 import { CustomCurrencyPipe } from '../../pipes/custom-currency.pipe';
@@ -38,7 +37,7 @@ interface ConfettiParticle {
 @Component({
   selector: 'app-order-confirmation',
   standalone: true,
-  imports: [RouterLink, CustomCurrencyPipe, DatePipe, LowerCasePipe, WhatsappShareComponent],
+  imports: [RouterLink, CustomCurrencyPipe, DatePipe, LowerCasePipe],
   templateUrl: './order-confirmation.component.html',
   styleUrl: './order-confirmation.component.scss',
 })

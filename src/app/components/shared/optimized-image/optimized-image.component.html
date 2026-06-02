@@ -2,11 +2,11 @@
   <source [srcset]="webpSrcSet()" type="image/webp" />
   <source [srcset]="srcSet()" />
   <img
-    [src]="src"
-    [alt]="alt"
-    [width]="width"
-    [height]="height"
-    [attr.loading]="loading"
+    [src]="src()"
+    [alt]="alt()"
+    [width]="width()"
+    [height]="height()"
+    [attr.loading]="loading()"
     decoding="async"
     [ngClass]="imageClasses()"
     (load)="onLoad()"

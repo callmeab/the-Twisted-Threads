@@ -9,7 +9,11 @@
     "generate:sitemap": "node ./scripts/generate-sitemap.js",
     "watch": "ng build --watch --configuration development",
     "perf:budget": "npm run build:prod",
-    "test": "ng test"
+    "test": "ng test",
+    "firebase:login": "npx firebase-tools login",
+    "firebase:emulators": "npx firebase-tools emulators:start",
+    "firebase:deploy:hosting": "npx firebase-tools deploy --only hosting",
+    "firebase:deploy:rules": "npx firebase-tools deploy --only firestore:rules,storage"
   },
   "private": true,
   "packageManager": "npm@11.11.0",
@@ -19,6 +23,7 @@
     "@angular/common": "^21.2.0",
     "@angular/compiler": "^21.2.0",
     "@angular/core": "^21.2.0",
+    "@angular/fire": "^20.0.1",
     "@angular/forms": "^21.2.0",
     "@angular/material": "^21.2.13",
     "@angular/platform-browser": "^21.2.0",
@@ -26,6 +31,7 @@
     "@angular/service-worker": "^21.2.13",
     "@ng-bootstrap/ng-bootstrap": "^20.0.0",
     "bootstrap": "^5.3.8",
+    "firebase": "^12.14.0",
     "ng-gallery": "^12.0.0",
     "ngx-toastr": "^20.0.5",
     "rxjs": "~7.8.0",

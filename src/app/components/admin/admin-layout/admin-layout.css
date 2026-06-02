@@ -1,0 +1,155 @@
+/* ========================================
+   Admin Shell Layout
+   ======================================== */
+:host {
+  display: block;
+  height: 100vh;
+}
+
+.admin-shell {
+  display: flex;
+  height: 100vh;
+  background: #f8f7f5;
+  font-family: 'Inter', sans-serif;
+}
+
+/* ========================================
+   Sidebar
+   ======================================== */
+.admin-sidebar {
+  width: 260px;
+  flex-shrink: 0;
+  background: #1a1a2e;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
+}
+
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 28px 24px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.brand-icon {
+  font-size: 20px;
+  color: #c9956c;
+}
+
+.brand-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: #f5f0eb;
+  letter-spacing: 0.02em;
+  flex: 1;
+}
+
+.brand-badge {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: rgba(201, 149, 108, 0.2);
+  color: #c9956c;
+  border: 1px solid rgba(201, 149, 108, 0.35);
+  border-radius: 4px;
+  padding: 3px 7px;
+}
+
+/* ========================================
+   Nav Items
+   ======================================== */
+.sidebar-nav {
+  flex: 1;
+  padding: 20px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 14px;
+  border-radius: 10px;
+  color: rgba(245, 240, 235, 0.55);
+  text-decoration: none;
+  font-size: 13.5px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  transition: background 0.2s ease, color 0.2s ease;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+  }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.07);
+    color: #f5f0eb;
+
+    mat-icon { opacity: 1; }
+  }
+
+  &.active {
+    background: rgba(201, 149, 108, 0.18);
+    color: #e8b89a;
+
+    mat-icon {
+      opacity: 1;
+      color: #c9956c;
+    }
+  }
+}
+
+/* ========================================
+   Sidebar Footer / Logout
+   ======================================== */
+.sidebar-footer {
+  padding: 16px 12px 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 11px 14px;
+  background: none;
+  border: none;
+  border-radius: 10px;
+  color: rgba(245, 240, 235, 0.45);
+  font-size: 13.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+
+  &:hover {
+    background: rgba(239, 83, 80, 0.12);
+    color: #ef9a9a;
+  }
+}
+
+/* ========================================
+   Main Content Area
+   ======================================== */
+.admin-main {
+  flex: 1;
+  overflow-y: auto;
+  min-width: 0;
+}
