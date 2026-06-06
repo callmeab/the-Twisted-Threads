@@ -13,30 +13,35 @@ import { ProductService } from '../../../services/product.service';
 export class Dashboard {
   private productService = inject(ProductService);
 
-  products = computed(() => this.productService.getAllProducts());
+  // Admin sees ALL products (active + inactive)
+  products = this.productService.allProductsSignal;
 
   stats = computed(() => {
     const all = this.products();
     const totalProducts  = all.length;
-    const inStock        = all.filter(p => p.inStock).length;
+    const activeProducts = all.filter(p =>  p.isActive).length;
+    const hiddenProducts = all.filter(p => !p.isActive).length;
+    const inStock        = all.filter(p =>  p.inStock).length;
     const outOfStock     = all.filter(p => !p.inStock).length;
     const totalStock     = all.reduce((sum, p) => sum + (p.stockQuantity ?? 0), 0);
-    const newArrivals    = all.filter(p => p.isNew).length;
-    const featured       = all.filter(p => p.isFeatured).length;
+    const newArrivals    = all.filter(p =>  p.isNew).length;
+    const featured       = all.filter(p =>  p.isFeatured).length;
     const avgRating      = all.length
       ? (all.reduce((s, p) => s + (p.rating ?? 0), 0) / all.length).toFixed(1)
       : '0.0';
-    return { totalProducts, inStock, outOfStock, totalStock, newArrivals, featured, avgRating };
+    return { totalProducts, activeProducts, hiddenProducts, inStock, outOfStock, totalStock, newArrivals, featured, avgRating };
   });
 
   cards = computed(() => [
     { label: 'Total Products',   value: this.stats().totalProducts,   icon: 'inventory_2',    color: 'indigo' },
-    { label: 'Total Stock Units',value: this.stats().totalStock,       icon: 'warehouse',      color: 'teal'   },
-    { label: 'In Stock',         value: this.stats().inStock,          icon: 'check_circle',   color: 'green'  },
-    { label: 'Out of Stock',     value: this.stats().outOfStock,       icon: 'cancel',         color: 'red'    },
-    { label: 'New Arrivals',     value: this.stats().newArrivals,      icon: 'new_releases',   color: 'rose'   },
-    { label: 'Featured',         value: this.stats().featured,         icon: 'star',           color: 'amber'  },
-    { label: 'Avg Rating',       value: this.stats().avgRating + ' ★', icon: 'grade',          color: 'gold'   },
+    { label: 'Live on Website',  value: this.stats().activeProducts,  icon: 'visibility',     color: 'green'  },
+    { label: 'Hidden',           value: this.stats().hiddenProducts,  icon: 'visibility_off', color: 'red'    },
+    { label: 'Total Stock Units',value: this.stats().totalStock,      icon: 'warehouse',      color: 'teal'   },
+    { label: 'In Stock',         value: this.stats().inStock,         icon: 'check_circle',   color: 'green'  },
+    { label: 'Out of Stock',     value: this.stats().outOfStock,      icon: 'cancel',         color: 'red'    },
+    { label: 'New Arrivals',     value: this.stats().newArrivals,     icon: 'new_releases',   color: 'rose'   },
+    { label: 'Featured',         value: this.stats().featured,        icon: 'star',           color: 'amber'  },
+    { label: 'Avg Rating',       value: this.stats().avgRating + ' ★',icon: 'grade',          color: 'gold'   },
   ]);
 
   recentProducts = computed(() =>

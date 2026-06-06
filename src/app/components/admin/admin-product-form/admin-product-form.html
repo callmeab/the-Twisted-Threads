@@ -1,0 +1,323 @@
+<div class="form-page">
+
+  <!-- ── Back + Title ── -->
+  <div class="page-header">
+    <a routerLink="/admin/products" class="back-link" id="back-to-products">
+      <mat-icon>arrow_back</mat-icon> Back to Products
+    </a>
+    <div class="header-text">
+      <h1>{{ isEdit() ? 'Edit Product' : 'Add New Product' }}</h1>
+      <p>{{ isEdit() ? 'Update product details — changes go live instantly.' : 'Fill in the details below. Only Active products are visible on your website.' }}</p>
+    </div>
+  </div>
+
+  @if (isLoadingProduct()) {
+    <div class="loading-overlay">
+      <div class="spinner-lg"></div>
+      <p>Loading product…</p>
+    </div>
+  } @else {
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate class="form-grid">
+
+      <!-- ════════════════════════════════════════════
+           LEFT COLUMN — Main fields
+           ════════════════════════════════════════════ -->
+      <div class="col-main">
+
+        <!-- ── Basic Info ── -->
+        <section class="card">
+          <h2 class="card-title"><mat-icon>info</mat-icon> Basic Information</h2>
+
+          <div class="field">
+            <label for="pf-name">Product Name <span class="req">*</span></label>
+            <input id="pf-name" formControlName="name" type="text" placeholder="e.g. Embroidered Silk Kurta" [class.error]="isInvalid('name')" />
+            @if (isInvalid('name')) { <span class="err-msg">Name is required (min 2 chars).</span> }
+          </div>
+
+          <div class="field">
+            <label for="pf-desc">Short Description <span class="req">*</span></label>
+            <textarea id="pf-desc" formControlName="description" rows="3" placeholder="Brief product summary shown on cards…" [class.error]="isInvalid('description')"></textarea>
+            @if (isInvalid('description')) { <span class="err-msg">Description required (min 10 chars).</span> }
+          </div>
+
+          <div class="field">
+            <label for="pf-long">Long Description</label>
+            <textarea id="pf-long" formControlName="longDescription" rows="5" placeholder="Detailed product description, care instructions, story…"></textarea>
+          </div>
+        </section>
+
+        <!-- ── Category ── -->
+        <section class="card">
+          <h2 class="card-title"><mat-icon>category</mat-icon> Category</h2>
+          <div class="row-2">
+            <div class="field">
+              <label for="pf-cat">Category <span class="req">*</span></label>
+              <select id="pf-cat" formControlName="category" [class.error]="isInvalid('category')">
+                <option value="">— Select category —</option>
+                @for (c of CATEGORIES; track c) {
+                  <option [value]="c">{{ c }}</option>
+                }
+              </select>
+              @if (isInvalid('category')) { <span class="err-msg">Category is required.</span> }
+            </div>
+            <div class="field">
+              <label for="pf-subcat">Sub-Category</label>
+              <input id="pf-subcat" formControlName="subCategory" type="text" placeholder="e.g. Lawn, Chiffon…" />
+            </div>
+          </div>
+        </section>
+
+        <!-- ── Pricing & Stock ── -->
+        <section class="card">
+          <h2 class="card-title"><mat-icon>payments</mat-icon> Pricing & Stock</h2>
+
+          <div class="row-2">
+            <div class="field">
+              <label for="pf-price">Sale Price (PKR) <span class="req">*</span></label>
+              <div class="input-prefix">
+                <span>PKR</span>
+                <input id="pf-price" formControlName="price" type="number" min="1" placeholder="0" [class.error]="isInvalid('price')" />
+              </div>
+              @if (isInvalid('price')) { <span class="err-msg">Valid price required.</span> }
+            </div>
+            <div class="field">
+              <label for="pf-orig">Original Price (PKR)</label>
+              <div class="input-prefix">
+                <span>PKR</span>
+                <input id="pf-orig" formControlName="originalPrice" type="number" min="0" placeholder="0 (leave blank if no discount)" />
+              </div>
+              @if (discount() > 0) {
+                <span class="discount-badge">{{ discount() }}% OFF</span>
+              }
+            </div>
+          </div>
+
+          <div class="row-2">
+            <div class="field">
+              <label for="pf-qty">Stock Quantity <span class="req">*</span></label>
+              <input id="pf-qty" formControlName="stockQuantity" type="number" min="0" placeholder="0" [class.error]="isInvalid('stockQuantity')" />
+              @if (isInvalid('stockQuantity')) { <span class="err-msg">Stock quantity required.</span> }
+            </div>
+            <div class="field toggles-field">
+              <label>In Stock</label>
+              <label class="toggle-switch">
+                <input type="checkbox" formControlName="inStock" id="pf-instock" />
+                <span class="slider"></span>
+              </label>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── Tags ── -->
+        <section class="card">
+          <h2 class="card-title"><mat-icon>label</mat-icon> Tags</h2>
+          <p class="field-hint">Press Enter or comma to add a tag.</p>
+          <div class="chip-input-area">
+            <div class="chips">
+              @for (tag of tagsArray.controls; track $index) {
+                <span class="chip">
+                  {{ tag.value }}
+                  <button type="button" (click)="removeChip(tagsArray, $index)"><mat-icon>close</mat-icon></button>
+                </span>
+              }
+            </div>
+            <input
+              type="text"
+              id="pf-tags"
+              class="chip-input"
+              placeholder="Add a tag…"
+              [value]="tagInput()"
+              (input)="tagInput.set($any($event.target).value)"
+              (keydown)="addChipOnEnter($event, tagsArray, tagInput, tagInput())"
+              (blur)="addChip(tagsArray, tagInput, tagInput())"
+            />
+          </div>
+        </section>
+
+        <!-- ── Materials ── -->
+        <section class="card">
+          <h2 class="card-title"><mat-icon>texture</mat-icon> Materials</h2>
+          <p class="field-hint">Press Enter or comma to add a material.</p>
+          <div class="chip-input-area">
+            <div class="chips">
+              @for (m of materialsArray.controls; track $index) {
+                <span class="chip">
+                  {{ m.value }}
+                  <button type="button" (click)="removeChip(materialsArray, $index)"><mat-icon>close</mat-icon></button>
+                </span>
+              }
+            </div>
+            <input
+              type="text"
+              id="pf-materials"
+              class="chip-input"
+              placeholder="e.g. Cotton, Silk…"
+              [value]="materialInput()"
+              (input)="materialInput.set($any($event.target).value)"
+              (keydown)="addChipOnEnter($event, materialsArray, materialInput, materialInput())"
+              (blur)="addChip(materialsArray, materialInput, materialInput())"
+            />
+          </div>
+        </section>
+
+        <!-- ── Sizes ── -->
+        <section class="card">
+          <h2 class="card-title"><mat-icon>straighten</mat-icon> Sizes</h2>
+          <div class="quick-sizes">
+            @for (s of SORT_SIZES; track s) {
+              <button type="button" class="quick-chip" (click)="addQuickSize(s)">{{ s }}</button>
+            }
+          </div>
+          <div class="chip-input-area">
+            <div class="chips">
+              @for (s of sizesArray.controls; track $index) {
+                <span class="chip">
+                  {{ s.value }}
+                  <button type="button" (click)="removeChip(sizesArray, $index)"><mat-icon>close</mat-icon></button>
+                </span>
+              }
+            </div>
+            <input
+              type="text"
+              id="pf-sizes"
+              class="chip-input"
+              placeholder="Custom size…"
+              [value]="sizeInput()"
+              (input)="sizeInput.set($any($event.target).value)"
+              (keydown)="addChipOnEnter($event, sizesArray, sizeInput, sizeInput())"
+              (blur)="addChip(sizesArray, sizeInput, sizeInput())"
+            />
+          </div>
+        </section>
+
+        <!-- ── Colors ── -->
+        <section class="card">
+          <h2 class="card-title"><mat-icon>palette</mat-icon> Colors</h2>
+          <div class="chip-input-area">
+            <div class="chips">
+              @for (c of colorsArray.controls; track $index) {
+                <span class="chip chip-color">
+                  {{ c.value }}
+                  <button type="button" (click)="removeChip(colorsArray, $index)"><mat-icon>close</mat-icon></button>
+                </span>
+              }
+            </div>
+            <input
+              type="text"
+              id="pf-colors"
+              class="chip-input"
+              placeholder="e.g. Ivory, Midnight Blue…"
+              [value]="colorInput()"
+              (input)="colorInput.set($any($event.target).value)"
+              (keydown)="addChipOnEnter($event, colorsArray, colorInput, colorInput())"
+              (blur)="addChip(colorsArray, colorInput, colorInput())"
+            />
+          </div>
+        </section>
+
+      </div><!-- /col-main -->
+
+      <!-- ════════════════════════════════════════════
+           RIGHT COLUMN — Images + Settings
+           ════════════════════════════════════════════ -->
+      <div class="col-side">
+
+        <!-- ── Image Uploader ── -->
+        <section class="card">
+          <h2 class="card-title"><mat-icon>photo_library</mat-icon> Product Images</h2>
+          <p class="field-hint">Paste an image URL (e.g., from Unsplash or Cloudinary) and press Enter. The first image becomes the main thumbnail.</p>
+
+          <div class="chip-input-area" style="margin-bottom: 16px;">
+            <input
+              type="text"
+              class="chip-input"
+              placeholder="Paste image URL here..."
+              [value]="imageInput()"
+              (input)="imageInput.set($any($event.target).value)"
+              (keydown)="addImageUrlOnEnter($event)"
+            />
+            <button type="button" class="btn-ghost" style="padding: 4px 12px; font-size: 12px;" (click)="addImageUrl()">Add</button>
+          </div>
+
+          <!-- Existing images (edit mode) -->
+          @if (existingImages().length > 0) {
+            <div class="image-grid-label">Saved Images</div>
+            <div class="image-grid">
+              @for (url of existingImages(); track url; let i = $index) {
+                <div class="thumb-wrapper">
+                  <img [src]="url" alt="Product image {{ i + 1 }}" class="thumb" />
+                  @if (i === 0) { <span class="main-badge">Main</span> }
+                  <button type="button" class="remove-btn" (click)="removeImage(i)" title="Remove">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </div>
+              }
+            </div>
+          }
+
+
+        </section>
+
+        <!-- ── Visibility & Flags ── -->
+        <section class="card">
+          <h2 class="card-title"><mat-icon>tune</mat-icon> Visibility & Flags</h2>
+
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <span class="toggle-label">Publish to Website</span>
+              <span class="toggle-hint">When OFF, product is hidden from all visitors</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" formControlName="isActive" id="pf-active" />
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <span class="toggle-label">Featured Product</span>
+              <span class="toggle-hint">Appears in the Featured section on the homepage</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" formControlName="isFeatured" id="pf-featured" />
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <span class="toggle-label">New Arrival</span>
+              <span class="toggle-hint">Shows a "New" badge on the product card</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" formControlName="isNew" id="pf-new" />
+              <span class="slider"></span>
+            </label>
+          </div>
+        </section>
+
+        <!-- ── Save Button ── -->
+        <div class="save-row">
+          <a routerLink="/admin/products" class="btn-ghost">Cancel</a>
+          <button
+            type="submit"
+            class="btn-save"
+            id="save-product-btn"
+            [disabled]="isSaving()"
+          >
+            @if (isSaving()) {
+              <span class="spinner-sm"></span>
+              {{ isSaving() ? 'Saving…' : '' }}
+            } @else {
+              <mat-icon>{{ isEdit() ? 'save' : 'add_circle' }}</mat-icon>
+              {{ isEdit() ? 'Save Changes' : 'Create Product' }}
+            }
+          </button>
+        </div>
+
+      </div><!-- /col-side -->
+
+    </form>
+  }
+
+</div>

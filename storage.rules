@@ -1,7 +1,17 @@
 rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
-    // TODO: tighten by path and auth roles before launch.
+
+    // ── Product images (public read, admin write) ──────────────
+    match /products/{allPaths=**} {
+      allow read: if true;
+      allow write: if request.auth != null
+                   && request.resource.size < 10 * 1024 * 1024   // max 10 MB
+                   && request.resource.contentType.matches('image/.*');
+      allow delete: if request.auth != null;
+    }
+
+    // ── All other paths: deny ──────────────────────────────────
     match /{allPaths=**} {
       allow read, write: if false;
     }

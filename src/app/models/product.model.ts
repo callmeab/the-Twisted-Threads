@@ -8,7 +8,8 @@ export interface ProductModel {
   discount: number;
   category: string;
   subCategory: string;
-  images: string[]; // multiple images
+  images: string[]; // download URLs from Firebase Storage
+  imageStoragePaths: string[]; // Firebase Storage paths for deletion
   mainImage: string;
   tags: string[];
   inStock: boolean;
@@ -20,7 +21,10 @@ export interface ProductModel {
   reviewCount: number;
   isFeatured: boolean;
   isNew: boolean;
+  isActive: boolean; // ← controls visibility on the public website
+  slug: string;      // ← SEO-friendly URL slug
   createdAt: Date;
+  updatedAt?: Date;
 }
 
 // Backward compatibility alias for the codebase

@@ -1,1 +1,206 @@
-<p>admin-products works!</p>
+<div class="products-page">
+
+  <!-- ── Page Header ── -->
+  <div class="page-header">
+    <div>
+      <h1>Products</h1>
+      <p>Manage your store catalogue — only <strong>Active</strong> products are visible on the website.</p>
+    </div>
+    <a routerLink="/admin/products/add" class="btn-primary" id="add-product-btn">
+      <mat-icon>add</mat-icon> Add Product
+    </a>
+  </div>
+
+  <!-- ── Stats Bar ── -->
+  <div class="stats-bar">
+    <div class="stat-pill">
+      <mat-icon>inventory_2</mat-icon>
+      <span>{{ stats().total }} Total</span>
+    </div>
+    <div class="stat-pill active">
+      <mat-icon>visibility</mat-icon>
+      <span>{{ stats().active }} Active</span>
+    </div>
+    <div class="stat-pill inactive">
+      <mat-icon>visibility_off</mat-icon>
+      <span>{{ stats().inactive }} Hidden</span>
+    </div>
+    <div class="stat-pill warn">
+      <mat-icon>remove_shopping_cart</mat-icon>
+      <span>{{ stats().outOfStock }} Out of Stock</span>
+    </div>
+  </div>
+
+  <!-- ── Filters ── -->
+  <div class="filters-row">
+    <div class="search-box">
+      <mat-icon>search</mat-icon>
+      <input
+        id="product-search"
+        type="text"
+        placeholder="Search by name, category, ID…"
+        [value]="search()"
+        (input)="onSearch($event)"
+      />
+    </div>
+
+    <select id="filter-category" class="filter-select" [value]="filterCategory()" (change)="filterCategory.set($any($event.target).value)">
+      @for (cat of categories(); track cat) {
+        <option [value]="cat">{{ cat }}</option>
+      }
+    </select>
+
+    <select id="filter-status" class="filter-select" [value]="filterStatus()" (change)="filterStatus.set($any($event.target).value)">
+      <option value="All">All Statuses</option>
+      <option value="Active">Active</option>
+      <option value="Inactive">Hidden</option>
+    </select>
+  </div>
+
+  <!-- ── Table ── -->
+  <div class="table-card">
+    @if (filtered().length === 0) {
+      <div class="empty-state">
+        <mat-icon>inventory_2</mat-icon>
+        <p>No products found. <a routerLink="/admin/products/add">Add your first product →</a></p>
+      </div>
+    } @else {
+      <div class="table-wrapper">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Category</th>
+              <th>Price</th>
+              <th>Stock</th>
+              <th>Status</th>
+              <th>Visibility</th>
+              <th class="actions-col">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (p of filtered(); track p.id) {
+              <tr [class.row-inactive]="!p.isActive">
+                <!-- Product cell -->
+                <td>
+                  <div class="product-cell">
+                    <img
+                      [src]="p.images[0] || p.mainImage || 'assets/placeholder.png'"
+                      [alt]="p.name"
+                      class="product-thumb"
+                    />
+                    <div class="product-meta">
+                      <span class="product-name">{{ p.name }}</span>
+                      <span class="product-id">ID: {{ p.id }}</span>
+                    </div>
+                  </div>
+                </td>
+
+                <!-- Category -->
+                <td>
+                  <span class="chip">{{ p.category }}</span>
+                  @if (p.subCategory) {
+                    <span class="chip chip-ghost">{{ p.subCategory }}</span>
+                  }
+                </td>
+
+                <!-- Price -->
+                <td class="price-cell">
+                  <span class="price-main">PKR {{ p.price | number }}</span>
+                  @if (p.originalPrice && p.originalPrice > p.price) {
+                    <span class="price-orig">{{ p.originalPrice | number }}</span>
+                  }
+                </td>
+
+                <!-- Stock -->
+                <td>
+                  <span [class]="p.inStock ? 'stock-ok' : 'stock-out'">
+                    {{ p.inStock ? p.stockQuantity + ' left' : 'Out of Stock' }}
+                  </span>
+                </td>
+
+                <!-- In Stock badge -->
+                <td>
+                  <span class="status-badge" [class.in-stock]="p.inStock" [class.out]="!p.inStock">
+                    {{ p.inStock ? 'In Stock' : 'Out of Stock' }}
+                  </span>
+                </td>
+
+                <!-- Visibility toggle -->
+                <td>
+                  <button
+                    class="toggle-btn"
+                    [class.toggle-on]="p.isActive"
+                    [class.toggle-off]="!p.isActive"
+                    [disabled]="toggling() === p.id"
+                    (click)="toggleActive(p)"
+                    [title]="p.isActive ? 'Click to hide from website' : 'Click to publish to website'"
+                  >
+                    @if (toggling() === p.id) {
+                      <span class="spinner-sm"></span>
+                    } @else {
+                      <mat-icon>{{ p.isActive ? 'toggle_on' : 'toggle_off' }}</mat-icon>
+                    }
+                    {{ p.isActive ? 'Live' : 'Hidden' }}
+                  </button>
+                </td>
+
+                <!-- Actions -->
+                <td class="actions-col">
+                  <div class="action-btns">
+                    <a
+                      [routerLink]="['/admin/products', p.id, 'edit']"
+                      class="action-btn edit-btn"
+                      title="Edit product"
+                    >
+                      <mat-icon>edit</mat-icon>
+                    </a>
+                    <button
+                      class="action-btn delete-btn"
+                      [disabled]="deleting() === p.id"
+                      (click)="requestDelete(p.id)"
+                      title="Delete product"
+                    >
+                      @if (deleting() === p.id) {
+                        <span class="spinner-sm"></span>
+                      } @else {
+                        <mat-icon>delete_outline</mat-icon>
+                      }
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <div class="table-footer">
+        Showing <strong>{{ filtered().length }}</strong> of <strong>{{ allProducts().length }}</strong> products
+      </div>
+    }
+  </div>
+</div>
+
+<!-- ── Delete Confirmation Modal ── -->
+@if (confirmDeleteId()) {
+  <div class="modal-backdrop" (click)="cancelDelete()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <div class="modal-icon">
+        <mat-icon>warning_amber</mat-icon>
+      </div>
+      <h3>Delete Product?</h3>
+      <p>This will permanently delete the product and all its images. This action cannot be undone.</p>
+      <div class="modal-actions">
+        <button class="btn-ghost" (click)="cancelDelete()">Cancel</button>
+        @for (p of allProducts(); track p.id) {
+          @if (p.id === confirmDeleteId()) {
+            <button class="btn-danger" (click)="confirmDelete(p)">
+              <mat-icon>delete_forever</mat-icon> Delete Forever
+            </button>
+          }
+        }
+      </div>
+    </div>
+  </div>
+}

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -9,6 +9,7 @@ import { AdminAuthService } from '../../../services/admin-auth.service';
   selector: 'app-admin-login',
   imports: [CommonModule, ReactiveFormsModule, MatIconModule],
   templateUrl: './admin-login.html',
+
   styleUrl: './admin-login.css',
 })
 export class AdminLogin {
@@ -21,23 +22,24 @@ export class AdminLogin {
     password: ['', [Validators.required, Validators.minLength(6)]],
   });
 
-  isLoading = false;
-  errorMessage = '';
-  showPassword = false;
+  isLoading = signal(false);
+  errorMessage = signal('');
+  showPassword = signal(false);
 
   async onSubmit() {
     if (this.form.invalid) return;
-    this.isLoading = true;
-    this.errorMessage = '';
+    this.isLoading.set(true);
+    this.errorMessage.set('');
 
     try {
       const { email, password } = this.form.value;
       await this.authService.login(email!, password!);
+      // Navigation successful, no need to reset isLoading here
+      // as the component will be destroyed.
       this.router.navigate(['/admin/dashboard']);
     } catch (err: any) {
-      this.errorMessage = this.getFriendlyError(err.code);
-    } finally {
-      this.isLoading = false;
+      this.errorMessage.set(this.getFriendlyError(err.code));
+      this.isLoading.set(false);
     }
   }
 

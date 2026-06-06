@@ -3,18 +3,18 @@ import { FirebaseEnvironmentConfig } from '../app/core/firebase/firebase-env.mod
 export const environment: FirebaseEnvironmentConfig = {
   production: false,
   firebase: {
-    projectId: 'your-firebase-project-id-dev',
-    appId: 'your-firebase-app-id-dev',
-    storageBucket: 'your-firebase-project-id-dev.firebasestorage.app',
-    apiKey: 'your-firebase-api-key-dev',
-    authDomain: 'your-firebase-project-id-dev.firebaseapp.com',
-    messagingSenderId: 'your-messaging-sender-id-dev',
-    measurementId: 'your-firebase-measurement-id-dev',
+    apiKey: 'AIzaSyB5Z20SkHNKMjs0cQlx-zAR2sr3DSaEJFE',
+    authDomain: 'the-twisted-thread.firebaseapp.com',
+    projectId: 'the-twisted-thread',
+    storageBucket: 'the-twisted-thread.firebasestorage.app',
+    messagingSenderId: '355932310857',
+    appId: '1:355932310857:web:3345295f0e9c90b0735e98',
+    measurementId: 'G-1RXKSMFBYC',
   },
   firebaseFeatureFlags: {
     analytics: false,
     appCheck: false,
-    useEmulators: true,
+    useEmulators: false,  // set to true if you want to use local emulators
   },
   firebaseEmulators: {
     auth: 9099,
@@ -23,7 +23,8 @@ export const environment: FirebaseEnvironmentConfig = {
     storage: 9199,
   },
   firebaseAppCheck: {
-    siteKey: 'your-firebase-app-check-site-key-dev',
-    debugToken: 'your-firebase-app-check-debug-token',
+    siteKey: '',
+    debugToken: '',
   },
 };
+

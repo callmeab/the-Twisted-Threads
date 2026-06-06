@@ -1,1 +1,67 @@
-<p>admin-orders works!</p>
+<div class="orders-page">
+
+  <!-- Header -->
+  <div class="page-header">
+    <div>
+      <h1>Orders</h1>
+      <p>View and manage customer orders.</p>
+    </div>
+  </div>
+
+  <!-- Stats bar -->
+  <div class="stats-bar">
+    <div class="stat-pill">
+      <mat-icon>receipt_long</mat-icon><span>{{ summary.total }} Total</span>
+    </div>
+    <div class="stat-pill warn">
+      <mat-icon>hourglass_empty</mat-icon><span>{{ summary.pending }} Pending</span>
+    </div>
+    <div class="stat-pill active">
+      <mat-icon>local_shipping</mat-icon><span>{{ summary.shipped }} Shipped</span>
+    </div>
+    <div class="stat-pill success">
+      <mat-icon>check_circle</mat-icon><span>{{ summary.delivered }} Delivered</span>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="table-card">
+    <div class="table-wrapper">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Customer</th>
+            <th>Date</th>
+            <th>Items</th>
+            <th>Total</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (o of orders; track o.id) {
+            <tr>
+              <td class="order-id">{{ o.id }}</td>
+              <td>
+                <div class="customer-cell">
+                  <div class="avatar">{{ o.customer[0] }}</div>
+                  <div>
+                    <div class="customer-name">{{ o.customer }}</div>
+                    <div class="customer-email">{{ o.email }}</div>
+                  </div>
+                </div>
+              </td>
+              <td class="date-cell">{{ o.date | date:'MMM d, y' }}</td>
+              <td>{{ o.items }} item{{ o.items !== 1 ? 's' : '' }}</td>
+              <td class="price-cell">PKR {{ o.total | number }}</td>
+              <td>
+                <span class="status-badge" [class]="'status-' + o.status">{{ o.status }}</span>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>

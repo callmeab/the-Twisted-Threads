@@ -1,7 +1,7 @@
 {
   "projects": {
-    "default": "your-firebase-project-id",
-    "development": "your-firebase-project-id-dev",
-    "production": "your-firebase-project-id"
+    "default": "the-twisted-thread",
+    "development": "the-twisted-thread",
+    "production": "the-twisted-thread"
   }
 }
