@@ -157,43 +157,35 @@
         </div>
 
         <div class="flex items-center gap-4 ml-auto">
-          <div class="hidden sm:flex border border-neutral-200 rounded-lg p-0.5 bg-neutral-50/50">
+          <div class="hidden sm:flex view-toggle-container">
             <button
               type="button"
               (click)="isGridView.set(true)"
-              class="p-1.5 rounded-md cursor-pointer border-none"
-              [ngClass]="{
-                'bg-white shadow-soft text-rose-gold': isGridView(),
-                'text-neutral-400 bg-transparent': !isGridView()
-              }"
+              class="view-toggle-btn"
+              [class.active]="isGridView()"
             >
               <mat-icon>grid_view</mat-icon>
             </button>
             <button
               type="button"
               (click)="isGridView.set(false)"
-              class="p-1.5 rounded-md cursor-pointer border-none"
-              [ngClass]="{
-                'bg-white shadow-soft text-rose-gold': !isGridView(),
-                'text-neutral-400 bg-transparent': isGridView()
-              }"
+              class="view-toggle-btn"
+              [class.active]="!isGridView()"
             >
               <mat-icon>view_list</mat-icon>
             </button>
           </div>
 
-          <mat-form-field appearance="outline" class="sort-field max-w-[180px]">
-            <mat-select
-              [value]="selectedSort()"
-              (selectionChange)="selectedSort.set($event.value); currentPage.set(1)"
-            >
-              <mat-option value="featured">Featured</mat-option>
-              <mat-option value="price-low">Price: Low to High</mat-option>
-              <mat-option value="price-high">Price: High to Low</mat-option>
-              <mat-option value="rating">Top Rated</mat-option>
-              <mat-option value="newest">New Arrivals</mat-option>
-            </mat-select>
-          </mat-form-field>
+          <select 
+            [value]="selectedSort()" 
+            (change)="selectedSort.set($any($event.target).value); currentPage.set(1)"
+            class="sort-dropdown-custom w-56">
+            <option value="featured">Featured Collection</option>
+            <option value="price-low">Price: Low to High</option>
+            <option value="price-high">Price: High to Low</option>
+            <option value="rating">Top Customer Rated</option>
+            <option value="newest">New Arrivals</option>
+          </select>
         </div>
       </div>
 

@@ -9,6 +9,15 @@
 // 1. Banner Background Pattern
 .banner-premium {
   background-color: var(--color-charcoal) !important;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  h1 {
+    color: var(--color-cream) !important;
+  }
 }
 
 // 2. Sidebar Filters & Mobile Drawer Adaptations
@@ -35,6 +44,10 @@
 
   .dark-mode & {
     border-color: rgba(254, 254, 254, 0.2);
+  }
+
+  &:hover {
+    border-color: var(--color-rose-gold);
   }
 
   &:checked {
@@ -110,9 +123,11 @@
   &::-webkit-scrollbar {
     width: 4px;
   }
+
   &::-webkit-scrollbar-track {
     background: transparent;
   }
+
   &::-webkit-scrollbar-thumb {
     background: rgba(44, 44, 44, 0.1);
     border-radius: var(--radius-full);
@@ -135,9 +150,13 @@
 }
 
 .filters-panel-content label {
-  min-height: 44px;
   display: flex;
   align-items: center;
+  min-height: 28px;
+
+  @media (max-width: 1023px) {
+    min-height: 44px;
+  }
 }
 
 // 3. Grid & List Cards Styling
@@ -222,27 +241,85 @@
   }
 }
 
-// Material Form override details
-::ng-deep {
-  .sort-field.mat-mdc-form-field {
-    .mat-mdc-text-field-wrapper {
-      padding: 0 12px !important;
-      background-color: var(--color-pearl) !important;
-    }
-    
-    .mat-mdc-form-field-flex {
-      height: 38px !important;
-      align-items: center !important;
-    }
+// Custom Select Dropdown & View Toggle Styling
+.sort-dropdown-custom {
+  height: 38px;
+  padding: 0 16px;
+  font-family: var(--font-body);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-charcoal);
+  background-color: var(--color-pearl);
+  border: 1px solid rgba(44, 44, 44, 0.15);
+  border-radius: var(--radius-md);
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232c2c2c' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+  padding-right: 36px;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 
-    .mat-mdc-form-field-infix {
-      padding-top: 6px !important;
-      padding-bottom: 6px !important;
-    }
+  .dark-mode & {
+    color: var(--color-cream);
+    background-color: var(--color-pearl);
+    border-color: rgba(254, 254, 254, 0.15);
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f5f1e8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  }
 
-    .mat-mdc-form-field-subscript-wrapper {
-      display: none !important;
-    }
+  &:hover {
+    border-color: var(--color-rose-gold);
+  }
+
+  &:focus {
+    border-color: var(--color-rose-gold);
+    box-shadow: 0 0 0 3px rgba(183, 110, 121, 0.15);
+  }
+}
+
+.view-toggle-container {
+  display: flex;
+  border: 1px solid rgba(44, 44, 44, 0.12);
+  border-radius: var(--radius-md);
+  padding: 2px;
+  background-color: rgba(44, 44, 44, 0.03);
+  height: 38px;
+  align-items: center;
+
+  .dark-mode & {
+    border-color: rgba(254, 254, 254, 0.12);
+    background-color: rgba(254, 254, 254, 0.03);
+  }
+}
+
+.view-toggle-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background-color: transparent;
+  color: var(--color-charcoal-soft);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+
+  .dark-mode & {
+    color: var(--color-cream);
+  }
+
+  &:hover {
+    color: var(--color-rose-gold);
+  }
+
+  &.active {
+    background-color: var(--color-pearl) !important;
+    color: var(--color-rose-gold) !important;
+    box-shadow: var(--shadow-soft) !important;
   }
 }
 

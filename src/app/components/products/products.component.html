@@ -1,6 +1,8 @@
 <!-- Page Banner & Breadcrumb -->
-<div class="banner-premium relative bg-charcoal text-cream py-16 px-6 sm:px-12 text-center overflow-hidden border-b border-gold/15">
-  <div class="absolute inset-0 bg-cover bg-center opacity-10" style="background-image: url('https://images.unsplash.com/photo-1509281373149-e957c6296406?q=80&w=1200');"></div>
+<div
+  class="banner-premium relative bg-charcoal text-cream py-16 px-6 sm:px-12 text-center overflow-hidden border-b border-gold/15">
+  <div class="absolute inset-0 bg-cover bg-center opacity-10"
+    style="background-image: url('https://images.unsplash.com/photo-1509281373149-e957c6296406?q=80&w=1200');"></div>
   <div class="relative z-10 max-w-4xl mx-auto space-y-2">
     <!-- Breadcrumb -->
     <nav class="font-body text-[9px] uppercase tracking-widest text-gold/80 flex items-center justify-center gap-2">
@@ -17,111 +19,98 @@
 
 <div class="container-premium py-12">
   <ng-template #filtersTpl>
-      <div class="space-y-6 filters-panel-content">
-        
-        <!-- Category Filter -->
-        <div class="filter-section space-y-3">
-          <h4 class="font-heading text-sm font-bold text-charcoal tracking-wide border-b border-neutral-100 pb-2">Category</h4>
-          <div class="flex flex-col gap-2 font-body text-xs text-neutral-600">
-            @for (cat of availableCategories; track cat) {
-              <label class="flex items-center gap-3 cursor-pointer select-none">
-                <input 
-                  type="checkbox" 
-                  [checked]="selectedCategories().has(cat)" 
-                  (change)="toggleCategory(cat)"
-                  class="filter-checkbox">
-                <span>{{ cat }}</span>
-              </label>
-            }
-          </div>
-        </div>
+    <div class="space-y-6 filters-panel-content mt-3">
 
-        <!-- Price Range Filter -->
-        <div class="filter-section space-y-3">
-          <h4 class="font-heading text-sm font-bold text-charcoal tracking-wide border-b border-neutral-100 pb-2">Price Limit</h4>
-          <div class="space-y-2">
-            <input 
-              type="range" 
-              min="0" 
-              max="1000" 
-              step="20"
-              [value]="maxPrice()" 
-              (input)="onPriceChange($event)"
-              class="w-full price-slider">
-            <div class="flex justify-between font-body text-[10px] text-neutral-500 font-semibold uppercase">
-              <span>Up to</span>
-              <span class="text-rose-gold text-xs font-bold">{{ maxPrice() | customCurrency }}</span>
-            </div>
-          </div>
+      <!-- Category Filter -->
+      <div class="filter-section space-y-3">
+        <h4 class="font-heading text-sm font-bold text-charcoal tracking-wide border-b border-neutral-100 pb-2">Category
+        </h4>
+        <div class="flex flex-col gap-2 font-body text-xs text-neutral-600">
+          @for (cat of availableCategories; track cat) {
+          <label class="flex items-center gap-3 cursor-pointer select-none">
+            <input type="checkbox" [checked]="selectedCategories().has(cat)" (change)="toggleCategory(cat)"
+              class="filter-checkbox">
+            <span>{{ cat }}</span>
+          </label>
+          }
         </div>
-
-        <!-- Materials Filter -->
-        <div class="filter-section space-y-3">
-          <h4 class="font-heading text-sm font-bold text-charcoal tracking-wide border-b border-neutral-100 pb-2">Materials</h4>
-          <div class="flex flex-col gap-2 font-body text-xs text-neutral-600 max-h-[160px] overflow-y-auto pr-2 custom-scrollbar">
-            @for (mat of availableMaterials; track mat) {
-              <label class="flex items-center gap-3 cursor-pointer select-none">
-                <input 
-                  type="checkbox" 
-                  [checked]="selectedMaterials().has(mat)" 
-                  (change)="toggleMaterial(mat)"
-                  class="filter-checkbox">
-                <span>{{ mat }}</span>
-              </label>
-            }
-          </div>
-        </div>
-
-        <!-- Colors Filter -->
-        <div class="filter-section space-y-3">
-          <h4 class="font-heading text-sm font-bold text-charcoal tracking-wide border-b border-neutral-100 pb-2">Colors</h4>
-          <div class="flex flex-col gap-2 font-body text-xs text-neutral-600 max-h-[160px] overflow-y-auto pr-2 custom-scrollbar">
-            @for (col of availableColors; track col) {
-              <label class="flex items-center gap-3 cursor-pointer select-none">
-                <input 
-                  type="checkbox" 
-                  [checked]="selectedColors().has(col)" 
-                  (change)="toggleColor(col)"
-                  class="filter-checkbox">
-                <span>{{ col }}</span>
-              </label>
-            }
-          </div>
-        </div>
-
-        <!-- Sizes Filter -->
-        <div class="filter-section space-y-3">
-          <h4 class="font-heading text-sm font-bold text-charcoal tracking-wide border-b border-neutral-100 pb-2">Sizes</h4>
-          <div class="flex flex-wrap gap-2 pt-1">
-            @for (sz of availableSizes; track sz) {
-              <button 
-                (click)="toggleSize(sz)"
-                class="size-pill font-body text-[10px] px-3 py-1.5 rounded-md border font-semibold transition-all duration-200"
-                [ngClass]="{ 'active': selectedSizes().has(sz) }">
-                {{ sz }}
-              </button>
-            }
-          </div>
-        </div>
-
-        <!-- In Stock Slide Toggle -->
-        <div class="filter-section pt-2">
-          <mat-slide-toggle 
-            [checked]="inStockOnly()"
-            (change)="toggleStockOnly($event.checked)"
-            color="primary"
-            class="font-body text-xs text-neutral-600 font-semibold uppercase tracking-wider">
-            In Stock Only
-          </mat-slide-toggle>
-        </div>
-
-        <!-- Clear all filters button -->
-        <button 
-          (click)="clearAllFilters()"
-          class="w-full py-2.5 bg-neutral-100 text-neutral-600 hover:bg-rose-gold hover:text-pearl transition-all duration-300 font-body text-xs font-semibold uppercase tracking-widest rounded-lg border-none cursor-pointer">
-          Clear All Filters
-        </button>
       </div>
+
+      <!-- Price Range Filter -->
+      <div class="filter-section space-y-3">
+        <h4 class="font-heading text-sm font-bold text-charcoal tracking-wide border-b border-neutral-100 pb-2">Price
+          Limit</h4>
+        <div class="space-y-2">
+          <input type="range" min="0" max="1000" step="20" [value]="maxPrice()" (input)="onPriceChange($event)"
+            class="w-full price-slider">
+          <div class="flex justify-between font-body text-[10px] text-neutral-500 font-semibold uppercase">
+            <span>Up to</span>
+            <span class="text-rose-gold text-xs font-bold">{{ maxPrice() | customCurrency }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Materials Filter -->
+      <div class="filter-section space-y-3">
+        <h4 class="font-heading text-sm font-bold text-charcoal tracking-wide border-b border-neutral-100 pb-2">
+          Materials</h4>
+        <div
+          class="flex flex-col gap-2 font-body text-xs text-neutral-600 max-h-[160px] overflow-y-auto pr-2 custom-scrollbar">
+          @for (mat of availableMaterials; track mat) {
+          <label class="flex items-center gap-3 cursor-pointer select-none">
+            <input type="checkbox" [checked]="selectedMaterials().has(mat)" (change)="toggleMaterial(mat)"
+              class="filter-checkbox">
+            <span>{{ mat }}</span>
+          </label>
+          }
+        </div>
+      </div>
+
+      <!-- Colors Filter -->
+      <div class="filter-section space-y-3">
+        <h4 class="font-heading text-sm font-bold text-charcoal tracking-wide border-b border-neutral-100 pb-2">Colors
+        </h4>
+        <div
+          class="flex flex-col gap-2 font-body text-xs text-neutral-600 max-h-[160px] overflow-y-auto pr-2 custom-scrollbar">
+          @for (col of availableColors; track col) {
+          <label class="flex items-center gap-3 cursor-pointer select-none">
+            <input type="checkbox" [checked]="selectedColors().has(col)" (change)="toggleColor(col)"
+              class="filter-checkbox">
+            <span>{{ col }}</span>
+          </label>
+          }
+        </div>
+      </div>
+
+      <!-- Sizes Filter -->
+      <div class="filter-section space-y-3">
+        <h4 class="font-heading text-sm font-bold text-charcoal tracking-wide border-b border-neutral-100 pb-2">Sizes
+        </h4>
+        <div class="flex flex-wrap gap-2 pt-1">
+          @for (sz of availableSizes; track sz) {
+          <button (click)="toggleSize(sz)"
+            class="size-pill font-body text-[10px] px-3 py-1.5 rounded-md border font-semibold transition-all duration-200"
+            [ngClass]="{ 'active': selectedSizes().has(sz) }">
+            {{ sz }}
+          </button>
+          }
+        </div>
+      </div>
+
+      <!-- In Stock Slide Toggle -->
+      <div class="filter-section pt-2">
+        <mat-slide-toggle [checked]="inStockOnly()" (change)="toggleStockOnly($event.checked)" color="primary"
+          class="font-body text-xs text-neutral-600 font-semibold uppercase tracking-wider">
+          In Stock Only
+        </mat-slide-toggle>
+      </div>
+
+      <!-- Clear all filters button -->
+      <button (click)="clearAllFilters()"
+        class="w-full py-2.5 bg-neutral-100 text-neutral-600 hover:bg-rose-gold hover:text-pearl transition-all duration-300 font-body text-xs font-semibold uppercase tracking-widest rounded-lg border-none cursor-pointer">
+        Clear All Filters
+      </button>
+    </div>
   </ng-template>
 
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
@@ -129,265 +118,233 @@
       <ng-container *ngTemplateOutlet="filtersTpl" />
     </aside>
 
-    <app-bottom-sheet
-      [isOpen]="filterSheetOpen()"
-      title="Filters"
-      (closed)="closeFilterSheet()"
-    >
-      <ng-container *ngTemplateOutlet="filtersTpl" />
-      <button
-        type="button"
-        class="filter-apply-btn"
-        (click)="closeFilterSheet()"
-      >
-        Show {{ filteredProducts().length }} results
-      </button>
-    </app-bottom-sheet>
-
     <!-- MAIN PRODUCTS GRID / LIST VIEW -->
     <main class="lg:col-span-9 space-y-8">
-      
+
       <!-- Toolbar controls -->
-      <div class="toolbar-box flex items-center justify-between border-b border-neutral-100 pb-4 gap-4">
-        
+      <div class="toolbar-box flex items-center justify-between border-b border-neutral-100 pb-4 gap-4 mt-3">
+
         <!-- Mobile filter toggle button -->
-        <button
-          type="button"
-          (click)="openFilterSheet()"
-          class="lg:hidden filter-sheet-trigger flex items-center gap-2 px-4 py-3 min-h-[44px] border border-neutral-200 rounded-lg bg-white font-body text-xs font-semibold text-charcoal"
-        >
+        <button type="button" (click)="openFilterSheet()"
+          class="lg:hidden filter-sheet-trigger flex items-center gap-2 px-4 py-3 min-h-[44px] border border-neutral-200 rounded-lg bg-white font-body text-xs font-semibold text-charcoal">
           <mat-icon>tune</mat-icon> Filters
         </button>
 
         <div class="font-body text-xs text-neutral-400 font-light hidden sm:block">
-          Showing <span class="text-charcoal font-bold">{{ visibleProducts().length }}</span> of <span class="text-charcoal font-bold">{{ filteredProducts().length }}</span> luxury products
+          Showing <span class="text-charcoal font-bold">{{ visibleProducts().length }}</span> of <span
+            class="text-charcoal font-bold">{{ filteredProducts().length }}</span> luxury products
         </div>
 
         <!-- Right: Sort & Grid/List View Toggles -->
         <div class="flex items-center gap-4 ml-auto sm:ml-0">
-          
+
           <!-- View Toggle buttons -->
-          <div class="hidden sm:flex border border-neutral-200 rounded-lg p-0.5 bg-neutral-50/50">
-            <button 
-              (click)="isGridView.set(true)" 
-              class="p-1.5 rounded-md cursor-pointer border-none"
-              [ngClass]="{ 'bg-white shadow-soft text-rose-gold': isGridView(), 'text-neutral-400 bg-transparent': !isGridView() }">
+          <div class="hidden sm:flex view-toggle-container">
+            <button (click)="isGridView.set(true)" class="view-toggle-btn" [class.active]="isGridView()">
               <mat-icon>grid_view</mat-icon>
             </button>
-            <button 
-              (click)="isGridView.set(false)" 
-              class="p-1.5 rounded-md cursor-pointer border-none"
-              [ngClass]="{ 'bg-white shadow-soft text-rose-gold': !isGridView(), 'text-neutral-400 bg-transparent': isGridView() }">
+            <button (click)="isGridView.set(false)" class="view-toggle-btn" [class.active]="!isGridView()">
               <mat-icon>view_list</mat-icon>
             </button>
           </div>
 
           <!-- Sort dropdown selector -->
-          <mat-form-field appearance="outline" class="sort-field max-w-[180px]">
-            <mat-select [value]="selectedSort()" (selectionChange)="selectedSort.set($event.value); currentPage.set(1)">
-              <mat-option value="featured">Featured Collection</mat-option>
-              <mat-option value="price-low">Price: Low to High</mat-option>
-              <mat-option value="price-high">Price: High to Low</mat-option>
-              <mat-option value="rating">Top Customer Rated</mat-option>
-              <mat-option value="newest">New Arrivals</mat-option>
-            </mat-select>
-          </mat-form-field>
+          <select [value]="selectedSort()" (change)="selectedSort.set($any($event.target).value); currentPage.set(1)"
+            class="sort-dropdown-custom w-56">
+            <option value="featured">Featured Collection</option>
+            <option value="price-low">Price: Low to High</option>
+            <option value="price-high">Price: High to Low</option>
+            <option value="rating">Top Customer Rated</option>
+            <option value="newest">New Arrivals</option>
+          </select>
         </div>
       </div>
 
       <!-- Skeletons Loader overlay -->
       @if (isLoading()) {
-        <app-product-card-skeleton [count]="6" [layout]="isGridView() ? 'grid' : 'list'" />
+      <app-product-card-skeleton [count]="6" [layout]="isGridView() ? 'grid' : 'list'" />
       }
 
       <!-- Grid / List Content loaded -->
       @else {
-        @if (visibleProducts().length > 0) {
-          
-          <!-- GRID VIEW -->
-          @if (isGridView()) {
-            <div 
-              class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
-              [@listStaggerAnimation]="visibleProducts().length">
-              
-              @for (product of visibleProducts(); track product.id) {
-                <mat-card class="product-card card-premium overflow-hidden flex flex-col h-full group border-none">
-                  <!-- Image area -->
-                  <div class="relative w-full h-80 overflow-hidden bg-neutral-50 border-b border-neutral-100/50">
-                    <img 
-                      [src]="product.images[0]" 
-                      [alt]="product.name" 
-                      loading="lazy" 
-                      class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105" />
-                    
-                    <div class="absolute inset-0 bg-neutral-950/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                      <button
-                        type="button"
-                        (click)="openQuickView(product, $event)"
-                        class="quick-view-btn shadow-medium flex items-center justify-center bg-pearl text-charcoal hover:bg-gold hover:text-purple transition-all duration-300"
-                        title="Quick view"
-                        aria-label="Quick view {{ product.name }}"
-                      >
-                        <mat-icon>visibility</mat-icon>
-                      </button>
-                    </div>
+      @if (visibleProducts().length > 0) {
 
-                    <!-- Badges -->
-                    @if (product.isNew) {
-                      <span class="absolute top-4 left-4 badge-custom font-body new">New</span>
-                    } @else if (product.discount > 0) {
-                      <span class="absolute top-4 left-4 badge-custom font-body sale">Sale</span>
-                    }
+      <!-- GRID VIEW -->
+      @if (isGridView()) {
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
+        [@listStaggerAnimation]="visibleProducts().length">
 
-                    <app-wishlist-heart-button
-                      [product]="product"
-                      buttonClass="absolute top-4 right-4 shadow-soft"
-                    />
+        @for (product of visibleProducts(); track product.id) {
+        <mat-card class="product-card card-premium overflow-hidden flex flex-col h-full group border-none">
+          <!-- Image area -->
+          <div class="relative w-full h-80 overflow-hidden bg-neutral-50 border-b border-neutral-100/50">
+            <img [src]="product.images[0]" [alt]="product.name" loading="lazy"
+              class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105" />
 
-                    <!-- Add to Cart (Appears on Hover) -->
-                    <button 
-                      (click)="addToCart(product, $event)" 
-                      class="absolute bottom-4 left-4 right-4 add-to-cart-slide py-3 bg-charcoal text-pearl text-xs uppercase tracking-widest font-semibold flex items-center justify-center gap-2 rounded-lg cursor-pointer border-none shadow-medium hover:bg-rose-gold hover:shadow-rose transition-all duration-300">
-                      <mat-icon class="text-sm">add_shopping_cart</mat-icon> Add to Cart
-                    </button>
-                  </div>
-
-                  <!-- Details -->
-                  <mat-card-content class="p-6 flex flex-col justify-between flex-grow space-y-4">
-                    <div>
-                      <span class="text-[10px] tracking-wider text-rose-gold font-body uppercase font-bold">{{ product.category }}</span>
-                      <h3 class="font-heading text-base font-bold text-charcoal mt-1 group-hover:text-rose-gold transition-colors duration-200">
-                        <a [routerLink]="['/products', product.id]" class="text-inherit hover:text-inherit">{{ product.name }}</a>
-                      </h3>
-                    </div>
-                    <div class="flex items-center justify-between pt-2 border-t border-neutral-100/50">
-                      <span class="font-body text-base font-bold text-charcoal">{{ product.price | customCurrency }}</span>
-                      <div class="flex items-center gap-1 text-[10px] text-gold font-semibold">
-                        <mat-icon class="text-xs w-4 h-4 font-semibold text-gold">star</mat-icon>
-                        <span>{{ product.rating }}</span>
-                      </div>
-                    </div>
-                  </mat-card-content>
-                </mat-card>
-              }
-            </div>
-          }
-
-          <!-- LIST VIEW -->
-          @else {
-            <div 
-              class="flex flex-col gap-6"
-              [@listStaggerAnimation]="visibleProducts().length">
-              
-              @for (product of visibleProducts(); track product.id) {
-                <mat-card class="list-card card-premium overflow-hidden flex flex-col sm:flex-row group border-none p-4 gap-6">
-                  <!-- Left Image -->
-                  <div class="relative w-full sm:w-64 h-64 flex-shrink-0 overflow-hidden bg-neutral-50 rounded-xl border border-neutral-100/50">
-                    <img 
-                      [src]="product.images[0]" 
-                      [alt]="product.name" 
-                      loading="lazy" 
-                      class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105" />
-                    
-                    @if (product.isNew) {
-                      <span class="absolute top-3 left-3 badge-custom font-body new">New</span>
-                    } @else if (product.discount > 0) {
-                      <span class="absolute top-3 left-3 badge-custom font-body sale">Sale</span>
-                    }
-
-                    <app-wishlist-heart-button
-                      [product]="product"
-                      buttonClass="absolute top-3 right-3 shadow-soft"
-                    />
-                  </div>
-
-                  <!-- Right Details -->
-                  <div class="flex flex-col justify-between flex-grow py-2">
-                    <div class="space-y-2">
-                      <div class="flex items-center justify-between">
-                        <span class="text-[10px] tracking-wider text-rose-gold font-body uppercase font-bold">{{ product.category }}</span>
-                        <div class="flex items-center gap-1 text-xs text-gold font-semibold">
-                          <mat-icon class="text-sm text-gold">star</mat-icon>
-                          <span>{{ product.rating }}</span>
-                        </div>
-                      </div>
-                      
-                      <h3 class="font-heading text-lg font-bold text-charcoal group-hover:text-rose-gold transition-colors duration-200">
-                        <a [routerLink]="['/products', product.id]" class="text-inherit hover:text-inherit">{{ product.name }}</a>
-                      </h3>
-                      
-                      <p class="font-serif text-xs text-neutral-500 font-light leading-relaxed line-clamp-3">
-                        {{ product.description }}
-                      </p>
-
-                      <div class="flex flex-wrap gap-2 pt-1 text-[9px] font-body text-neutral-400">
-                        @for (material of product.materials; track material) {
-                          <span class="px-2.5 py-0.5 bg-neutral-100 rounded">{{ material }}</span>
-                        }
-                      </div>
-                    </div>
-
-                    <!-- Price & Actions -->
-                    <div class="flex items-center justify-between mt-6 pt-4 border-t border-neutral-100/50">
-                      <div class="flex items-baseline gap-2">
-                        <span class="font-body text-xl font-bold text-charcoal">{{ product.price | customCurrency }}</span>
-                        @if (product.originalPrice > product.price) {
-                          <span class="font-body text-xs text-neutral-400 line-through">{{ product.originalPrice | customCurrency }}</span>
-                        }
-                      </div>
-
-                      <div class="flex gap-2">
-                        <button
-                          type="button"
-                          (click)="openQuickView(product, $event)"
-                          class="px-4 py-2 border border-neutral-200 text-charcoal hover:bg-neutral-50 transition-colors font-body text-xs font-semibold uppercase tracking-widest rounded-lg flex items-center justify-center cursor-pointer bg-transparent"
-                          title="Quick view"
-                        >
-                          <mat-icon class="text-sm">visibility</mat-icon>
-                        </button>
-                        <a [routerLink]="['/products', product.id]" class="px-4 py-2 border border-neutral-200 text-charcoal hover:bg-neutral-50 transition-colors font-body text-xs font-semibold uppercase tracking-widest rounded-lg flex items-center justify-center">
-                          Details
-                        </a>
-                        <button 
-                          (click)="addToCart(product, $event)" 
-                          class="px-5 py-2 bg-charcoal text-pearl hover:bg-rose-gold hover:shadow-rose transition-all duration-300 font-body text-xs font-semibold uppercase tracking-widest rounded-lg flex items-center gap-2 border-none cursor-pointer">
-                          <mat-icon class="text-sm">add_shopping_cart</mat-icon> Add
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </mat-card>
-              }
-            </div>
-          }
-
-          <!-- Pagination Load More trigger -->
-          @if (hasMoreProducts()) {
-            <div class="flex justify-center pt-8">
-              <button 
-                (click)="loadMore()"
-                class="px-10 py-3.5 bg-pearl text-charcoal hover:bg-gold hover:text-purple border border-neutral-200 hover:border-gold transition-all duration-300 font-body text-xs font-bold uppercase tracking-widest rounded-lg shadow-soft cursor-pointer">
-                Load More Luxury Items
+            <div
+              class="absolute inset-0 bg-neutral-950/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+              <button type="button" (click)="openQuickView(product, $event)"
+                class="quick-view-btn shadow-medium flex items-center justify-center bg-pearl text-charcoal hover:bg-gold hover:text-purple transition-all duration-300"
+                title="Quick view" aria-label="Quick view {{ product.name }}">
+                <mat-icon>visibility</mat-icon>
               </button>
             </div>
-          }
 
-        } @else {
-          <!-- Empty State -->
-          <div class="empty-state-box text-center py-20 px-6 space-y-6 max-w-md mx-auto">
-            <mat-icon class="empty-icon text-neutral-300">hourglass_empty</mat-icon>
-            <h3 class="font-heading text-2xl font-bold text-charcoal">No Masterpieces Found</h3>
-            <p class="font-body text-xs text-neutral-500 leading-relaxed font-light">
-              We couldn't locate any handcrafted items matching your current filters. Clear your selections to discover all premium creations.
-            </p>
-            <button 
-              (click)="clearAllFilters()"
-              class="px-8 py-3 bg-charcoal text-pearl hover:bg-rose-gold hover:shadow-rose transition-all duration-300 font-body text-xs font-semibold uppercase tracking-widest rounded-lg border-none cursor-pointer">
-              Clear All Filters
+            <!-- Badges -->
+            @if (product.isNew) {
+            <span class="absolute top-4 left-4 badge-custom font-body new">New</span>
+            } @else if (product.discount > 0) {
+            <span class="absolute top-4 left-4 badge-custom font-body sale">Sale</span>
+            }
+
+            <app-wishlist-heart-button [product]="product" buttonClass="absolute top-4 right-4 shadow-soft" />
+
+            <!-- Add to Cart (Appears on Hover) -->
+            <button (click)="addToCart(product, $event)"
+              class="absolute bottom-4 left-4 right-4 add-to-cart-slide py-3 bg-charcoal text-pearl text-xs uppercase tracking-widest font-semibold flex items-center justify-center gap-2 rounded-lg cursor-pointer border-none shadow-medium hover:bg-rose-gold hover:shadow-rose transition-all duration-300">
+              <mat-icon class="text-sm">add_shopping_cart</mat-icon> Add to Cart
             </button>
           </div>
+
+          <!-- Details -->
+          <mat-card-content class="p-6 flex flex-col justify-between flex-grow space-y-4">
+            <div>
+              <span class="text-[10px] tracking-wider text-rose-gold font-body uppercase font-bold">{{ product.category
+                }}</span>
+              <h3
+                class="font-heading text-base font-bold text-charcoal mt-1 group-hover:text-rose-gold transition-colors duration-200">
+                <a [routerLink]="['/products', product.id]" class="text-inherit hover:text-inherit">{{ product.name
+                  }}</a>
+              </h3>
+            </div>
+            <div class="flex items-center justify-between pt-2 border-t border-neutral-100/50">
+              <span class="font-body text-base font-bold text-charcoal">{{ product.price | customCurrency }}</span>
+              <div class="flex items-center gap-1 text-[10px] text-gold font-semibold">
+                <mat-icon class="text-xs w-4 h-4 font-semibold text-gold">star</mat-icon>
+                <span>{{ product.rating }}</span>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
         }
+      </div>
+      }
+
+      <!-- LIST VIEW -->
+      @else {
+      <div class="flex flex-col gap-6" [@listStaggerAnimation]="visibleProducts().length">
+
+        @for (product of visibleProducts(); track product.id) {
+        <mat-card class="list-card card-premium overflow-hidden flex flex-col sm:flex-row group border-none p-4 gap-6">
+          <!-- Left Image -->
+          <div
+            class="relative w-full sm:w-64 h-64 flex-shrink-0 overflow-hidden bg-neutral-50 rounded-xl border border-neutral-100/50">
+            <img [src]="product.images[0]" [alt]="product.name" loading="lazy"
+              class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105" />
+
+            @if (product.isNew) {
+            <span class="absolute top-3 left-3 badge-custom font-body new">New</span>
+            } @else if (product.discount > 0) {
+            <span class="absolute top-3 left-3 badge-custom font-body sale">Sale</span>
+            }
+
+            <app-wishlist-heart-button [product]="product" buttonClass="absolute top-3 right-3 shadow-soft" />
+          </div>
+
+          <!-- Right Details -->
+          <div class="flex flex-col justify-between flex-grow py-2">
+            <div class="space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-[10px] tracking-wider text-rose-gold font-body uppercase font-bold">{{
+                  product.category }}</span>
+                <div class="flex items-center gap-1 text-xs text-gold font-semibold">
+                  <mat-icon class="text-sm text-gold">star</mat-icon>
+                  <span>{{ product.rating }}</span>
+                </div>
+              </div>
+
+              <h3
+                class="font-heading text-lg font-bold text-charcoal group-hover:text-rose-gold transition-colors duration-200">
+                <a [routerLink]="['/products', product.id]" class="text-inherit hover:text-inherit">{{ product.name
+                  }}</a>
+              </h3>
+
+              <p class="font-serif text-xs text-neutral-500 font-light leading-relaxed line-clamp-3">
+                {{ product.description }}
+              </p>
+
+              <div class="flex flex-wrap gap-2 pt-1 text-[9px] font-body text-neutral-400">
+                @for (material of product.materials; track material) {
+                <span class="px-2.5 py-0.5 bg-neutral-100 rounded">{{ material }}</span>
+                }
+              </div>
+            </div>
+
+            <!-- Price & Actions -->
+            <div class="flex items-center justify-between mt-6 pt-4 border-t border-neutral-100/50">
+              <div class="flex items-baseline gap-2">
+                <span class="font-body text-xl font-bold text-charcoal">{{ product.price | customCurrency }}</span>
+                @if (product.originalPrice > product.price) {
+                <span class="font-body text-xs text-neutral-400 line-through">{{ product.originalPrice | customCurrency
+                  }}</span>
+                }
+              </div>
+
+              <div class="flex gap-2">
+                <button type="button" (click)="openQuickView(product, $event)"
+                  class="px-4 py-2 border border-neutral-200 text-charcoal hover:bg-neutral-50 transition-colors font-body text-xs font-semibold uppercase tracking-widest rounded-lg flex items-center justify-center cursor-pointer bg-transparent"
+                  title="Quick view">
+                  <mat-icon class="text-sm">visibility</mat-icon>
+                </button>
+                <a [routerLink]="['/products', product.id]"
+                  class="px-4 py-2 border border-neutral-200 text-charcoal hover:bg-neutral-50 transition-colors font-body text-xs font-semibold uppercase tracking-widest rounded-lg flex items-center justify-center">
+                  Details
+                </a>
+                <button (click)="addToCart(product, $event)"
+                  class="px-5 py-2 bg-charcoal text-pearl hover:bg-rose-gold hover:shadow-rose transition-all duration-300 font-body text-xs font-semibold uppercase tracking-widest rounded-lg flex items-center gap-2 border-none cursor-pointer">
+                  <mat-icon class="text-sm">add_shopping_cart</mat-icon> Add
+                </button>
+              </div>
+            </div>
+          </div>
+        </mat-card>
+        }
+      </div>
+      }
+
+      <!-- Pagination Load More trigger -->
+      @if (hasMoreProducts()) {
+      <div class="flex justify-center pt-8">
+        <button (click)="loadMore()"
+          class="px-10 py-3.5 bg-pearl text-charcoal hover:bg-gold hover:text-purple border border-neutral-200 hover:border-gold transition-all duration-300 font-body text-xs font-bold uppercase tracking-widest rounded-lg shadow-soft cursor-pointer">
+          Load More Luxury Items
+        </button>
+      </div>
+      }
+
+      } @else {
+      <!-- Empty State -->
+      <div class="empty-state-box text-center py-20 px-6 space-y-6 max-w-md mx-auto">
+        <mat-icon class="empty-icon text-neutral-300">hourglass_empty</mat-icon>
+        <h3 class="font-heading text-2xl font-bold text-charcoal">No Masterpieces Found</h3>
+        <p class="font-body text-xs text-neutral-500 leading-relaxed font-light">
+          We couldn't locate any handcrafted items matching your current filters. Clear your selections to discover all
+          premium creations.
+        </p>
+        <button (click)="clearAllFilters()"
+          class="px-8 py-3 bg-charcoal text-pearl hover:bg-rose-gold hover:shadow-rose transition-all duration-300 font-body text-xs font-semibold uppercase tracking-widest rounded-lg border-none cursor-pointer">
+          Clear All Filters
+        </button>
+      </div>
+      }
       }
     </main>
   </div>
+
+  <app-bottom-sheet [isOpen]="filterSheetOpen()" title="Filters" (closed)="closeFilterSheet()">
+    <ng-container *ngTemplateOutlet="filtersTpl" />
+    <button type="button" class="filter-apply-btn" (click)="closeFilterSheet()">
+      Show {{ filteredProducts().length }} results
+    </button>
+  </app-bottom-sheet>
 </div>
