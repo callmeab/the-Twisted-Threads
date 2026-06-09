@@ -34,104 +34,96 @@
   <div class="filters-card">
     <div class="search-box">
       <mat-icon>search</mat-icon>
-      <input
-        type="search"
-        placeholder="Search by order #, customer, or email…"
-        [ngModel]="searchQuery()"
-        (ngModelChange)="searchQuery.set($event)"
-      />
+      <input type="search" placeholder="Search by order #, customer, or email…" [ngModel]="searchQuery()"
+        (ngModelChange)="searchQuery.set($event)" />
     </div>
     <select [ngModel]="filterStatus()" (ngModelChange)="filterStatus.set($event)">
       <option value="">All statuses</option>
       @for (s of statuses; track s) {
-        <option [value]="s">{{ s }}</option>
+      <option [value]="s">{{ s }}</option>
       }
     </select>
     <select [ngModel]="filterPayment()" (ngModelChange)="filterPayment.set($event)">
       <option value="">All payments</option>
       @for (p of payments; track p) {
-        <option [value]="p">{{ paymentLabel(p) }}</option>
+      <option [value]="p">{{ paymentLabel(p) }}</option>
       }
     </select>
   </div>
 
   @if (isLoading()) {
-    <div class="state-card loading">
-      <mat-icon>hourglass_top</mat-icon>
-      <p>Loading orders…</p>
-    </div>
+  <div class="state-card loading">
+    <mat-icon>hourglass_top</mat-icon>
+    <p>Loading orders…</p>
+  </div>
   } @else if (error()) {
-    <div class="state-card error">
-      <mat-icon>error_outline</mat-icon>
-      <p>{{ error() }}</p>
-    </div>
+  <div class="state-card error">
+    <mat-icon>error_outline</mat-icon>
+    <p>{{ error() }}</p>
+  </div>
   } @else if (!filteredOrders().length) {
-    <div class="state-card empty">
-      <mat-icon>inbox</mat-icon>
-      <h3>No orders yet</h3>
-      <p>When customers place orders, they will appear here automatically.</p>
-    </div>
+  <div class="state-card empty">
+    <mat-icon>inbox</mat-icon>
+    <h3>No orders yet</h3>
+    <p>When customers place orders, they will appear here automatically.</p>
+  </div>
   } @else {
-    <div class="table-card">
-      <div class="table-wrapper">
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th>Order</th>
-              <th>Customer</th>
-              <th>Date</th>
-              <th>Items</th>
-              <th>Total</th>
-              <th>Payment</th>
-              <th>Status</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (o of filteredOrders(); track o.orderId) {
-              <tr>
-                <td class="order-id">
-                  <a [routerLink]="['/admin/orders', o.orderId]" class="order-link">{{ o.orderNumber }}</a>
-                </td>
-                <td>
-                  <div class="customer-cell">
-                    <div class="avatar">{{ o.customerInfo.fullName[0] }}</div>
-                    <div>
-                      <div class="customer-name">{{ o.customerInfo.fullName }}</div>
-                      <div class="customer-email">{{ o.customerInfo.email }}</div>
-                    </div>
-                  </div>
-                </td>
-                <td class="date-cell">{{ o.createdAt | date:'MMM d, y' }}</td>
-                <td>{{ o.items.length }} item{{ o.items.length !== 1 ? 's' : '' }}</td>
-                <td class="price-cell">PKR {{ o.total | number }}</td>
-                <td>
-                  <span class="payment-badge" [class]="'pay-' + o.paymentMethod.toLowerCase()">
-                    {{ paymentLabel(o.paymentMethod) }}
-                  </span>
-                </td>
-                <td>
-                  <select
-                    class="status-select"
-                    [ngModel]="o.status"
-                    (ngModelChange)="changeStatus(o, $event)"
-                  >
-                    @for (s of statuses; track s) {
-                      <option [value]="s">{{ s }}</option>
-                    }
-                  </select>
-                </td>
-                <td>
-                  <a [routerLink]="['/admin/orders', o.orderId]" class="btn-icon" title="View details">
-                    <mat-icon>visibility</mat-icon>
-                  </a>
-                </td>
-              </tr>
-            }
-          </tbody>
-        </table>
-      </div>
+  <div class="table-card">
+    <div class="table-wrapper">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Order</th>
+            <th>Customer</th>
+            <th>Date</th>
+            <th>Items</th>
+            <th>Total</th>
+            <th>Payment</th>
+            <th>Status</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (o of filteredOrders(); track o.orderId) {
+          <tr>
+            <td class="order-id">
+              <a [routerLink]="['/admin/orders', o.orderId]" class="order-link">{{ o.orderNumber }}</a>
+            </td>
+            <td>
+              <div class="customer-cell">
+                <div class="avatar">{{ o.customerInfo.fullName[0] }}</div>
+                <div>
+                  <div class="customer-name">{{ o.customerInfo.fullName }}</div>
+                  <div class="customer-email">{{ o.shippingAddress.email }}</div>
+                </div>
+              </div>
+            </td>
+            <td class="date-cell">{{ o.createdAt | date:'MMM d, y' }}</td>
+            <td>{{ o.items.length }} item{{ o.items.length !== 1 ? 's' : '' }}</td>
+            <td class="price-cell">PKR {{ o.total | number }}</td>
+            <td>
+              <span class="payment-badge" [class]="'pay-' + o.paymentMethod.toLowerCase()">
+                {{ paymentLabel(o.paymentMethod) }}
+              </span>
+            </td>
+            <td>
+              <select class="status-select" [ngModel]="o.status" (ngModelChange)="changeStatus(o, $event)">
+                @for (s of statuses; track s) {
+                <option [value]="s">{{ s }}</option>
+                }
+              </select>
+            </td>
+            <td>
+              <a [routerLink]="['/admin/orders', o.orderId]" class="btn-icon" title="View details">
+                <mat-icon>visibility</mat-icon>
+              </a>
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
     </div>
+  </div>
   }
 
 </div>

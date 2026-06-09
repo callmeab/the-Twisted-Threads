@@ -28,7 +28,7 @@ import { AdminAuditService } from '../../services/admin-audit.service';
     <section class="customer-info">
       <h2>Customer Details</h2>
       <p>{{ order.customerInfo.fullName }}</p>
-      <p>{{ order.customerInfo.email }}</p>
+      // <p>{{ order.shippingAddress.email }}</p>
       <p>{{ order.customerInfo.phone }}</p>
       <p>{{ order.shippingAddress.addressLine1 }}, {{ order.shippingAddress.city }}</p>
     </section>
@@ -60,9 +60,9 @@ import { AdminAuditService } from '../../services/admin-audit.service';
 })
 export class AdminOrderDetailComponent implements OnInit {
   order: OrderModel | undefined;
-  statuses = ['PENDING','CONFIRMED','PROCESSING','SHIPPED','DELIVERED','CANCELLED'];
+  statuses = ['PENDING', 'CONFIRMED', 'PROCESSING', 'SHIPPED', 'DELIVERED', 'CANCELLED'];
 
-  constructor(private route: ActivatedRoute, private orderService: OrderService, private toastr: ToastrService, private audit: AdminAuditService) {}
+  constructor(private route: ActivatedRoute, private orderService: OrderService, private toastr: ToastrService, private audit: AdminAuditService) { }
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');

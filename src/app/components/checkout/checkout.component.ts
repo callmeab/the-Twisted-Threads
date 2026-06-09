@@ -49,7 +49,7 @@ export class CheckoutComponent {
 
   protected address: ShippingAddress = {
     fullName: '',
-    email: '',
+    whatsappNumber: '',
     phone: '',
     alternativePhone: '',
     addressLine1: '',
@@ -127,7 +127,7 @@ export class CheckoutComponent {
     try {
       const customerInfo: CustomerInfo = {
         fullName: this.address.fullName,
-        email: this.address.email,
+        whatsappNumber: this.address.whatsappNumber,
         phone: this.address.phone,
         alternativePhone: this.address.alternativePhone,
       };
@@ -226,7 +226,7 @@ export class CheckoutComponent {
     const orderTotal = this.cartService.totalPrice();
     const customerName = this.address.fullName || 'Valued Customer';
     const message = `Hi The Twisted Threads, this is ${customerName}. Here is the bank transfer receipt for my order total of ${orderTotal} PKR.`;
-    const whatsappUrl = `https://wa.me/923001234567?text=${encodeURIComponent(message)}`;
+    const whatsappUrl = `https://wa.me/923316903634?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
   }
 

@@ -72,7 +72,7 @@ export class ContactComponent implements AfterViewInit, OnDestroy {
     phone: '(503) 555-0199',
     phoneTel: '+15035550199',
     email: 'concierge@thetwistedthreads.com',
-    whatsapp: '923001234567',
+    whatsapp: '923316903634',
     hoursWeekday: 'Monday – Friday: 9:00 AM – 6:00 PM PST',
     hoursWeekend: 'Saturday: 10:00 AM – 4:00 PM · Closed Sundays',
   };

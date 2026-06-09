@@ -106,6 +106,54 @@
   box-shadow: var(--shadow-soft);
 }
 
+// ── WhatsApp Alert Banner ──────────────────────────────────────
+.whatsapp-alert-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5);
+  background: linear-gradient(135deg, rgba(37, 211, 102, 0.12), rgba(18, 140, 126, 0.08));
+  border: 1.5px solid rgba(37, 211, 102, 0.35);
+  border-radius: var(--radius-xl);
+  margin-bottom: var(--space-6);
+  animation: slideDownFadeIn 0.3s ease forwards;
+
+  &.full {
+    grid-column: 1 / -1;
+  }
+}
+
+.whatsapp-alert-icon {
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(37, 211, 102, 0.18);
+  border-radius: 50%;
+  color: #128C7E;
+
+  svg {
+    display: block;
+  }
+}
+
+.whatsapp-alert-text {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  color: var(--color-charcoal);
+  line-height: var(--line-height-relaxed);
+
+  strong {
+    display: block;
+    color: #075E54;
+    margin-bottom: 2px;
+    font-size: var(--font-size-sm);
+  }
+}
+
 .form-section-title {
   font-family: var(--font-heading);
   font-size: var(--font-size-xl);
@@ -1124,53 +1172,136 @@
   }
 }
 
-// Mobile checkout optimizations
+// ============================================================
+// Mobile Responsive — Full Implementation
+// ============================================================
+
+// ── Mobile bottom summary bar (hidden on desktop) ─────────────
+.mobile-summary-bar {
+  display: none; // shown only on mobile via media query
+}
+
+// ── Desktop sidebar (hidden on mobile) ────────────────────────
+// .desktop-sidebar is shown on desktop and hidden on mobile
+
+// ── Tablet ≤ 1023px ──────────────────────────────────────────
 @media (max-width: 1023px) {
-  .checkout-page {
-    padding-bottom: calc(6rem + env(safe-area-inset-bottom, 0px));
+
+  // Grid becomes single column
+  .checkout-grid {
+    grid-template-columns: 1fr;
+    gap: 0;
   }
 
-  .checkout-grid .summary-card.sticky-panel {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: calc(3.75rem + env(safe-area-inset-bottom, 0px));
-    z-index: 40;
-    margin: 0;
-    border-radius: 1rem 1rem 0 0;
-    padding: 0.85rem 1rem;
-    box-shadow: 0 -8px 32px rgba(44, 44, 44, 0.1);
+  // Hide desktop sidebar entirely
+  .desktop-sidebar {
+    display: none !important;
+  }
+
+  // Show mobile bottom bar
+  .mobile-summary-bar {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
-    background: rgba(254, 254, 254, 0.98);
-    backdrop-filter: blur(12px);
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 50;
+    padding: 0.875rem 1.25rem;
+    background: rgba(255, 255, 255, 0.97);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-top: 1px solid rgba(183, 110, 121, 0.15);
+    box-shadow: 0 -4px 24px rgba(44, 44, 44, 0.1);
+    padding-bottom: calc(0.875rem + env(safe-area-inset-bottom, 0px));
   }
 
-  .form-input,
-  .form-select,
+  .mobile-summary-total {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .mobile-total-label {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-charcoal-soft);
+    font-family: var(--font-body);
+  }
+
+  .mobile-total-value {
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--color-purple);
+    white-space: nowrap;
+  }
+
+  .mobile-total-note {
+    font-size: 0.6rem;
+    color: var(--color-charcoal-soft);
+    opacity: 0.7;
+  }
+
+  .mobile-place-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    flex-shrink: 0;
+    padding: 0.75rem 1.25rem;
+    background: linear-gradient(135deg, var(--color-rose-gold), var(--color-rose-gold-dark));
+    color: white;
+    border: none;
+    border-radius: var(--radius-lg);
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: var(--shadow-rose);
+    min-height: 48px;
+    transition: all 0.2s ease;
+
+    &:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    &:not(:disabled):active {
+      transform: scale(0.97);
+    }
+  }
+
+  // Give form section bottom padding so content isn't hidden behind bar
+  .checkout-page {
+    padding: var(--space-8) var(--space-4);
+    padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  // Prevent iOS zoom on inputs
   input[type='text'],
-  input[type='email'],
   input[type='tel'],
+  input[type='email'],
   textarea,
   select {
     font-size: 16px !important;
-    min-height: 48px;
   }
 
-  .next-btn,
-  .back-btn,
-  .submit-btn,
-  .order-place-btn {
-    min-height: 48px;
-    width: 100%;
-  }
-
+  // Payment methods single column
   .payment-methods-grid {
     grid-template-columns: 1fr;
+    gap: var(--space-3);
   }
 
+  // Modal as bottom sheet
   .modal-backdrop {
     align-items: flex-end;
     padding: 0;
@@ -1179,23 +1310,481 @@
   .modal-box {
     width: 100%;
     max-width: 100%;
-    max-height: 88vh;
-    border-radius: 1.25rem 1.25rem 0 0;
+    max-height: 90vh;
+    border-radius: 1.5rem 1.5rem 0 0;
     margin: 0;
-    animation: sheetSlideUp 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    animation: sheetSlideUp 0.32s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   .modal-accept-btn {
-    min-height: 48px;
+    min-height: 52px;
     width: 100%;
   }
 }
 
-@keyframes sheetSlideUp {
-  from {
-    transform: translateY(100%);
+// ── Phone ≤ 768px ─────────────────────────────────────────────
+@media (max-width: 768px) {
+
+  .checkout-page {
+    padding: var(--space-6) var(--space-3);
+    padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px));
   }
-  to {
-    transform: translateY(0);
+
+  // Header
+  .checkout-header h1 {
+    font-size: clamp(1.6rem, 6vw, 2.2rem);
+  }
+
+  .checkout-header p {
+    font-size: var(--font-size-sm);
+  }
+
+  // Steps bar
+  .checkout-steps {
+    gap: var(--space-1);
+    margin-bottom: var(--space-5);
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    &::-webkit-scrollbar { display: none; }
+  }
+
+  .checkout-steps .step {
+    font-size: 0.65rem;
+    padding: var(--space-2) var(--space-3);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .step-divider {
+    flex-shrink: 0;
+    width: 24px;
+    min-width: 24px;
+  }
+
+  // Form card
+  .form-card {
+    padding: var(--space-5) var(--space-4);
+    border-radius: var(--radius-xl);
+    border-left: none;
+    border-right: none;
+    border-radius: 0;
+    box-shadow: none;
+    border-top: 1px solid rgba(183, 110, 121, 0.1);
+    border-bottom: 1px solid rgba(183, 110, 121, 0.1);
+  }
+
+  // Form grid single column
+  .form-grid {
+    grid-template-columns: 1fr !important;
+    gap: var(--space-4);
+  }
+
+  .form-field.full {
+    grid-column: 1 / -1;
+  }
+
+  // Section title
+  .form-section-title {
+    font-size: var(--font-size-base);
+    margin-bottom: var(--space-4);
+  }
+
+  // WhatsApp banner stacks
+  .whatsapp-alert-banner {
+    flex-direction: row;
+    align-items: flex-start;
+    padding: var(--space-3) var(--space-4);
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
+  }
+
+  .whatsapp-alert-text {
+    font-size: 0.8rem;
+
+    strong {
+      font-size: 0.8rem;
+    }
+  }
+
+  // Wizard action buttons stack
+  .wizard-actions {
+    flex-direction: column-reverse;
+    gap: var(--space-3);
+    margin-top: var(--space-5);
+    padding-top: var(--space-4);
+
+    .back-btn {
+      width: 100%;
+      min-height: 48px;
+      justify-content: center;
+      font-size: var(--font-size-sm);
+    }
+
+    .submit-btn {
+      width: 100%;
+      min-height: 52px;
+      font-size: var(--font-size-sm);
+    }
+  }
+
+  // Step 2 — bank fields
+  .bank-fields-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+
+  .bank-details-card {
+    padding: var(--space-4);
+    border-radius: var(--radius-lg);
+  }
+
+  // Dropzone
+  .dropzone {
+    min-height: 130px;
+    padding: var(--space-5) var(--space-3);
+  }
+
+  .upload-cloud-icon svg {
+    width: 28px;
+    height: 28px;
+  }
+
+  .dropzone-title {
+    font-size: var(--font-size-xs);
+  }
+
+  // WhatsApp alt card
+  .whatsapp-alt-card {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-3);
+    padding: var(--space-4);
+  }
+
+  .whatsapp-btn {
+    width: 100%;
+    min-height: 48px;
+    justify-content: center;
+    font-size: var(--font-size-xs);
+  }
+
+  // Step 3 — Review sections
+  .review-sections-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  .review-cart-section {
+    margin-bottom: var(--space-4);
+  }
+
+  .review-cart-item {
+    gap: var(--space-2);
+    padding: var(--space-3);
+
+    img {
+      width: 52px;
+      height: 52px;
+      border-radius: var(--radius-md);
+    }
+  }
+
+  .review-item-name {
+    font-size: var(--font-size-xs);
+  }
+
+  .review-item-meta {
+    font-size: var(--font-size-xxs);
+  }
+
+  .review-item-price,
+  .review-item-qty {
+    font-size: var(--font-size-xs);
+  }
+
+  // Customizations
+  .order-customizations-card {
+    padding: var(--space-4);
+    border-radius: var(--radius-lg);
+  }
+
+  .notes-textarea {
+    font-size: 16px !important;
+  }
+
+  .gift-checkbox {
+    font-size: var(--font-size-xs);
+
+    .gift-checkbox-text span {
+      font-size: var(--font-size-xs);
+    }
+  }
+
+  .gift-fee-tag {
+    font-size: var(--font-size-xxs);
+    padding: 2px 6px;
+    white-space: nowrap;
+  }
+
+  // Consent
+  .consent-section {
+    padding: var(--space-4);
+    border-radius: var(--radius-lg);
+  }
+
+  .consent-text {
+    font-size: var(--font-size-xs);
+  }
+
+  // Overlays center properly
+  .processing-overlay,
+  .success-overlay {
+    padding: var(--space-4);
+  }
+
+  .processing-box,
+  .success-box {
+    padding: var(--space-6) var(--space-5);
+    width: 100%;
+    max-width: 320px;
+    border-radius: var(--radius-xl);
   }
 }
+
+// ── Small phone ≤ 480px ───────────────────────────────────────
+@media (max-width: 480px) {
+
+  .checkout-page {
+    padding: var(--space-4) var(--space-2);
+    padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  // Header
+  .checkout-header {
+    margin-bottom: var(--space-4);
+    gap: var(--space-2);
+  }
+
+  .checkout-header .eyebrow {
+    font-size: 0.6rem;
+  }
+
+  .checkout-header h1 {
+    font-size: clamp(1.35rem, 7.5vw, 1.8rem);
+  }
+
+  .checkout-header p {
+    font-size: 0.75rem;
+  }
+
+  // Steps — icon only
+  .checkout-steps .step {
+    font-size: 0;
+    padding: 0;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    justify-content: center;
+    flex-shrink: 0;
+
+    .step-num {
+      font-size: 0.75rem;
+    }
+  }
+
+  .step-divider {
+    width: 16px;
+    min-width: 16px;
+  }
+
+  // Form card flush
+  .form-card {
+    padding: var(--space-4) var(--space-3);
+    border-radius: 0;
+  }
+
+  .form-section-title {
+    font-size: 0.9rem;
+    padding-bottom: var(--space-2);
+    margin-bottom: var(--space-3);
+  }
+
+  // Fields
+  .form-field {
+    input, select {
+      padding: 1rem 0.875rem 0.6rem;
+      font-size: 16px !important;
+    }
+
+    label {
+      top: 1rem;
+      font-size: 0.8rem;
+    }
+
+    input:focus ~ label,
+    input:not(:placeholder-shown) ~ label,
+    select:focus ~ label,
+    select.has-value ~ label {
+      transform: translateY(-1.6rem) scale(0.82);
+    }
+  }
+
+  .field-error {
+    font-size: 0.7rem;
+  }
+
+  // WhatsApp banner
+  .whatsapp-alert-banner {
+    padding: var(--space-3);
+    gap: var(--space-2);
+    border-radius: var(--radius-lg);
+  }
+
+  .whatsapp-alert-icon {
+    width: 30px;
+    height: 30px;
+    flex-shrink: 0;
+
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  .whatsapp-alert-text {
+    font-size: 0.72rem;
+
+    strong {
+      font-size: 0.72rem;
+    }
+  }
+
+  // Submit button
+  .submit-btn {
+    font-size: 0.75rem;
+    padding: var(--space-3) var(--space-3);
+    letter-spacing: 0.04em;
+    min-height: 50px;
+  }
+
+  // Payment cards
+  .payment-method-card {
+    padding: var(--space-3) var(--space-4);
+  }
+
+  .payment-card-content {
+    gap: var(--space-2);
+  }
+
+  .payment-icon {
+    width: 34px;
+    height: 34px;
+
+    svg {
+      width: 18px;
+      height: 18px;
+    }
+  }
+
+  .payment-title {
+    font-size: 0.82rem;
+  }
+
+  .payment-desc {
+    font-size: 0.72rem;
+  }
+
+  .payment-badge {
+    font-size: 0.65rem;
+    padding: 1px 6px;
+  }
+
+  // Bank details
+  .bank-details-card {
+    padding: var(--space-3);
+  }
+
+  .bank-value {
+    font-size: 0.78rem;
+    word-break: break-all;
+  }
+
+  .bank-label {
+    font-size: 0.6rem;
+  }
+
+  // Review cart items
+  .review-cart-item {
+    padding: var(--space-2);
+
+    img {
+      width: 44px;
+      height: 44px;
+    }
+  }
+
+  // Consent
+  .consent-text {
+    font-size: 0.72rem;
+  }
+
+  .terms-link-btn {
+    font-size: 0.72rem;
+  }
+
+  // Wizard back button
+  .wizard-actions .back-btn {
+    font-size: 0.75rem;
+    padding: var(--space-3) var(--space-4);
+    min-height: 44px;
+  }
+
+  // Mobile bottom bar
+  .mobile-summary-bar {
+    padding: 0.75rem 1rem;
+    padding-bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
+    gap: 0.625rem;
+  }
+
+  .mobile-total-value {
+    font-size: 1rem;
+  }
+
+  .mobile-place-btn {
+    font-size: 0.72rem;
+    padding: 0.625rem 1rem;
+    min-height: 44px;
+    letter-spacing: 0.04em;
+  }
+
+  // Modal
+  .modal-box {
+    max-height: 94vh;
+    border-radius: 1.25rem 1.25rem 0 0;
+  }
+
+  .modal-header h3 {
+    font-size: var(--font-size-base);
+  }
+
+  .modal-body {
+    padding: var(--space-4);
+    font-size: 0.78rem;
+
+    h4 {
+      font-size: 0.85rem;
+    }
+
+    p {
+      line-height: 1.55;
+    }
+  }
+}
+
+@keyframes sheetSlideUp {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+

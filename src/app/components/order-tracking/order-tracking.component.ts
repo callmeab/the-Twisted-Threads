@@ -199,7 +199,7 @@ export class OrderTrackingComponent implements OnInit {
     }
     const subject = encodeURIComponent(`Order updates for ${order.orderNumber}`);
     const body = encodeURIComponent(
-      `Please send shipping updates for order ${order.orderNumber} to ${order.customerInfo.email}.`
+      `Please send shipping updates for order ${order.orderNumber} to ${order.email}.`
     );
     return `mailto:${this.supportEmail}?subject=${subject}&body=${body}`;
   }

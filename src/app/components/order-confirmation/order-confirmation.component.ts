@@ -55,7 +55,7 @@ export class OrderConfirmationComponent implements OnInit, AfterViewInit, OnDest
 
   protected readonly supportEmail = 'concierge@thetwistedthreads.com';
   protected readonly supportPhone = '(503) 555-0199';
-  protected readonly whatsappNumber = '923001234567';
+  protected readonly whatsappNumber = '923316903634';
 
   private confettiFrameId = 0;
   private confettiTimeoutId = 0;

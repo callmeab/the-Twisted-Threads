@@ -42,7 +42,7 @@ export class AdminOrders {
         const matches =
           order.orderNumber.toLowerCase().includes(q) ||
           order.customerInfo.fullName.toLowerCase().includes(q) ||
-          order.customerInfo.email.toLowerCase().includes(q);
+          order.shippingAddress.email?.toLowerCase().includes(q);
         if (!matches) return false;
       }
       if (status && order.status !== status) return false;
