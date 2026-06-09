@@ -2,7 +2,6 @@ import { initializeApp } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
 import { onDocumentCreated } from 'firebase-functions/v2/firestore';
 import { onCall, HttpsError } from 'firebase-functions/v2/https';
-import { sendOrderConfirmationEmail } from './email/order-confirmation';
 
 initializeApp();
 
@@ -15,20 +14,18 @@ export const onOrderCreated = onDocumentCreated('orders/{orderId}', async event 
   }
 
   const order = snapshot.data();
-  if (order.emailConfirmationSent) {
+  if (order.whatsappConfirmationSent) {
     return;
   }
 
   try {
-    const sent = await sendOrderConfirmationEmail(order as Parameters<typeof sendOrderConfirmationEmail>[0]);
-    if (sent) {
-      await snapshot.ref.update({
-        emailConfirmationSent: true,
-        emailConfirmationSentAt: new Date(),
-      });
-    }
+    console.info(`[onOrderCreated] Order ${order.orderNumber} created. Notification is handled client-side.`);
+    await snapshot.ref.update({
+      whatsappConfirmationSent: true,
+      whatsappConfirmationSentAt: new Date(),
+    });
   } catch (err) {
-    console.error('[onOrderCreated] Failed to send confirmation email:', err);
+    console.error('[onOrderCreated] Failed to update WhatsApp confirmation status:', err);
   }
 });
 

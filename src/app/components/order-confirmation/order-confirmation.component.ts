@@ -12,6 +12,7 @@ import { isPlatformBrowser, DatePipe, DOCUMENT, LowerCasePipe } from '@angular/c
 import { RouterLink } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { OrderService } from '../../services/order.service';
+import { WhatsAppService } from '../../services/whatsapp.service';
 import { CustomCurrencyPipe } from '../../pipes/custom-currency.pipe';
 import { OrderModel } from '../../models/order.model';
 
@@ -48,6 +49,7 @@ export class OrderConfirmationComponent implements OnInit, AfterViewInit, OnDest
   private readonly toastr = inject(ToastrService);
   private readonly document = inject(DOCUMENT);
   private readonly platformId = inject(PLATFORM_ID);
+  private readonly whatsappService = inject(WhatsAppService);
 
   protected pageReady = false;
   protected showOrderDetails = false;
@@ -184,6 +186,14 @@ export class OrderConfirmationComponent implements OnInit, AfterViewInit, OnDest
       ? `Hi, I need help with my order ${order.orderNumber}.`
       : 'Hi, I need help with my order.';
     return `https://wa.me/${this.whatsappNumber}?text=${encodeURIComponent(text)}`;
+  }
+
+  protected get whatsAppReceiptUrl(): string {
+    const order = this.order;
+    if (!order) {
+      return '#';
+    }
+    return this.whatsappService.getOrderWhatsAppUrl(order);
   }
 
   protected copyOrderNumber(): void {

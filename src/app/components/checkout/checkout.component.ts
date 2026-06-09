@@ -4,6 +4,7 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CartService } from '../../services/cart.service';
 import { OrderService } from '../../services/order.service';
+import { WhatsAppService } from '../../services/whatsapp.service';
 import { CustomCurrencyPipe } from '../../pipes/custom-currency.pipe';
 import { ToastrService } from 'ngx-toastr';
 import { CustomerInfo, PaymentProof, ShippingAddress } from '../../models/order.model';
@@ -24,6 +25,7 @@ export class CheckoutComponent {
   private readonly orderService = inject(OrderService);
   private readonly router = inject(Router);
   private readonly toastr = inject(ToastrService);
+  private readonly whatsappService = inject(WhatsAppService);
 
   protected currentStep = 1;
   protected paymentMethod: 'COD' | 'BankTransfer' | '' = '';
@@ -156,6 +158,14 @@ export class CheckoutComponent {
         shippingCost: this.cartService.shipping() + this.codFee + this.giftWrapFee,
         total: this.grandTotal,
       });
+
+      // Automatically launch the Click-to-WhatsApp URL
+      try {
+        const whatsappUrl = this.whatsappService.getOrderWhatsAppUrl(order);
+        window.open(whatsappUrl, '_blank');
+      } catch (err) {
+        console.warn('[Checkout] Failed to auto-open WhatsApp link:', err);
+      }
 
       this.isProcessing = false;
       this.isSuccess = true;
