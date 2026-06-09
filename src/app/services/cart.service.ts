@@ -14,8 +14,8 @@ interface CartOptions {
 })
 export class CartService {
   private readonly TAX_RATE = 0.08;
-  private readonly SHIPPING_FEE = 9.99;
-  private readonly FREE_SHIPPING_THRESHOLD = 100;
+  private readonly SHIPPING_FEE = 250;
+  private readonly FREE_SHIPPING_THRESHOLD = 5000;
   private readonly STORAGE_KEY = 'twistedThreadsCart';
 
   private readonly itemsSignal = signal<CartItem[]>(this.loadCartItems());

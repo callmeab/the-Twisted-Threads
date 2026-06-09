@@ -29,7 +29,7 @@ export const FAQ_CATEGORIES: FaqCategory[] = [
         id: 'os-2',
         question: 'What are the shipping charges?',
         answer:
-          'Standard shipping is $9.99 for orders under $100. Orders of $100 or more qualify for complimentary shipping. Additional fees may apply for gift wrap or Cash on Delivery (COD). Final shipping and fees are shown at checkout before you place your order.',
+          'Standard shipping is PKR 250 for orders under PKR 5,000. Orders of PKR 5,000 or more qualify for complimentary shipping. Additional fees may apply for gift wrap or Cash on Delivery (COD). Final shipping and fees are shown at checkout before you place your order.',
       },
       {
         id: 'os-3',

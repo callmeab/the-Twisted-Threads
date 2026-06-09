@@ -25,7 +25,11 @@ export interface CustomerInfo {
 
 export interface PaymentProof {
   fileName: string;
-  fileData: string;
+  /** Base64 data URL — used during checkout before upload to Storage */
+  fileData?: string;
+  /** Public download URL after upload to Firebase Storage */
+  fileUrl?: string;
+  storagePath?: string;
   uploadedAt: Date;
   uploadMethod: 'WEBSITE' | 'WHATSAPP';
 }

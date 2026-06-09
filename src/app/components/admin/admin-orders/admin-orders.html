@@ -1,67 +1,137 @@
 <div class="orders-page">
 
-  <!-- Header -->
   <div class="page-header">
     <div>
       <h1>Orders</h1>
-      <p>View and manage customer orders.</p>
+      <p>Real-time customer orders from your store.</p>
     </div>
+    <button type="button" class="btn-secondary" (click)="exportCsv()">
+      <mat-icon>download</mat-icon> Export CSV
+    </button>
   </div>
 
-  <!-- Stats bar -->
   <div class="stats-bar">
     <div class="stat-pill">
-      <mat-icon>receipt_long</mat-icon><span>{{ summary.total }} Total</span>
+      <mat-icon>receipt_long</mat-icon><span>{{ summary().total }} Total</span>
     </div>
     <div class="stat-pill warn">
-      <mat-icon>hourglass_empty</mat-icon><span>{{ summary.pending }} Pending</span>
+      <mat-icon>hourglass_empty</mat-icon><span>{{ summary().pending }} Pending</span>
+    </div>
+    <div class="stat-pill info">
+      <mat-icon>sync</mat-icon><span>{{ summary().processing }} Processing</span>
     </div>
     <div class="stat-pill active">
-      <mat-icon>local_shipping</mat-icon><span>{{ summary.shipped }} Shipped</span>
+      <mat-icon>local_shipping</mat-icon><span>{{ summary().shipped }} Shipped</span>
     </div>
     <div class="stat-pill success">
-      <mat-icon>check_circle</mat-icon><span>{{ summary.delivered }} Delivered</span>
+      <mat-icon>check_circle</mat-icon><span>{{ summary().delivered }} Delivered</span>
+    </div>
+    <div class="stat-pill revenue">
+      <mat-icon>payments</mat-icon><span>PKR {{ summary().revenue | number }} Revenue</span>
     </div>
   </div>
 
-  <!-- Table -->
-  <div class="table-card">
-    <div class="table-wrapper">
-      <table class="data-table">
-        <thead>
-          <tr>
-            <th>Order ID</th>
-            <th>Customer</th>
-            <th>Date</th>
-            <th>Items</th>
-            <th>Total</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (o of orders; track o.id) {
-            <tr>
-              <td class="order-id">{{ o.id }}</td>
-              <td>
-                <div class="customer-cell">
-                  <div class="avatar">{{ o.customer[0] }}</div>
-                  <div>
-                    <div class="customer-name">{{ o.customer }}</div>
-                    <div class="customer-email">{{ o.email }}</div>
-                  </div>
-                </div>
-              </td>
-              <td class="date-cell">{{ o.date | date:'MMM d, y' }}</td>
-              <td>{{ o.items }} item{{ o.items !== 1 ? 's' : '' }}</td>
-              <td class="price-cell">PKR {{ o.total | number }}</td>
-              <td>
-                <span class="status-badge" [class]="'status-' + o.status">{{ o.status }}</span>
-              </td>
-            </tr>
-          }
-        </tbody>
-      </table>
+  <div class="filters-card">
+    <div class="search-box">
+      <mat-icon>search</mat-icon>
+      <input
+        type="search"
+        placeholder="Search by order #, customer, or email…"
+        [ngModel]="searchQuery()"
+        (ngModelChange)="searchQuery.set($event)"
+      />
     </div>
+    <select [ngModel]="filterStatus()" (ngModelChange)="filterStatus.set($event)">
+      <option value="">All statuses</option>
+      @for (s of statuses; track s) {
+        <option [value]="s">{{ s }}</option>
+      }
+    </select>
+    <select [ngModel]="filterPayment()" (ngModelChange)="filterPayment.set($event)">
+      <option value="">All payments</option>
+      @for (p of payments; track p) {
+        <option [value]="p">{{ paymentLabel(p) }}</option>
+      }
+    </select>
   </div>
+
+  @if (isLoading()) {
+    <div class="state-card loading">
+      <mat-icon>hourglass_top</mat-icon>
+      <p>Loading orders…</p>
+    </div>
+  } @else if (error()) {
+    <div class="state-card error">
+      <mat-icon>error_outline</mat-icon>
+      <p>{{ error() }}</p>
+    </div>
+  } @else if (!filteredOrders().length) {
+    <div class="state-card empty">
+      <mat-icon>inbox</mat-icon>
+      <h3>No orders yet</h3>
+      <p>When customers place orders, they will appear here automatically.</p>
+    </div>
+  } @else {
+    <div class="table-card">
+      <div class="table-wrapper">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Order</th>
+              <th>Customer</th>
+              <th>Date</th>
+              <th>Items</th>
+              <th>Total</th>
+              <th>Payment</th>
+              <th>Status</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (o of filteredOrders(); track o.orderId) {
+              <tr>
+                <td class="order-id">
+                  <a [routerLink]="['/admin/orders', o.orderId]" class="order-link">{{ o.orderNumber }}</a>
+                </td>
+                <td>
+                  <div class="customer-cell">
+                    <div class="avatar">{{ o.customerInfo.fullName[0] }}</div>
+                    <div>
+                      <div class="customer-name">{{ o.customerInfo.fullName }}</div>
+                      <div class="customer-email">{{ o.customerInfo.email }}</div>
+                    </div>
+                  </div>
+                </td>
+                <td class="date-cell">{{ o.createdAt | date:'MMM d, y' }}</td>
+                <td>{{ o.items.length }} item{{ o.items.length !== 1 ? 's' : '' }}</td>
+                <td class="price-cell">PKR {{ o.total | number }}</td>
+                <td>
+                  <span class="payment-badge" [class]="'pay-' + o.paymentMethod.toLowerCase()">
+                    {{ paymentLabel(o.paymentMethod) }}
+                  </span>
+                </td>
+                <td>
+                  <select
+                    class="status-select"
+                    [ngModel]="o.status"
+                    (ngModelChange)="changeStatus(o, $event)"
+                  >
+                    @for (s of statuses; track s) {
+                      <option [value]="s">{{ s }}</option>
+                    }
+                  </select>
+                </td>
+                <td>
+                  <a [routerLink]="['/admin/orders', o.orderId]" class="btn-icon" title="View details">
+                    <mat-icon>visibility</mat-icon>
+                  </a>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }
 
 </div>

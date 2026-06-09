@@ -13,7 +13,8 @@
     "firebase:login": "npx firebase-tools login",
     "firebase:emulators": "npx firebase-tools emulators:start",
     "firebase:deploy:hosting": "npx firebase-tools deploy --only hosting",
-    "firebase:deploy:rules": "npx firebase-tools deploy --only firestore:rules,storage"
+    "firebase:deploy:rules": "npx firebase-tools deploy --only firestore:rules,storage",
+    "firebase:deploy:functions": "npm --prefix functions run build && npx firebase-tools deploy --only functions"
   },
   "private": true,
   "packageManager": "npm@11.11.0",

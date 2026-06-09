@@ -106,8 +106,8 @@ export class AdminOrdersComponent implements OnInit {
     });
   }
 
-  changeStatus(o: OrderModel, status: OrderStatus) {
-    const updated = this.orderService.updateOrderStatus(o.orderId, status);
+  async changeStatus(o: OrderModel, status: OrderStatus) {
+    const updated = await this.orderService.updateOrderStatus(o.orderId, status);
     if (updated) {
       this.toastr.success('Order status updated', 'Updated');
       this.orders = this.orderService.getAllOrders();
@@ -115,8 +115,8 @@ export class AdminOrdersComponent implements OnInit {
     }
   }
 
-  approvePayment(o: OrderModel) {
-    const updated = this.orderService.verifyPayment(o.orderId);
+  async approvePayment(o: OrderModel) {
+    const updated = await this.orderService.verifyPayment(o.orderId);
     if (updated) {
       this.toastr.success('Payment verified', 'Payment');
       this.orders = this.orderService.getAllOrders();
@@ -124,8 +124,8 @@ export class AdminOrdersComponent implements OnInit {
     }
   }
 
-  rejectPayment(o: OrderModel) {
-    const updated = this.orderService.setPaymentStatus(o.orderId, 'FAILED');
+  async rejectPayment(o: OrderModel) {
+    const updated = await this.orderService.setPaymentStatus(o.orderId, 'FAILED');
     if (updated) {
       this.toastr.warning('Payment rejected', 'Payment');
       this.orders = this.orderService.getAllOrders();
@@ -134,9 +134,7 @@ export class AdminOrdersComponent implements OnInit {
   }
 
   requestClarify(o: OrderModel) {
-    // In a real app we'd send an email; here we queue a mock email via OrderService
-    this.orderService.sendOrderConfirmationEmail(o.orderId);
-    this.toastr.info('Requested clarification email sent to customer (mock).', 'Requested');
+    this.toastr.info('Clarification request noted for customer follow-up.', 'Requested');
     this.audit.log('request_clarification', { orderNumber: o.orderNumber });
   }
 

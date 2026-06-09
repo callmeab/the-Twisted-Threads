@@ -118,9 +118,9 @@
             <div class="receipt-preview">
               <span class="receipt-label">Uploaded receipt · {{ order.paymentProof.fileName }}</span>
               @if (receiptIsImage) {
-                <img [src]="order.paymentProof.fileData" [alt]="order.paymentProof.fileName" class="receipt-image" />
+                <img [src]="receiptSrc" [alt]="order.paymentProof.fileName" class="receipt-image" />
               } @else {
-                <a [href]="order.paymentProof.fileData" target="_blank" rel="noopener noreferrer" class="receipt-pdf-link">
+                <a [href]="receiptSrc" target="_blank" rel="noopener noreferrer" class="receipt-pdf-link">
                   View receipt ({{ order.paymentProof.fileName }})
                 </a>
               }

@@ -1,20 +1,23 @@
 <div class="dashboard-page">
 
-  <!-- Page Header -->
   <div class="page-header">
     <div>
       <h1>Dashboard</h1>
-      <p>Live snapshot of your store's inventory</p>
+      <p>Welcome back — here's what's happening in your store today.</p>
     </div>
-    <a routerLink="/admin/products" class="btn-primary">
-      <mat-icon>add</mat-icon> Add Product
-    </a>
+    <div class="header-actions">
+      <a routerLink="/admin/orders" class="btn-ghost">
+        <mat-icon>receipt_long</mat-icon> View Orders
+      </a>
+      <a routerLink="/admin/products/add" class="btn-primary">
+        <mat-icon>add</mat-icon> Add Product
+      </a>
+    </div>
   </div>
 
-  <!-- Stats Grid -->
   <div class="stats-grid">
     @for (card of cards(); track card.label) {
-      <div class="stat-card" [class]="'accent-' + card.color">
+      <a [routerLink]="card.link" class="stat-card" [class]="'accent-' + card.color">
         <div class="stat-icon">
           <mat-icon>{{ card.icon }}</mat-icon>
         </div>
@@ -22,51 +25,99 @@
           <span class="stat-value">{{ card.value }}</span>
           <span class="stat-label">{{ card.label }}</span>
         </div>
-      </div>
+        <mat-icon class="stat-arrow">arrow_forward</mat-icon>
+      </a>
     }
   </div>
 
-  <!-- Recent Products Table -->
-  <div class="section-card">
-    <div class="section-header">
-      <h2>Recent Products</h2>
-      <a routerLink="/admin/products" class="btn-ghost">View All →</a>
+  <div class="sections-grid">
+
+    <div class="section-card">
+      <div class="section-header">
+        <h2><mat-icon>receipt_long</mat-icon> Recent Orders</h2>
+        <a routerLink="/admin/orders" class="btn-ghost-sm">View All →</a>
+      </div>
+
+      @if (recentOrders().length) {
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Order</th>
+                <th>Customer</th>
+                <th>Total</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (o of recentOrders(); track o.orderId) {
+                <tr>
+                  <td>
+                    <a [routerLink]="['/admin/orders', o.orderId]" class="order-link">{{ o.orderNumber }}</a>
+                  </td>
+                  <td>
+                    <div class="customer-cell">
+                      <span class="customer-name">{{ o.customerInfo.fullName }}</span>
+                      <span class="customer-email">{{ o.customerInfo.email }}</span>
+                    </div>
+                  </td>
+                  <td class="price-cell">PKR {{ o.total | number }}</td>
+                  <td>
+                    <span class="status-badge" [class]="'status-' + o.status.toLowerCase()">{{ o.status }}</span>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      } @else {
+        <div class="empty-state">
+          <mat-icon>inbox</mat-icon>
+          <p>No orders yet. They'll appear here when customers check out.</p>
+        </div>
+      }
     </div>
 
-    <div class="table-wrapper">
-      <table class="data-table">
-        <thead>
-          <tr>
-            <th>Product</th>
-            <th>Category</th>
-            <th>Price</th>
-            <th>Stock</th>
-            <th>Status</th>
-            <th>Added</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (p of recentProducts(); track p.id) {
+    <div class="section-card">
+      <div class="section-header">
+        <h2><mat-icon>inventory_2</mat-icon> Recent Products</h2>
+        <a routerLink="/admin/products" class="btn-ghost-sm">View All →</a>
+      </div>
+
+      <div class="table-wrapper">
+        <table class="data-table">
+          <thead>
             <tr>
-              <td>
-                <div class="product-cell">
-                  <img [src]="p.images[0]" [alt]="p.name" class="product-thumb" />
-                  <span class="product-name">{{ p.name }}</span>
-                </div>
-              </td>
-              <td><span class="chip">{{ p.category }}</span></td>
-              <td class="price-cell">${{ p.price | number:'1.2-2' }}</td>
-              <td>{{ p.stockQuantity }}</td>
-              <td>
-                <span class="status-badge" [class.in-stock]="p.inStock" [class.out]="!p.inStock">
-                  {{ p.inStock ? 'In Stock' : 'Out of Stock' }}
-                </span>
-              </td>
-              <td class="date-cell">{{ p.createdAt | date:'MMM d, y' }}</td>
+              <th>Product</th>
+              <th>Price</th>
+              <th>Stock</th>
+              <th>Status</th>
             </tr>
-          }
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            @for (p of recentProducts(); track p.id) {
+              <tr>
+                <td>
+                  <div class="product-cell">
+                    @if (p.images[0]) {
+                      <img [src]="p.images[0]" [alt]="p.name" class="product-thumb" />
+                    }
+                    <span class="product-name">{{ p.name }}</span>
+                  </div>
+                </td>
+                <td class="price-cell">PKR {{ p.price | number }}</td>
+                <td>{{ p.stockQuantity }}</td>
+                <td>
+                  <span class="status-badge" [class.in-stock]="p.inStock" [class.out]="!p.inStock">
+                    {{ p.inStock ? 'In Stock' : 'Out of Stock' }}
+                  </span>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
     </div>
+
   </div>
 </div>

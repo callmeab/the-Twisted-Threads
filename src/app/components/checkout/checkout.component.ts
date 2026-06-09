@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -15,6 +15,7 @@ export const COD_FEE = 150;
   selector: 'app-checkout',
   standalone: true,
   imports: [CommonModule, FormsModule, CustomCurrencyPipe],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.scss'
 })
@@ -108,7 +109,7 @@ export class CheckoutComponent {
     }
   }
 
-  protected onPlaceOrder(): void {
+  protected async onPlaceOrder(): Promise<void> {
     if (!this.agreeToTerms || !this.agreeToPrivacy) {
       this.toastr.warning('Please accept the Terms & Conditions and Privacy Policy.', 'Consent Required');
       document.getElementById('terms-consent-section')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -123,8 +124,7 @@ export class CheckoutComponent {
 
     this.isProcessing = true;
 
-    // Simulate a 2-second processing delay
-    setTimeout(() => {
+    try {
       const customerInfo: CustomerInfo = {
         fullName: this.address.fullName,
         email: this.address.email,
@@ -145,7 +145,7 @@ export class CheckoutComponent {
         };
       }
 
-      const order = this.orderService.createOrder({
+      const order = await this.orderService.createOrder({
         customerInfo,
         items,
         shippingAddress: { ...this.address },
@@ -160,14 +160,17 @@ export class CheckoutComponent {
       this.isProcessing = false;
       this.isSuccess = true;
 
-      // Hold success screen for 2s then navigate
       setTimeout(() => {
         this.cartService.clearCart();
         window.localStorage.removeItem(this.addressStorageKey);
         this.toastr.success(`Order ${order.orderNumber} placed successfully!`, 'Order Complete');
         this.router.navigate(['/order-confirmation']);
-      }, 2000);
-    }, 2000);
+      }, 1500);
+    } catch (err) {
+      console.error('[Checkout] Order placement failed:', err);
+      this.isProcessing = false;
+      this.toastr.error('Failed to place your order. Please try again.', 'Order Failed');
+    }
   }
 
   protected persistChanges(): void {

@@ -92,6 +92,11 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./components/admin/admin-orders/admin-orders').then(m => m.AdminOrders),
       },
+      {
+        path: 'orders/:id',
+        loadComponent: () =>
+          import('./components/admin/admin-order-detail/admin-order-detail').then(m => m.AdminOrderDetail),
+      },
     ],
   },
 
