@@ -1,0 +1,139 @@
+@if (order(); as o) {
+<div class="detail-page">
+
+  <div class="page-header">
+    <div>
+      <a routerLink="/admin/orders" class="back-link">
+        <mat-icon>arrow_back</mat-icon> Back to Orders
+      </a>
+      <h1>{{ o.orderNumber }}</h1>
+      <p>Placed {{ o.createdAt | date:'fullDate' }} at {{ o.createdAt | date:'shortTime' }}</p>
+    </div>
+    <div class="header-actions">
+      <button type="button" class="btn-secondary" (click)="printInvoice()">
+        <mat-icon>print</mat-icon> Print
+      </button>
+    </div>
+  </div>
+
+  <div class="detail-grid">
+
+    <div class="main-col">
+      <section class="card">
+        <h2><mat-icon>shopping_bag</mat-icon> Order Items</h2>
+        <div class="items-list">
+          @for (item of o.items; track item.id) {
+          <div class="item-row">
+            @if (item.product.images?.[0]) {
+            <img [src]="item.product.images[0]" [alt]="item.name" class="item-thumb" />
+            } @else {
+            <div class="item-thumb placeholder"><mat-icon>image</mat-icon></div>
+            }
+            <div class="item-info">
+              <div class="item-name">{{ item.name }}</div>
+              <div class="item-meta">
+                @if (item.selectedSize) { <span>Size: {{ item.selectedSize }}</span> }
+                @if (item.selectedColor) { <span>Color: {{ item.selectedColor }}</span> }
+              </div>
+            </div>
+            <div class="item-qty">×{{ item.quantity }}</div>
+            <div class="item-price">PKR {{ item.price * item.quantity | number }}</div>
+          </div>
+          }
+        </div>
+        <div class="totals">
+          <div class="total-row"><span>Subtotal</span><span>PKR {{ o.subtotal | number }}</span></div>
+          <div class="total-row"><span>Shipping &amp; fees</span><span>PKR {{ o.shippingCost | number }}</span></div>
+          <div class="total-row grand"><span>Total</span><span>PKR {{ o.total | number }}</span></div>
+        </div>
+      </section>
+
+      @if (o.orderNotes) {
+      <section class="card">
+        <h2><mat-icon>sticky_note_2</mat-icon> Order Notes</h2>
+        <p class="notes-text">{{ o.orderNotes }}</p>
+      </section>
+      }
+
+      @if (o.paymentProof) {
+      <section class="card">
+        <h2><mat-icon>receipt</mat-icon> Payment Receipt</h2>
+        <p class="receipt-meta">{{ o.paymentProof.fileName }} · {{ o.paymentProof.uploadedAt | date:'medium' }}</p>
+        @if (receiptIsImage()) {
+        <img [src]="receiptSrc()" [alt]="o.paymentProof.fileName" class="receipt-img" />
+        } @else if (receiptSrc()) {
+        <a [href]="receiptSrc()" target="_blank" rel="noopener noreferrer" class="receipt-link">
+          <mat-icon>open_in_new</mat-icon> View receipt
+        </a>
+        }
+      </section>
+      }
+    </div>
+
+    <div class="side-col">
+      <section class="card">
+        <h2><mat-icon>tune</mat-icon> Status</h2>
+        <select class="status-select" [ngModel]="o.status" (ngModelChange)="updateStatus($event)">
+          @for (s of statuses; track s) {
+          <option [value]="s">{{ s }}</option>
+          }
+        </select>
+        @if (o.trackingNumber) {
+        <div class="tracking-box">
+          <span class="label">Tracking</span>
+          <code>{{ o.trackingNumber }}</code>
+        </div>
+        }
+      </section>
+
+      <section class="card">
+        <h2><mat-icon>payments</mat-icon> Payment</h2>
+        <div class="info-row"><span>Method</span><strong>{{ paymentLabel(o.paymentMethod) }}</strong></div>
+        <div class="info-row">
+          <span>Status</span>
+          <span class="payment-status" [class]="'ps-' + o.paymentStatus.toLowerCase()">{{ o.paymentStatus }}</span>
+        </div>
+        @if (o.paymentMethod === 'BANK_TRANSFER') {
+        <div class="payment-actions">
+          <button type="button" class="btn-approve" (click)="approvePayment()">Verify Payment</button>
+          <button type="button" class="btn-reject" (click)="rejectPayment()">Reject</button>
+        </div>
+        }
+      </section>
+
+      <section class="card">
+        <h2><mat-icon>person</mat-icon> Customer</h2>
+        <div class="customer-block">
+          <div class="customer-name">{{ o.customerInfo.fullName }}</div>
+          <a [href]="'mailto:' + o.email" class="customer-email">{{ o.customerInfo.email }}</a>
+          <div class="customer-phone">{{ o.customerInfo.phone }}</div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2><mat-icon>local_shipping</mat-icon> Shipping</h2>
+        <address class="address-block">
+          {{ o.shippingAddress.addressLine1 }}<br>
+          @if (o.shippingAddress.addressLine2) { {{ o.shippingAddress.addressLine2 }}<br> }
+          {{ o.shippingAddress.city }}, {{ o.shippingAddress.stateProvince }}<br>
+          {{ o.shippingAddress.postalCode }}, {{ o.shippingAddress.country }}
+        </address>
+        <div class="delivery-est">
+          <mat-icon>event</mat-icon>
+          Est. delivery: {{ o.estimatedDelivery | date:'mediumDate' }}
+        </div>
+      </section>
+    </div>
+
+  </div>
+</div>
+} @else {
+<div class="detail-page">
+  <div class="state-card">
+    <mat-icon>search_off</mat-icon>
+    <h3>Order not found</h3>
+    <p>This order may not exist or hasn't loaded yet.</p>
+    <a routerLink="/admin/orders" class="btn-primary">Back to Orders</a>
+  </div>
+</div>
+}

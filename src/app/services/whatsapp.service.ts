@@ -1,9 +1,21 @@
 import { Injectable } from '@angular/core';
 import { WHATSAPP_CONFIG } from '../config/whatsapp.config';
+import { OrderModel } from '../models/order.model';
 
 function normalizeNumber(num: string): string {
   // remove non digits and leading +
   return num.replace(/[^0-9]/g, '').replace(/^0+/, '');
+}
+
+function normalizeRecipientNumber(num: string): string {
+  const cleaned = num.replace(/[^0-9]/g, '');
+  if (cleaned.startsWith('03') && cleaned.length === 11) {
+    return '92' + cleaned.slice(1);
+  }
+  if (cleaned.startsWith('3') && cleaned.length === 10) {
+    return '92' + cleaned;
+  }
+  return cleaned;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -71,5 +83,47 @@ export class WhatsAppService {
   // Order share
   orderShare(orderNumber: string, orderUrl: string): string {
     return `Order ${orderNumber} details: ${orderUrl}`;
+  }
+
+  buildOrderWhatsAppMessage(order: OrderModel): string {
+    const itemsText = order.items
+      .map(item => {
+        const variant = [item.selectedSize, item.selectedColor].filter(Boolean).join(' / ');
+        const variantStr = variant ? ` (${variant})` : '';
+        return `• ${item.name}${variantStr} x${item.quantity} - PKR ${item.price * item.quantity}`;
+      })
+      .join('\n');
+
+    const paymentLabel = order.paymentMethod === 'COD' ? 'Cash on Delivery (COD)' : 'Bank Transfer';
+
+    return `*Order Confirmed!* 🎉
+
+Thank you for shopping with *The Twisted Threads*.
+
+*Order Number:* ${order.orderNumber}
+*Date:* ${new Date(order.createdAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+*Payment Method:* ${paymentLabel}
+
+*Items Ordered:*
+${itemsText}
+
+*Summary:*
+• *Subtotal:* PKR ${order.subtotal}
+• *Shipping & Fees:* PKR ${order.shippingCost}
+• *Total:* *PKR ${order.total}*
+
+*Shipping Address:*
+${order.shippingAddress.fullName}
+${order.shippingAddress.addressLine1}
+${order.shippingAddress.addressLine2 ? order.shippingAddress.addressLine2 + '\n' : ''}${order.shippingAddress.city}, ${order.shippingAddress.stateProvince}
+${order.shippingAddress.postalCode}, ${order.shippingAddress.country}
+
+Track your order: ${window.location.origin}/track-order?order=${order.orderNumber}&whatsapp=${normalizeRecipientNumber(order.customerInfo.whatsappNumber)}`;
+  }
+
+  getOrderWhatsAppUrl(order: OrderModel): string {
+    const phone = normalizeRecipientNumber(order.customerInfo.whatsappNumber || order.customerInfo.phone);
+    const message = this.buildOrderWhatsAppMessage(order);
+    return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
   }
 }

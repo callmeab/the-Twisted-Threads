@@ -152,4 +152,11 @@
   flex: 1;
   overflow-y: auto;
   min-width: 0;
+  background: linear-gradient(180deg, #f8f7f5 0%, #f3f1ee 100%);
 }
+
+/* Scrollbar styling */
+.admin-main::-webkit-scrollbar { width: 6px; }
+.admin-main::-webkit-scrollbar-track { background: transparent; }
+.admin-main::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
+.admin-main::-webkit-scrollbar-thumb:hover { background: #9ca3af; }

@@ -1,9 +1,57 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // TODO: tighten per-collection rules before launch.
-    match /{document=**} {
-      allow read, write: if false;
+
+    // ── Helper: only a signed-in Firebase Auth user can write ──
+    function isAdmin() {
+      return request.auth != null;
+    }
+
+    // ── products ──────────────────────────────────────────────
+    // Public visitors can read only ACTIVE products.
+    // Admin can read, create, update, delete any product.
+    match /products/{productId} {
+      allow read: if resource.data.isActive == true || isAdmin();
+      allow create, update, delete: if isAdmin();
+    }
+
+    // ── orders ────────────────────────────────────────────────
+    // Anyone can place an order (create). Only admin can read/update.
+    match /orders/{orderId} {
+      allow create: if true;
+      allow read, update, delete: if isAdmin();
+    }
+
+    // ── order number counters ─────────────────────────────────
+    // Customers increment the yearly sequence when placing orders.
+    match /counters/{counterId} {
+      allow read: if true;
+      allow create: if request.resource.data.keys().hasOnly(['seq'])
+                    && request.resource.data.seq == 1;
+      allow update: if request.resource.data.keys().hasOnly(['seq'])
+                    && request.resource.data.seq == resource.data.seq + 1;
+    }
+
+    // ── reviews ───────────────────────────────────────────────
+    // Anyone can read reviews. Only authenticated users can create.
+    // Admin can delete.
+    match /reviews/{reviewId} {
+      allow read: if true;
+      allow create: if request.auth != null;
+      allow update, delete: if isAdmin();
+    }
+
+    // ── contacts ──────────────────────────────────────────────
+    // Anyone can submit a contact form. Only admin can read.
+    match /contacts/{docId} {
+      allow create: if true;
+      allow read, update, delete: if isAdmin();
+    }
+
+    // ── admin_audit ───────────────────────────────────────────
+    // Only admin can read/write audit logs.
+    match /admin_audit/{docId} {
+      allow read, write: if isAdmin();
     }
   }
 }

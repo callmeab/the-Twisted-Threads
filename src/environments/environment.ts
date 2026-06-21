@@ -3,13 +3,13 @@ import { FirebaseEnvironmentConfig } from '../app/core/firebase/firebase-env.mod
 export const environment: FirebaseEnvironmentConfig = {
   production: true,
   firebase: {
-    projectId: 'your-firebase-project-id',
-    appId: 'your-firebase-app-id',
-    storageBucket: 'your-firebase-project-id.firebasestorage.app',
-    apiKey: 'your-firebase-api-key',
-    authDomain: 'your-firebase-project-id.firebaseapp.com',
-    messagingSenderId: 'your-messaging-sender-id',
-    measurementId: 'your-firebase-measurement-id',
+    apiKey: 'AIzaSyB5Z20SkHNKMjs0cQlx-zAR2sr3DSaEJFE',
+    authDomain: 'the-twisted-thread.firebaseapp.com',
+    projectId: 'the-twisted-thread',
+    storageBucket: 'the-twisted-thread.firebasestorage.app',
+    messagingSenderId: '355932310857',
+    appId: '1:355932310857:web:3345295f0e9c90b0735e98',
+    measurementId: 'G-1RXKSMFBYC',
   },
   firebaseFeatureFlags: {
     analytics: true,
@@ -23,6 +23,6 @@ export const environment: FirebaseEnvironmentConfig = {
     storage: 9199,
   },
   firebaseAppCheck: {
-    siteKey: 'your-firebase-app-check-site-key',
+    siteKey: '',
   },
 };

@@ -1,9 +1,10 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CartService } from '../../services/cart.service';
 import { OrderService } from '../../services/order.service';
+import { WhatsAppService } from '../../services/whatsapp.service';
 import { CustomCurrencyPipe } from '../../pipes/custom-currency.pipe';
 import { ToastrService } from 'ngx-toastr';
 import { CustomerInfo, PaymentProof, ShippingAddress } from '../../models/order.model';
@@ -15,6 +16,7 @@ export const COD_FEE = 150;
   selector: 'app-checkout',
   standalone: true,
   imports: [CommonModule, FormsModule, CustomCurrencyPipe],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.scss'
 })
@@ -23,6 +25,7 @@ export class CheckoutComponent {
   private readonly orderService = inject(OrderService);
   private readonly router = inject(Router);
   private readonly toastr = inject(ToastrService);
+  private readonly whatsappService = inject(WhatsAppService);
 
   protected currentStep = 1;
   protected paymentMethod: 'COD' | 'BankTransfer' | '' = '';
@@ -48,7 +51,7 @@ export class CheckoutComponent {
 
   protected address: ShippingAddress = {
     fullName: '',
-    email: '',
+    whatsappNumber: '',
     phone: '',
     alternativePhone: '',
     addressLine1: '',
@@ -108,7 +111,7 @@ export class CheckoutComponent {
     }
   }
 
-  protected onPlaceOrder(): void {
+  protected async onPlaceOrder(): Promise<void> {
     if (!this.agreeToTerms || !this.agreeToPrivacy) {
       this.toastr.warning('Please accept the Terms & Conditions and Privacy Policy.', 'Consent Required');
       document.getElementById('terms-consent-section')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -123,11 +126,10 @@ export class CheckoutComponent {
 
     this.isProcessing = true;
 
-    // Simulate a 2-second processing delay
-    setTimeout(() => {
+    try {
       const customerInfo: CustomerInfo = {
         fullName: this.address.fullName,
-        email: this.address.email,
+        whatsappNumber: this.address.whatsappNumber,
         phone: this.address.phone,
         alternativePhone: this.address.alternativePhone,
       };
@@ -145,7 +147,7 @@ export class CheckoutComponent {
         };
       }
 
-      const order = this.orderService.createOrder({
+      const order = await this.orderService.createOrder({
         customerInfo,
         items,
         shippingAddress: { ...this.address },
@@ -157,17 +159,28 @@ export class CheckoutComponent {
         total: this.grandTotal,
       });
 
+      // Automatically launch the Click-to-WhatsApp URL
+      try {
+        const whatsappUrl = this.whatsappService.getOrderWhatsAppUrl(order);
+        window.open(whatsappUrl, '_blank');
+      } catch (err) {
+        console.warn('[Checkout] Failed to auto-open WhatsApp link:', err);
+      }
+
       this.isProcessing = false;
       this.isSuccess = true;
 
-      // Hold success screen for 2s then navigate
       setTimeout(() => {
         this.cartService.clearCart();
         window.localStorage.removeItem(this.addressStorageKey);
         this.toastr.success(`Order ${order.orderNumber} placed successfully!`, 'Order Complete');
         this.router.navigate(['/order-confirmation']);
-      }, 2000);
-    }, 2000);
+      }, 1500);
+    } catch (err) {
+      console.error('[Checkout] Order placement failed:', err);
+      this.isProcessing = false;
+      this.toastr.error('Failed to place your order. Please try again.', 'Order Failed');
+    }
   }
 
   protected persistChanges(): void {
@@ -223,7 +236,7 @@ export class CheckoutComponent {
     const orderTotal = this.cartService.totalPrice();
     const customerName = this.address.fullName || 'Valued Customer';
     const message = `Hi The Twisted Threads, this is ${customerName}. Here is the bank transfer receipt for my order total of ${orderTotal} PKR.`;
-    const whatsappUrl = `https://wa.me/923001234567?text=${encodeURIComponent(message)}`;
+    const whatsappUrl = `https://wa.me/923316903634?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
   }
 

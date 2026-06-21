@@ -13,7 +13,8 @@
     "firebase:login": "npx firebase-tools login",
     "firebase:emulators": "npx firebase-tools emulators:start",
     "firebase:deploy:hosting": "npx firebase-tools deploy --only hosting",
-    "firebase:deploy:rules": "npx firebase-tools deploy --only firestore:rules,storage"
+    "firebase:deploy:rules": "npx firebase-tools deploy --only firestore:rules,storage",
+    "firebase:deploy:functions": "npm --prefix functions run build && npx firebase-tools deploy --only functions"
   },
   "private": true,
   "packageManager": "npm@11.11.0",
@@ -31,7 +32,7 @@
     "@angular/service-worker": "^21.2.13",
     "@ng-bootstrap/ng-bootstrap": "^20.0.0",
     "bootstrap": "^5.3.8",
-    "firebase": "^12.14.0",
+    "firebase": "^11.10.0",
     "ng-gallery": "^12.0.0",
     "ngx-toastr": "^20.0.5",
     "rxjs": "~7.8.0",

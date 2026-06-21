@@ -28,7 +28,7 @@ import { AdminAuditService } from '../../services/admin-audit.service';
     <section class="customer-info">
       <h2>Customer Details</h2>
       <p>{{ order.customerInfo.fullName }}</p>
-      <p>{{ order.customerInfo.email }}</p>
+      // <p>{{ order.shippingAddress.email }}</p>
       <p>{{ order.customerInfo.phone }}</p>
       <p>{{ order.shippingAddress.addressLine1 }}, {{ order.shippingAddress.city }}</p>
     </section>
@@ -60,9 +60,9 @@ import { AdminAuditService } from '../../services/admin-audit.service';
 })
 export class AdminOrderDetailComponent implements OnInit {
   order: OrderModel | undefined;
-  statuses = ['PENDING','CONFIRMED','PROCESSING','SHIPPED','DELIVERED','CANCELLED'];
+  statuses = ['PENDING', 'CONFIRMED', 'PROCESSING', 'SHIPPED', 'DELIVERED', 'CANCELLED'];
 
-  constructor(private route: ActivatedRoute, private orderService: OrderService, private toastr: ToastrService, private audit: AdminAuditService) {}
+  constructor(private route: ActivatedRoute, private orderService: OrderService, private toastr: ToastrService, private audit: AdminAuditService) { }
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
@@ -70,25 +70,28 @@ export class AdminOrderDetailComponent implements OnInit {
     this.order = this.orderService.getOrderById(id);
   }
 
-  updateStatus(status: string) {
+  async updateStatus(status: string) {
     if (!this.order) return;
-    this.orderService.updateOrderStatus(this.order.orderId, status as any);
+    await this.orderService.updateOrderStatus(this.order.orderId, status as any);
+    this.order = this.orderService.getOrderById(this.order.orderId);
     this.toastr.success('Status updated', 'Order');
-    this.audit.log('update_status', { orderNumber: this.order.orderNumber, status });
+    this.audit.log('update_status', { orderNumber: this.order!.orderNumber, status });
   }
 
-  approvePayment() {
+  async approvePayment() {
     if (!this.order) return;
-    this.orderService.verifyPayment(this.order.orderId);
+    await this.orderService.verifyPayment(this.order.orderId);
+    this.order = this.orderService.getOrderById(this.order.orderId);
     this.toastr.success('Payment approved', 'Payment');
-    this.audit.log('approve_payment', { orderNumber: this.order.orderNumber });
+    this.audit.log('approve_payment', { orderNumber: this.order!.orderNumber });
   }
 
-  rejectPayment() {
+  async rejectPayment() {
     if (!this.order) return;
-    this.orderService.setPaymentStatus(this.order.orderId, 'FAILED');
+    await this.orderService.setPaymentStatus(this.order.orderId, 'FAILED');
+    this.order = this.orderService.getOrderById(this.order.orderId);
     this.toastr.warning('Payment rejected', 'Payment');
-    this.audit.log('reject_payment', { orderNumber: this.order.orderNumber });
+    this.audit.log('reject_payment', { orderNumber: this.order!.orderNumber });
   }
 
   printInvoice() {

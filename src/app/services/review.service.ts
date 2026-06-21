@@ -123,10 +123,7 @@ export class ReviewService {
     }
 
     return this.orderService.orders().some(order => {
-      const orderEmail =
-        order.customerInfo.email?.toLowerCase() ||
-        order.shippingAddress.email?.toLowerCase() ||
-        '';
+      const orderEmail = order.email?.toLowerCase() || '';
       if (orderEmail !== normalized) {
         return false;
       }

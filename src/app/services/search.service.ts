@@ -24,10 +24,10 @@ const POPULAR_SEARCHES = [
 ];
 
 const PRICE_RANGES: Array<{ label: string; min?: number; max?: number }> = [
-  { label: 'Under $50', max: 50 },
-  { label: '$50 – $150', min: 50, max: 150 },
-  { label: '$150 – $300', min: 150, max: 300 },
-  { label: 'Over $300', min: 300 },
+  { label: 'Under PKR 50', max: 50 },
+  { label: 'PKR 50 – 150', min: 50, max: 150 },
+  { label: 'PKR 150 – 300', min: 150, max: 300 },
+  { label: 'Over PKR 300', min: 300 },
 ];
 
 @Injectable({
@@ -78,7 +78,7 @@ export class SearchService {
         id: `product-${product.id}`,
         type: 'product',
         label: product.name,
-        sublabel: `${product.category} · $${product.price.toFixed(2)}`,
+        sublabel: `${product.category} · PKR ${product.price.toLocaleString('en-PK')}`,
         query: product.name,
         product,
         imageUrl: product.images[0] || product.mainImage,
@@ -244,7 +244,8 @@ export class SearchService {
       q.includes('cheap') ||
       q.includes('budget') ||
       q.includes('price') ||
-      q.includes('$')
+      q.includes('$') ||
+      q.includes('pkr')
     ) {
       return PRICE_RANGES;
     }

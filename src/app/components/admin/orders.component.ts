@@ -76,10 +76,10 @@ export class AdminOrdersComponent implements OnInit {
   filterPayment: PaymentMethod | '' = '';
   from: string | null = null;
   to: string | null = null;
-  statuses: OrderStatus[] = ['PENDING','CONFIRMED','PROCESSING','SHIPPED','DELIVERED','CANCELLED'];
-  payments: PaymentMethod[] = ['COD','BANK_TRANSFER'];
+  statuses: OrderStatus[] = ['PENDING', 'CONFIRMED', 'PROCESSING', 'SHIPPED', 'DELIVERED', 'CANCELLED'];
+  payments: PaymentMethod[] = ['COD', 'BANK_TRANSFER'];
 
-  constructor(private orderService: OrderService, private toastr: ToastrService, private audit: AdminAuditService) {}
+  constructor(private orderService: OrderService, private toastr: ToastrService, private audit: AdminAuditService) { }
 
   ngOnInit(): void {
     this.orders = this.orderService.getAllOrders();
@@ -99,15 +99,15 @@ export class AdminOrdersComponent implements OnInit {
       }
       if (this.to) {
         const toD = new Date(this.to);
-        toD.setHours(23,59,59,999);
+        toD.setHours(23, 59, 59, 999);
         if (o.createdAt > toD) return false;
       }
       return true;
     });
   }
 
-  changeStatus(o: OrderModel, status: OrderStatus) {
-    const updated = this.orderService.updateOrderStatus(o.orderId, status);
+  async changeStatus(o: OrderModel, status: OrderStatus) {
+    const updated = await this.orderService.updateOrderStatus(o.orderId, status);
     if (updated) {
       this.toastr.success('Order status updated', 'Updated');
       this.orders = this.orderService.getAllOrders();
@@ -115,8 +115,8 @@ export class AdminOrdersComponent implements OnInit {
     }
   }
 
-  approvePayment(o: OrderModel) {
-    const updated = this.orderService.verifyPayment(o.orderId);
+  async approvePayment(o: OrderModel) {
+    const updated = await this.orderService.verifyPayment(o.orderId);
     if (updated) {
       this.toastr.success('Payment verified', 'Payment');
       this.orders = this.orderService.getAllOrders();
@@ -124,8 +124,8 @@ export class AdminOrdersComponent implements OnInit {
     }
   }
 
-  rejectPayment(o: OrderModel) {
-    const updated = this.orderService.setPaymentStatus(o.orderId, 'FAILED');
+  async rejectPayment(o: OrderModel) {
+    const updated = await this.orderService.setPaymentStatus(o.orderId, 'FAILED');
     if (updated) {
       this.toastr.warning('Payment rejected', 'Payment');
       this.orders = this.orderService.getAllOrders();
@@ -134,9 +134,7 @@ export class AdminOrdersComponent implements OnInit {
   }
 
   requestClarify(o: OrderModel) {
-    // In a real app we'd send an email; here we queue a mock email via OrderService
-    this.orderService.sendOrderConfirmationEmail(o.orderId);
-    this.toastr.info('Requested clarification email sent to customer (mock).', 'Requested');
+    this.toastr.info('Clarification request noted for customer follow-up.', 'Requested');
     this.audit.log('request_clarification', { orderNumber: o.orderNumber });
   }
 
@@ -144,20 +142,20 @@ export class AdminOrdersComponent implements OnInit {
     const rows = this.filteredOrders().map(o => ({
       orderNumber: o.orderNumber,
       customer: o.customerInfo.fullName,
-      email: o.customerInfo.email,
+      email: o.email,
       date: o.createdAt.toISOString(),
       total: o.total,
       paymentMethod: o.paymentMethod,
       status: o.status,
     }));
     const header = Object.keys(rows[0] || {}).join(',');
-    const csv = [header, ...rows.map(r => Object.values(r).map(v => `"${String(v).replace(/"/g,'""')}"`).join(','))].join('\n');
+    const csv = [header, ...rows.map(r => Object.values(r).map(v => `"${String(v).replace(/"/g, '""')}"`).join(','))].join('\n');
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     // Use a simple download method
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `orders-${new Date().toISOString().slice(0,10)}.csv`;
+    a.download = `orders-${new Date().toISOString().slice(0, 10)}.csv`;
     a.click();
     URL.revokeObjectURL(url);
   }

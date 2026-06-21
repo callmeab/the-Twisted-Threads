@@ -181,8 +181,15 @@ export class OrderTrackingComponent implements OnInit {
   }
 
   protected get receiptIsImage(): boolean {
-    const data = this.foundOrder?.paymentProof?.fileData ?? '';
-    return data.startsWith('data:image');
+    const proof = this.foundOrder?.paymentProof;
+    if (!proof) return false;
+    const src = proof.fileUrl ?? proof.fileData ?? '';
+    return src.startsWith('data:image') || /\.(jpe?g|png|webp|gif)(\?|$)/i.test(src);
+  }
+
+  protected get receiptSrc(): string {
+    const proof = this.foundOrder?.paymentProof;
+    return proof?.fileUrl ?? proof?.fileData ?? '';
   }
 
   protected get emailNotificationsUrl(): string {
@@ -192,7 +199,7 @@ export class OrderTrackingComponent implements OnInit {
     }
     const subject = encodeURIComponent(`Order updates for ${order.orderNumber}`);
     const body = encodeURIComponent(
-      `Please send shipping updates for order ${order.orderNumber} to ${order.customerInfo.email}.`
+      `Please send shipping updates for order ${order.orderNumber} to ${order.email}.`
     );
     return `mailto:${this.supportEmail}?subject=${subject}&body=${body}`;
   }
@@ -225,8 +232,7 @@ export class OrderTrackingComponent implements OnInit {
     this.foundOrder = null;
     this.resultsVisible.set(false);
 
-    setTimeout(() => {
-      const order = this.orderService.trackOrder(this.orderNumber, this.email);
+    void this.orderService.trackOrder(this.orderNumber, this.email).then(order => {
       this.isSearching = false;
 
       if (!order) {
@@ -248,7 +254,7 @@ export class OrderTrackingComponent implements OnInit {
       }
 
       requestAnimationFrame(() => this.resultsVisible.set(true));
-    }, 400);
+    });
   }
 
   private statusRank(status: OrderModel['status']): number {

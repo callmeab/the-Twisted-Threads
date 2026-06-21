@@ -1,6 +1,17 @@
 import { ProductModel } from '../models/product.model';
 
-export const MOCK_PRODUCTS: ProductModel[] = [
+/** Adds new required fields with sensible defaults so the mock data stays lean */
+function withDefaults(p: Omit<ProductModel, 'isActive' | 'slug' | 'imageStoragePaths' | 'updatedAt'>): ProductModel {
+  return {
+    ...p,
+    isActive: true,
+    imageStoragePaths: [],
+    slug: p.name.toLowerCase().trim().replace(/[^\w\s-]/g, '').replace(/[\s_-]+/g, '-').replace(/^-+|-+$/g, ''),
+  };
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const _raw: any[] = [
   {
     id: "prod-1",
     name: "Exquisite Woolen Knit Cardigan",
@@ -527,3 +538,5 @@ export const MOCK_PRODUCTS: ProductModel[] = [
     createdAt: new Date("2026-05-31T00:00:00.000Z")
   }
 ];
+
+export const MOCK_PRODUCTS: ProductModel[] = _raw.map(withDefaults);

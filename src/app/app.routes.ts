@@ -1,7 +1,9 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './guards/auth.guard';
+import { adminGuard } from './guards/admin.guard';
 
 export const routes: Routes = [
+  // ── Public routes ──────────────────────────────────────────────────────
   {
     path: '',
     loadComponent: () => import('./components/home/home.component').then(m => m.HomeComponent),
@@ -51,9 +53,58 @@ export const routes: Routes = [
     path: 'wishlist',
     loadComponent: () => import('./components/wishlist/wishlist.component').then(m => m.WishlistComponent),
   },
+
+  // ── Admin routes ───────────────────────────────────────────────────────
+  {
+    path: 'admin/login',
+    loadComponent: () =>
+      import('./components/admin/admin-login/admin-login').then(m => m.AdminLogin),
+  },
+  {
+    path: 'admin',
+    loadComponent: () =>
+      import('./components/admin/admin-layout/admin-layout').then(m => m.AdminLayout),
+    canActivate: [adminGuard],
+    children: [
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      {
+        path: 'dashboard',
+        loadComponent: () =>
+          import('./components/admin/dashboard/dashboard').then(m => m.Dashboard),
+      },
+      {
+        path: 'products',
+        loadComponent: () =>
+          import('./components/admin/admin-products/admin-products').then(m => m.AdminProducts),
+      },
+      {
+        path: 'products/add',
+        loadComponent: () =>
+          import('./components/admin/admin-product-form/admin-product-form').then(m => m.AdminProductForm),
+      },
+      {
+        path: 'products/:id/edit',
+        loadComponent: () =>
+          import('./components/admin/admin-product-form/admin-product-form').then(m => m.AdminProductForm),
+      },
+      {
+        path: 'orders',
+        loadComponent: () =>
+          import('./components/admin/admin-orders/admin-orders').then(m => m.AdminOrders),
+      },
+      {
+        path: 'orders/:id',
+        loadComponent: () =>
+          import('./components/admin/admin-order-detail/admin-order-detail').then(m => m.AdminOrderDetail),
+      },
+    ],
+  },
+
+  // ── Fallback ───────────────────────────────────────────────────────────
   {
     path: '**',
     redirectTo: '',
   },
 ];
+
 
