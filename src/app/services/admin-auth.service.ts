@@ -1,5 +1,5 @@
 import { Injectable, inject, signal } from '@angular/core';
-import { Auth, signInWithEmailAndPassword, signOut, onAuthStateChanged, User } from '@angular/fire/auth';
+import { Auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, User } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
@@ -19,9 +19,6 @@ export class AdminAuthService {
 
   // Used by the legacy adminAuthGuard (synchronous check)
   isAuthenticated(): boolean {
-    if (typeof window !== 'undefined' && window.localStorage.getItem('dummyAdminLoggedIn') === 'true') {
-      return true;
-    }
     return !!this.auth.currentUser;
   }
 
@@ -30,8 +27,16 @@ export class AdminAuthService {
 
   async login(email: string, password: string): Promise<void> {
     if (email === 'dummy@admin.com' && password === 'dummy123') {
-      if (typeof window !== 'undefined') {
-        window.localStorage.setItem('dummyAdminLoggedIn', 'true');
+      try {
+        await signInWithEmailAndPassword(this.auth, email, password);
+      } catch (err: any) {
+        // If user doesn't exist, try to create it automatically so backend rules work
+        try {
+          await createUserWithEmailAndPassword(this.auth, email, password);
+        } catch (createErr) {
+          console.error('Failed to create dummy admin account in Firebase:', createErr);
+          throw err;
+        }
       }
       return;
     }
@@ -39,11 +44,6 @@ export class AdminAuthService {
   }
 
   async logout(): Promise<void> {
-    if (typeof window !== 'undefined' && window.localStorage.getItem('dummyAdminLoggedIn') === 'true') {
-      window.localStorage.removeItem('dummyAdminLoggedIn');
-      this.router.navigate(['/admin/login']);
-      return;
-    }
     await signOut(this.auth);
     this.router.navigate(['/admin/login']);
   }

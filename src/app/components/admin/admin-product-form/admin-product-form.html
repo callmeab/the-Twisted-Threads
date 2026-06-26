@@ -225,23 +225,45 @@
         <!-- ── Image Uploader ── -->
         <section class="card">
           <h2 class="card-title"><mat-icon>photo_library</mat-icon> Product Images</h2>
-          <p class="field-hint">Paste an image URL (e.g., from Unsplash or Cloudinary) and press Enter. The first image becomes the main thumbnail.</p>
+          <p class="field-hint">Upload high-quality product images. The first image becomes the main thumbnail.</p>
 
-          <div class="chip-input-area" style="margin-bottom: 16px;">
-            <input
-              type="text"
-              class="chip-input"
-              placeholder="Paste image URL here..."
-              [value]="imageInput()"
-              (input)="imageInput.set($any($event.target).value)"
-              (keydown)="addImageUrlOnEnter($event)"
-            />
-            <button type="button" class="btn-ghost" style="padding: 4px 12px; font-size: 12px;" (click)="addImageUrl()">Add</button>
+          <div
+            class="drop-zone"
+            [class.dragging]="isDragging()"
+            (dragover)="onDragOver($event)"
+            (dragleave)="onDragLeave($event)"
+            (drop)="onDrop($event)"
+            (click)="fileInput.click()"
+          >
+            <input type="file" multiple accept="image/jpeg,image/png,image/webp" class="hidden-file-input" #fileInput (change)="onFileSelected($event)">
+            <mat-icon>cloud_upload</mat-icon>
+            <p>Click or drag images here to upload</p>
+            <span>Supports JPG, PNG, WEBP (Max 5MB)</span>
           </div>
 
-          <!-- Existing images (edit mode) -->
+          <!-- Upload Progress -->
+          @if (uploadService.uploadTasks().length > 0) {
+            <div class="upload-progress-list">
+              @for (task of uploadService.uploadTasks(); track task.file.name) {
+                <div class="upload-task" [class.done]="task.status === 'done'" [class.error]="task.status === 'error'">
+                  <mat-icon>{{ task.status === 'done' ? 'check_circle' : (task.status === 'error' ? 'error' : 'cloud_upload') }}</mat-icon>
+                  <div class="task-info">
+                    <span class="task-name">{{ task.file.name }}</span>
+                    <div class="progress-bar">
+                      <div class="progress-fill" [style.width.%]="task.progress"></div>
+                    </div>
+                    <span class="task-pct">
+                      {{ task.status === 'error' ? task.error : task.progress + '%' }}
+                    </span>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+
+          <!-- Existing images -->
           @if (existingImages().length > 0) {
-            <div class="image-grid-label">Saved Images</div>
+            <div class="image-grid-label" style="margin-top: 16px;">Saved Images</div>
             <div class="image-grid">
               @for (url of existingImages(); track url; let i = $index) {
                 <div class="thumb-wrapper">
@@ -254,7 +276,6 @@
               }
             </div>
           }
-
 
         </section>
 

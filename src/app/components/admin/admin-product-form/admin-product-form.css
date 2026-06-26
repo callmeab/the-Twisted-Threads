@@ -327,6 +327,8 @@ select {
   }
 }
 
+.hidden-file-input { display: none; }
+
 /* Image grid */
 .image-grid-label {
   font-size: 11px;

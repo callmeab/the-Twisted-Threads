@@ -10,6 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { ToastrService } from 'ngx-toastr';
 
 import { ProductService } from '../../../services/product.service';
+import { ProductImageUploadService } from '../../../services/product-image-upload.service';
 
 @Component({
   selector: 'app-admin-product-form',
@@ -23,16 +24,20 @@ export class AdminProductForm implements OnInit, OnDestroy {
   private route = inject(ActivatedRoute);
   private products = inject(ProductService);
   private toastr = inject(ToastrService);
+  public uploadService = inject(ProductImageUploadService);
 
   // ── Mode ────────────────────────────────────────────────────────────────
   editId = signal<string | null>(null);
+  newProductId = crypto.randomUUID();
   isEdit = computed(() => !!this.editId());
   isSaving = signal(false);
   isLoadingProduct = signal(false);
 
   // ── Image state ─────────────────────────────────────────────────────────
   existingImages = signal<string[]>([]);
+  imageStoragePaths = signal<string[]>([]);
   imageInput = signal('');
+  isDragging = signal(false);
 
   // ── Chip helpers ─────────────────────────────────────────────────────────
   tagInput = signal('');
@@ -121,33 +126,72 @@ export class AdminProductForm implements OnInit, OnDestroy {
 
     // Existing images
     this.existingImages.set(p.images || []);
+    this.imageStoragePaths.set(p.imageStoragePaths || []);
     this.isLoadingProduct.set(false);
   }
 
   // ── Image handling ────────────────────────────────────────────────────────
-  addImageUrl() {
-    const url = this.imageInput().trim();
-    if (!url) return;
+  onDragOver(event: DragEvent) {
+    event.preventDefault();
+    this.isDragging.set(true);
+  }
 
-    // Basic URL validation
+  onDragLeave(event: DragEvent) {
+    event.preventDefault();
+    this.isDragging.set(false);
+  }
+
+  onDrop(event: DragEvent) {
+    event.preventDefault();
+    this.isDragging.set(false);
+    if (event.dataTransfer?.files) {
+      this.handleFiles(Array.from(event.dataTransfer.files));
+    }
+  }
+
+  onFileSelected(event: any) {
+    if (event.target.files) {
+      this.handleFiles(Array.from(event.target.files));
+    }
+    event.target.value = '';
+  }
+
+  async handleFiles(files: File[]) {
+    const validFiles = files.filter(f => {
+      const isImg = ['image/jpeg', 'image/png', 'image/webp'].includes(f.type);
+      const isSmall = f.size <= 5 * 1024 * 1024;
+      if (!isImg) this.toastr.error(`${f.name} is not a valid image format.`);
+      if (!isSmall) this.toastr.error(`${f.name} exceeds 5MB limit.`);
+      return isImg && isSmall;
+    });
+
+    if (validFiles.length === 0) return;
+
+    const targetId = this.editId() ?? this.newProductId;
+    
     try {
-      new URL(url);
-      this.existingImages.update(cur => [...cur, url]);
-      this.imageInput.set('');
-    } catch {
-      this.toastr.error('Please enter a valid HTTP/HTTPS URL', 'Invalid URL');
+      const results = await this.uploadService.uploadMany(validFiles, targetId);
+      for (const res of results) {
+        this.existingImages.update(cur => [...cur, res.url]);
+        this.imageStoragePaths.update(cur => [...cur, res.storagePath]);
+      }
+      this.toastr.success('Images uploaded successfully.');
+    } catch (err: any) {
+      this.toastr.error('Some images failed to upload.');
     }
   }
 
-  addImageUrlOnEnter(event: KeyboardEvent) {
-    if (event.key === 'Enter') {
-      event.preventDefault();
-      this.addImageUrl();
+  async removeImage(index: number) {
+    const path = this.imageStoragePaths()[index];
+    if (path) {
+      try {
+        await this.uploadService.deleteImage(path);
+      } catch (e) {
+        console.warn('Failed to delete from storage', e);
+      }
     }
-  }
-
-  removeImage(index: number) {
     this.existingImages.update(cur => cur.filter((_, i) => i !== index));
+    this.imageStoragePaths.update(cur => cur.filter((_, i) => i !== index));
   }
 
   // ── Chip management ───────────────────────────────────────────────────────
@@ -189,7 +233,7 @@ export class AdminProductForm implements OnInit, OnDestroy {
 
     this.isSaving.set(true);
     try {
-      const productId = this.editId() ?? crypto.randomUUID();
+      const productId = this.editId() ?? this.newProductId;
       const name = this.form.get('name')!.value!;
 
       const imageUrls = this.existingImages();
@@ -218,7 +262,7 @@ export class AdminProductForm implements OnInit, OnDestroy {
         sizes: this.sizesArray.value as string[],
         colors: this.colorsArray.value as string[],
         images: imageUrls,
-        imageStoragePaths: [], // No longer used
+        imageStoragePaths: this.imageStoragePaths(),
         mainImage: imageUrls[0] ?? '',
         slug: this._slugify(name),
         rating: 0,
