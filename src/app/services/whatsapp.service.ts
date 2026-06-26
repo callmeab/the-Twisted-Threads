@@ -95,35 +95,40 @@ export class WhatsAppService {
       .join('\n');
 
     const paymentLabel = order.paymentMethod === 'COD' ? 'Cash on Delivery (COD)' : 'Bank Transfer';
+    const emailStr = order.customerInfo.email ? `\n*Email:* ${order.customerInfo.email}` : '';
+    const notesStr = order.orderNotes ? `\n\n*Customer Notes / Instructions:*\n${order.orderNotes}` : '';
+    const proofStr = (order.paymentMethod === 'BANK_TRANSFER' && order.paymentProof?.fileUrl) 
+      ? `\n*Payment Proof URL:* ${order.paymentProof.fileUrl}` 
+      : '';
 
-    return `*Order Confirmed!* 🎉
-
-Thank you for shopping with *The Twisted Threads*.
+    return `*New Order Placed!* 🎉
 
 *Order Number:* ${order.orderNumber}
 *Date:* ${new Date(order.createdAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
-*Payment Method:* ${paymentLabel}
+
+*Customer Details:*
+*Name:* ${order.customerInfo.fullName}
+*Phone:* ${order.customerInfo.phone} (WhatsApp: ${order.customerInfo.whatsappNumber})${emailStr}
+
+*Shipping Address:*
+${order.shippingAddress.addressLine1}
+${order.shippingAddress.addressLine2 ? order.shippingAddress.addressLine2 + '\n' : ''}${order.shippingAddress.city}, ${order.shippingAddress.stateProvince}
+${order.shippingAddress.postalCode}, ${order.shippingAddress.country}
+
+*Payment Method:* ${paymentLabel}${proofStr}
 
 *Items Ordered:*
 ${itemsText}
 
 *Summary:*
 • *Subtotal:* PKR ${order.subtotal}
-• *Shipping & Fees:* PKR ${order.shippingCost}
-• *Total:* *PKR ${order.total}*
-
-*Shipping Address:*
-${order.shippingAddress.fullName}
-${order.shippingAddress.addressLine1}
-${order.shippingAddress.addressLine2 ? order.shippingAddress.addressLine2 + '\n' : ''}${order.shippingAddress.city}, ${order.shippingAddress.stateProvince}
-${order.shippingAddress.postalCode}, ${order.shippingAddress.country}
-
-Track your order: ${window.location.origin}/track-order?order=${order.orderNumber}&whatsapp=${normalizeRecipientNumber(order.customerInfo.whatsappNumber)}`;
+• *Delivery Charges:* PKR ${order.shippingCost}
+• *Total:* *PKR ${order.total}*${notesStr}`;
   }
 
   getOrderWhatsAppUrl(order: OrderModel): string {
-    const phone = normalizeRecipientNumber(order.customerInfo.whatsappNumber || order.customerInfo.phone);
+    const companyPhone = normalizeRecipientNumber('03316903634');
     const message = this.buildOrderWhatsAppMessage(order);
-    return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+    return `https://wa.me/${companyPhone}?text=${encodeURIComponent(message)}`;
   }
 }

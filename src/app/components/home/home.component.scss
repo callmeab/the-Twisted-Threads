@@ -6,7 +6,18 @@
   display: block;
 }
 
-// 1. Hero Slideshow Container & Styles
+// ============================================================
+// 1. Hero Slideshow Section
+// ============================================================
+
+.hero-section {
+  width: 100%;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+  background-color: var(--color-charcoal);
+}
+
 swiper-container {
   width: 100%;
   height: 100%;
@@ -35,7 +46,41 @@ swiper-container {
   }
 }
 
+.hero-slide {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  
+  // Parallax Background transitions
+  .hero-bg {
+    will-change: transform;
+  }
+}
+
+.hero-overlay {
+  background-color: rgba(10, 10, 10, 0.65);
+  backdrop-filter: brightness(0.8);
+}
+
+.hero-content {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  padding: 0 1.5rem;
+}
+
+.hero-badge {
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  color: var(--color-gold);
+  background-color: rgba(74, 44, 62, 0.3); // Purple with transparency
+  backdrop-filter: blur(4px);
+  margin-bottom: var(--space-6);
+}
+
+// ============================================================
 // 2. Buttons Styling
+// ============================================================
+
 .btn-primary-luxury {
   background-color: var(--color-gold) !important;
   color: var(--color-purple) !important;
@@ -56,14 +101,14 @@ swiper-container {
 }
 
 .btn-outline-luxury {
-  background-color: rgba(254, 254, 254, 0.05) !important;
-  color: var(--color-pearl) !important;
-  border: 1px solid rgba(254, 254, 254, 0.2) !important;
+  background-color: rgba(254, 254, 254, 0.05);
+  color: var(--color-pearl);
+  border: 1px solid rgba(254, 254, 254, 0.2);
   text-decoration: none;
 
   &:hover {
-    background-color: rgba(254, 254, 254, 0.12) !important;
-    border-color: var(--color-pearl) !important;
+    background-color: rgba(254, 254, 254, 0.12);
+    border-color: var(--color-pearl);
     transform: translateY(-2px);
   }
 
@@ -72,7 +117,21 @@ swiper-container {
   }
 }
 
+// ============================================================
 // 3. Scroll Down Arrow Indicator
+// ============================================================
+
+.scroll-down-btn {
+  color: rgba(254, 254, 254, 0.5); // pearl/50
+  &:hover {
+    color: var(--color-gold);
+    
+    .scroll-arrow-box {
+      border-color: var(--color-gold);
+    }
+  }
+}
+
 .scroll-arrow-box {
   width: 26px;
   height: 44px;
@@ -96,12 +155,6 @@ swiper-container {
   }
 }
 
-button:hover {
-  .scroll-arrow-box {
-    border-color: var(--color-gold);
-  }
-}
-
 @keyframes scrollScroll {
   0% {
     opacity: 0;
@@ -120,12 +173,81 @@ button:hover {
   }
 }
 
-// 4. Parallax Background transitions
-swiper-slide div {
-  will-change: transform;
+// ============================================================
+// 4. Promotional Banner
+// ============================================================
+
+.promo-banner {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  z-index: 20;
+  position: relative;
 }
 
+// ============================================================
+// 5. Category Showcase
+// ============================================================
+
+.category-section {
+  padding-top: var(--space-20);
+  padding-bottom: var(--space-20);
+}
+
+.category-card {
+  cursor: pointer;
+  
+  .category-img-wrapper {
+    background-color: var(--color-charcoal-soft);
+  }
+  
+  &:hover .category-overlay {
+    opacity: 1;
+  }
+  
+  &:hover img {
+    transform: scale(1.1);
+  }
+}
+
+// ============================================================
+// 6. Brand Story Section
+// ============================================================
+
+.brand-story-section {
+  padding-top: var(--space-24);
+  padding-bottom: var(--space-24);
+}
+
+.story-image-container {
+  img {
+    transition: transform var(--transition-slow);
+  }
+  
+  &:hover img {
+    transform: scale(1.05);
+  }
+}
+
+// ============================================================
+// 7. Testimonials Section
+// ============================================================
+
+.testimonials-section {
+  background: linear-gradient(135deg, var(--color-purple) 0%, var(--color-purple-dark) 100%);
+}
+
+.testimonial-card {
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.15);
+  }
+}
+
+// ============================================================
 // Material Icons adjustment inside grids
+// ============================================================
+
 mat-icon {
   width: 20px;
   height: 20px;

@@ -3,7 +3,7 @@
   [ngClass]="{ 'scrolled-header': isScrolled(), 'transparent-header': !isScrolled() }"
   class="fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300"
 >
-  <div class="mx-auto flex h-20 items-center justify-between px-4 sm:px-8 lg:px-12 max-w-8xl">
+  <div class="mx-auto flex h-20 items-center justify-between px-4 lg:px-8 max-w-8xl">
     <!-- Logo -->
     <a routerLink="/" class="flex items-center gap-2 logo-link shrink-0" (click)="mobileNav.close()">
       <span class="font-heading tracking-widest text-xl sm:text-2xl uppercase gradient-purple-rose font-bold">
@@ -12,18 +12,38 @@
     </a>
 
     <!-- Desktop navigation -->
-    <nav class="hidden lg:flex items-center gap-8 text-sm uppercase tracking-widest font-semibold text-charcoal">
+    <nav class="hidden lg:flex items-center gap-6 xl:gap-8 text-sm uppercase tracking-widest font-semibold text-charcoal">
       <a routerLink="/" routerLinkActive="active-nav-link" [routerLinkActiveOptions]="{ exact: true }" class="nav-link">
         Home
       </a>
       <a routerLink="/products" routerLinkActive="active-nav-link" class="nav-link">Shop</a>
-      <button
-        [matMenuTriggerFor]="collectionsMenu"
-        class="nav-link flex items-center gap-1 border-none cursor-pointer bg-transparent"
-      >
-        Collections
-        <mat-icon class="text-xs transition-transform duration-200">keyboard_arrow_down</mat-icon>
-      </button>
+      
+      <!-- Inline CSS Dropdown for Collections -->
+      <div class="nav-dropdown-wrapper">
+        <button class="nav-link flex items-center gap-1 border-none cursor-pointer bg-transparent">
+          Collections
+          <mat-icon class="text-xs transition-transform duration-200 dropdown-arrow">keyboard_arrow_down</mat-icon>
+        </button>
+        <div class="nav-dropdown-menu">
+          <a routerLink="/products" [queryParams]="{ category: 'Necklaces' }" class="nav-dropdown-item">
+            <mat-icon class="text-rose-gold text-sm mr-2">diamond</mat-icon>
+            Artisan Necklaces
+          </a>
+          <a routerLink="/products" [queryParams]="{ category: 'Bracelets' }" class="nav-dropdown-item">
+            <mat-icon class="text-rose-gold text-sm mr-2">watch</mat-icon>
+            Fine Bracelets
+          </a>
+          <a routerLink="/products" [queryParams]="{ category: 'Earrings' }" class="nav-dropdown-item">
+            <mat-icon class="text-rose-gold text-sm mr-2">auto_awesome</mat-icon>
+            Elegant Earrings
+          </a>
+          <a routerLink="/products" [queryParams]="{ category: 'Sets' }" class="nav-dropdown-item">
+            <mat-icon class="text-rose-gold text-sm mr-2">interests</mat-icon>
+            Custom Sets
+          </a>
+        </div>
+      </div>
+
       <a routerLink="/about" routerLinkActive="active-nav-link" class="nav-link">About</a>
       <a routerLink="/contact" routerLinkActive="active-nav-link" class="nav-link">Contact</a>
     </nav>
@@ -34,9 +54,10 @@
         <app-search-bar />
       </div>
 
-      <button [matMenuTriggerFor]="accountMenu" class="action-btn hidden sm:inline-flex" aria-label="Account">
+      <!-- Hidden User/Profile Icon -->
+      <!-- <button class="action-btn hidden" aria-label="Account">
         <mat-icon>person_outline</mat-icon>
-      </button>
+      </button> -->
 
       <a
         routerLink="/wishlist"
@@ -71,61 +92,3 @@
 
 <app-mobile-menu />
 
-<!-- Collections desktop menu -->
-<mat-menu #collectionsMenu="matMenu" class="collections-dropdown-menu">
-  <div class="px-3 py-2 flex flex-col gap-1">
-    <a
-      routerLink="/products"
-      [queryParams]="{ category: 'Home Decor' }"
-      mat-menu-item
-      class="menu-item-link font-body text-xs font-semibold"
-    >
-      <mat-icon class="text-rose-gold text-sm mr-2">home_work</mat-icon>
-      Artisan Home Decor
-    </a>
-    <a
-      routerLink="/products"
-      [queryParams]="{ category: 'Accessories' }"
-      mat-menu-item
-      class="menu-item-link font-body text-xs font-semibold"
-    >
-      <mat-icon class="text-rose-gold text-sm mr-2">watch</mat-icon>
-      Luxurious Accessories
-    </a>
-    <a
-      routerLink="/products"
-      [queryParams]="{ category: 'Apparel' }"
-      mat-menu-item
-      class="menu-item-link font-body text-xs font-semibold"
-    >
-      <mat-icon class="text-rose-gold text-sm mr-2">checkroom</mat-icon>
-      Apparel Essentials
-    </a>
-    <a
-      routerLink="/products"
-      [queryParams]="{ category: 'Jewelry' }"
-      mat-menu-item
-      class="menu-item-link font-body text-xs font-semibold"
-    >
-      <mat-icon class="text-rose-gold text-sm mr-2">diamond</mat-icon>
-      Fine Jewelry
-    </a>
-  </div>
-</mat-menu>
-
-<mat-menu #accountMenu="matMenu" class="account-dropdown-menu">
-  <div class="px-3 py-2 flex flex-col gap-1 min-w-[200px]">
-    <div class="border-b border-neutral-100 pb-2 mb-2 px-3">
-      <p class="font-body text-xs font-bold text-neutral-800 m-0">Welcome Guest</p>
-      <span class="font-serif text-[10px] text-neutral-400">Unlock premium orders tracker</span>
-    </div>
-    <button mat-menu-item class="font-body text-xs font-semibold">
-      <mat-icon class="text-neutral-500 mr-2">lock_open</mat-icon>
-      Login / Sign Up
-    </button>
-    <button mat-menu-item class="font-body text-xs font-semibold">
-      <mat-icon class="text-neutral-500 mr-2">settings</mat-icon>
-      Preferences
-    </button>
-  </div>
-</mat-menu>

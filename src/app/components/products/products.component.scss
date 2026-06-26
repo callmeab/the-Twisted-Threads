@@ -328,3 +328,78 @@ mat-icon {
   height: 18px;
   font-size: 18px;
 }
+
+// 5. New Filter Styles
+.color-swatch-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid rgba(44, 44, 44, 0.1);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+  padding: 0;
+
+  &:hover {
+    transform: scale(1.1);
+    box-shadow: var(--shadow-soft);
+  }
+
+  &.active {
+    box-shadow: 0 0 0 2px var(--color-pearl), 0 0 0 4px var(--color-rose-gold);
+  }
+}
+
+.radio-style {
+  border-radius: 50% !important;
+
+  &.checked {
+    border-color: var(--color-rose-gold);
+    background-color: var(--color-rose-gold);
+    position: relative;
+
+    &::after {
+      content: '';
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background-color: var(--color-pearl);
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
+}
+
+.rating-filter-row:hover .radio-style {
+  border-color: var(--color-rose-gold);
+}
+
+// Angular Material Accordion Overrides
+::ng-deep .premium-accordion {
+  .mat-expansion-panel {
+    background: transparent !important;
+    color: var(--color-charcoal) !important;
+  }
+
+  .mat-expansion-panel-header {
+    padding: 0 !important;
+    font-family: var(--font-heading) !important;
+    height: 48px !important;
+
+    &.mat-expanded {
+      height: 48px !important;
+    }
+  }
+
+  .mat-expansion-panel-content {
+    font-family: var(--font-body) !important;
+  }
+
+  .mat-expansion-panel-body {
+    padding: 0 !important;
+  }
+}

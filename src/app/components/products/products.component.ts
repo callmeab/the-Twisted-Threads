@@ -57,6 +57,7 @@ export class ProductsComponent implements OnInit {
   selectedMaterials = signal<Set<string>>(new Set());
   selectedColors = signal<Set<string>>(new Set());
   selectedSizes = signal<Set<string>>(new Set());
+  selectedRating = signal<number>(0);
   maxPrice = signal<number>(1000);
   inStockOnly = signal<boolean>(false);
   selectedSort = signal<string>('featured');
@@ -67,9 +68,27 @@ export class ProductsComponent implements OnInit {
   filterSheetOpen = signal<boolean>(false);
 
   // Unique filters lists dynamically compiled from database
-  availableCategories = ['Apparel', 'Home Decor', 'Accessories', 'Jewelry'];
-  availableMaterials = ['Wool', 'Linen', 'Cotton', 'Cashmere', 'Rose Gold', 'Gold', 'Amethyst', 'Pearl', 'Silver', 'Silk'];
+  availableCategories = ['Bracelets', 'Necklaces', 'Earrings', 'Handmade Sets'];
+  availableMaterials = ['Beads', 'Pearls', 'Threads', 'Handmade Fabric', 'Rose Gold', 'Gold', 'Silver'];
   availableColors = ['Charcoal', 'Cream', 'Oatmeal', 'Sage', 'Terracotta', 'Indigo Blue', 'Purple', 'Gold', 'Pearl White', 'Rose Gold', 'White Gold', 'Beige', 'Slate Blue', 'Pink'];
+  
+  colorSwatches: Record<string, string> = {
+    'Charcoal': '#333333',
+    'Cream': '#F5F1E8',
+    'Oatmeal': '#E4D5B7',
+    'Sage': '#9DC183',
+    'Terracotta': '#E2725B',
+    'Indigo Blue': '#4B0082',
+    'Purple': '#663399',
+    'Gold': '#D4AF37',
+    'Pearl White': '#FDFDFD',
+    'Rose Gold': '#B76E79',
+    'White Gold': '#F5F5F5',
+    'Beige': '#F5F5DC',
+    'Slate Blue': '#6A5ACD',
+    'Pink': '#FFC0CB'
+  };
+
   availableSizes = ['S', 'M', 'L', 'XL', 'Standard', 'One Size', '6', '7', '8', '9', '18" Chain', '30mm Diameter'];
 
   ngOnInit(): void {
@@ -146,13 +165,18 @@ export class ProductsComponent implements OnInit {
       result = result.filter(p => p.inStock);
     }
 
+    // 6.5 Rating
+    if (this.selectedRating() > 0) {
+      result = result.filter(p => p.rating >= this.selectedRating());
+    }
+
     // 7. Sort
     const sortOrder = this.selectedSort();
     if (sortOrder === 'price-low') {
       result.sort((a, b) => a.price - b.price);
     } else if (sortOrder === 'price-high') {
       result.sort((a, b) => b.price - a.price);
-    } else if (sortOrder === 'rating') {
+    } else if (sortOrder === 'rating' || sortOrder === 'popular') {
       result.sort((a, b) => b.rating - a.rating);
     } else if (sortOrder === 'newest') {
       result.sort((a, b) => {
@@ -222,6 +246,15 @@ export class ProductsComponent implements OnInit {
     this.maxPrice.set(val);
   }
 
+  toggleRating(rating: number) {
+    this.triggerShimmer();
+    if (this.selectedRating() === rating) {
+      this.selectedRating.set(0); // Toggle off if clicked again
+    } else {
+      this.selectedRating.set(rating);
+    }
+  }
+
   toggleStockOnly(checked: boolean) {
     this.triggerShimmer();
     this.inStockOnly.set(checked);
@@ -238,6 +271,7 @@ export class ProductsComponent implements OnInit {
     this.selectedMaterials.set(new Set());
     this.selectedColors.set(new Set());
     this.selectedSizes.set(new Set());
+    this.selectedRating.set(0);
     this.maxPrice.set(1000);
     this.inStockOnly.set(false);
     this.currentPage.set(1);

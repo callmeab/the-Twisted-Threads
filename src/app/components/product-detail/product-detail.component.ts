@@ -12,6 +12,7 @@ import { StarRatingComponent } from '../shared/star-rating/star-rating.component
 import { ProductReviewsComponent } from '../product-reviews/product-reviews.component';
 import { ProductDetailSkeletonComponent } from '../shared/skeletons/product-detail-skeleton.component';
 import { ProductImageGalleryComponent } from '../shared/product-image-gallery/product-image-gallery.component';
+import { MatIcon } from "@angular/material/icon";
 
 @Component({
   selector: 'app-product-detail',
@@ -25,7 +26,8 @@ import { ProductImageGalleryComponent } from '../shared/product-image-gallery/pr
     ProductReviewsComponent,
     ProductDetailSkeletonComponent,
     ProductImageGalleryComponent,
-  ],
+    MatIcon
+],
   templateUrl: './product-detail.component.html',
   styleUrls: ['./product-detail.component.scss'],
 })
@@ -192,6 +194,14 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     if (prod) {
       this.cartService.addToCart(prod, this.quantity());
       this.toastr.success(`${this.quantity()}× ${prod.name} added to cart`, 'Item Added');
+    }
+  }
+
+  protected buyNow(): void {
+    const prod = this.product();
+    if (prod) {
+      this.cartService.addToCart(prod, this.quantity());
+      void this.router.navigate(['/checkout']);
     }
   }
 

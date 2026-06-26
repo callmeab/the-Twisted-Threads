@@ -253,3 +253,73 @@
   position: relative;
   z-index: 101;
 }
+
+// 6. Custom Inline Nav Dropdown
+.nav-dropdown-wrapper {
+  position: relative;
+  
+  &:hover {
+    .nav-dropdown-menu {
+      visibility: visible;
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    
+    .dropdown-arrow {
+      transform: rotate(180deg);
+    }
+  }
+}
+
+.nav-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(10px);
+  min-width: 220px;
+  background-color: rgba(254, 254, 254, 0.98);
+  backdrop-filter: blur(10px);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(183, 110, 121, 0.08);
+  box-shadow: var(--shadow-medium);
+  padding: var(--space-2) 0;
+  
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-normal), transform var(--transition-normal), visibility var(--transition-normal);
+  z-index: 100;
+
+  .dark-mode & {
+    background-color: rgba(26, 18, 24, 0.98);
+    border: 1px solid rgba(212, 175, 55, 0.08);
+  }
+}
+
+.nav-dropdown-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  font-family: var(--font-body);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-charcoal);
+  text-decoration: none;
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+
+  &:hover {
+    background-color: rgba(183, 110, 121, 0.04);
+    color: var(--color-rose-gold);
+  }
+
+  .dark-mode & {
+    color: var(--color-cream);
+    
+    &:hover {
+      background-color: rgba(212, 175, 55, 0.04);
+      color: var(--color-gold);
+    }
+  }
+}

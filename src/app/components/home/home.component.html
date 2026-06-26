@@ -1,87 +1,153 @@
 <!-- Stunning Full-Screen Hero Slideshow -->
-<section class="relative w-full h-screen overflow-hidden bg-charcoal">
+<section class="hero-section relative w-full h-screen overflow-hidden bg-charcoal">
 
   <!-- Swiper Full-Screen Background Carousel -->
   <swiper-container effect="fade" autoplay='{"delay": 6000, "disableOnInteraction": false, "pauseOnHover": true}'
     loop="true" speed="1400" class="w-full h-full">
-    <!-- Slide 1 -->
-    <swiper-slide class="w-full h-full relative">
-      <div class="absolute inset-0 bg-cover bg-center transition-transform duration-100 ease-out" [ngStyle]="{ 
-          'background-image': 'url(https://images.unsplash.com/photo-1573408301185-9146fe634ad0?q=80&w=1600)', 
-          'transform': 'translateY(' + (scrollY() * 0.35) + 'px)' 
-        }"></div>
-      <div class="absolute inset-0 bg-neutral-950/65 backdrop-brightness-[0.7]"></div>
+    
+    <!-- Slide 1: Beads -->
+    <swiper-slide class="hero-slide w-full h-full relative">
+      <div class="hero-bg absolute inset-0 bg-cover bg-center transition-transform duration-100 ease-out" 
+           [ngStyle]="{ 'transform': 'translateY(' + (scrollY() * 0.35) + 'px)' }"
+           style="background-image: url('https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=1600')"></div>
+      <div class="hero-overlay absolute inset-0"></div>
     </swiper-slide>
 
-    <!-- Slide 2 -->
-    <swiper-slide class="w-full h-full relative">
-      <div class="absolute inset-0 bg-cover bg-center transition-transform duration-100 ease-out" [ngStyle]="{ 
-          'background-image': 'url(https://images.unsplash.com/photo-1606722590583-6951b5ea92ad?q=80&w=1600)', 
-          'transform': 'translateY(' + (scrollY() * 0.35) + 'px)' 
-        }"></div>
-      <div class="absolute inset-0 bg-neutral-950/65 backdrop-brightness-[0.7]"></div>
+    <!-- Slide 2: Handmade Jewelry -->
+    <swiper-slide class="hero-slide w-full h-full relative">
+      <div class="hero-bg absolute inset-0 bg-cover bg-center transition-transform duration-100 ease-out" 
+           [ngStyle]="{ 'transform': 'translateY(' + (scrollY() * 0.35) + 'px)' }"
+           style="background-image: url('https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=1600')"></div>
+      <div class="hero-overlay absolute inset-0"></div>
     </swiper-slide>
 
-    <!-- Slide 3 -->
-    <swiper-slide class="w-full h-full relative">
-      <div class="absolute inset-0 bg-cover bg-center transition-transform duration-100 ease-out" [ngStyle]="{ 
-          'background-image': 'url(https://images.unsplash.com/photo-1509281373149-e957c6296406?q=80&w=1600)', 
-          'transform': 'translateY(' + (scrollY() * 0.35) + 'px)' 
-        }"></div>
-      <div class="absolute inset-0 bg-neutral-950/65 backdrop-brightness-[0.7]"></div>
+    <!-- Slide 3: Pearls -->
+    <swiper-slide class="hero-slide w-full h-full relative">
+      <div class="hero-bg absolute inset-0 bg-cover bg-center transition-transform duration-100 ease-out" 
+           [ngStyle]="{ 'transform': 'translateY(' + (scrollY() * 0.35) + 'px)' }"
+           style="background-image: url('https://images.unsplash.com/photo-1515562141207-7a8efbfc344c?q=80&w=1600')"></div>
+      <div class="hero-overlay absolute inset-0"></div>
     </swiper-slide>
 
-    <!-- Slide 4 -->
-    <swiper-slide class="w-full h-full relative">
-      <div class="absolute inset-0 bg-cover bg-center transition-transform duration-100 ease-out" [ngStyle]="{ 
-          'background-image': 'url(https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=1600)', 
-          'transform': 'translateY(' + (scrollY() * 0.35) + 'px)' 
-        }"></div>
-      <div class="absolute inset-0 bg-neutral-950/65 backdrop-brightness-[0.7]"></div>
-    </swiper-slide>
   </swiper-container>
 
   <!-- Elegant Centered Content Overlay -->
-  <div class="absolute inset-0 z-10 flex flex-col items-center justify-center text-center px-6">
-    <span
-      class="animate-fade-in text-[10px] tracking-[0.25em] font-semibold text-gold uppercase border border-gold/30 rounded-full px-4 py-2 mb-6 bg-purple/20 backdrop-blur-sm">
-      All Seasons Collection 2026
+  <div class="hero-content absolute inset-0 z-10 flex-column flex-center text-center px-6">
+    <span class="hero-badge animate-fade-in text-xs tracking-widest font-semibold uppercase rounded-full px-4 py-2 mb-6">
+      Artisan Crafted Collection
     </span>
-    <h1
-      class="animate-slide-up font-heading tracking-wide text-4xl sm:text-7xl font-bold text-pearl leading-none max-w-4xl">
-      Handcrafted Elegance, <br />
-      <span class="gradient-rose-gold">Just for You</span>
+    <h1 class="hero-title animate-slide-up font-heading tracking-wide text-5xl sm:text-7xl font-bold text-pearl leading-none max-w-4xl">
+      Handmade Beauty, <br />
+      <span class="gradient-rose-gold">Woven With Love</span>
     </h1>
-    <p
-      class="animate-fade-in font-serif text-sm sm:text-lg text-cream/80 max-w-2xl mt-6 leading-relaxed font-light text-white">
-      Explore our private boutique of hand-twisted gold threads, organic fabrics, and luxury textiles spun by master
-      weavers into pure, wearable art.
+    <p class="hero-subtitle animate-fade-in font-serif text-sm sm:text-lg text-cream max-w-2xl mt-6 leading-relaxed font-light">
+      Discover our exclusive collection of handcrafted jewelry. From intricately woven threads to carefully selected beads and natural pearls, each piece tells a unique story.
     </p>
 
     <!-- CTA Actions -->
-    <div class="animate-slide-up flex flex-col sm:flex-row gap-4 mt-8">
-      <a routerLink="/products"
-        class="btn-primary-luxury px-4 py-3 text-xs font-semibold uppercase tracking-widest rounded-lg transition-all duration-300">
+    <div class="hero-cta animate-slide-up flex-row flex-center gap-4 mt-8">
+      <a routerLink="/products" class="btn-primary-luxury px-5 py-3 text-sm font-semibold uppercase tracking-widest rounded-lg transition-all duration-300">
         Shop Collection
       </a>
-      <a routerLink="/about"
-        class="btn-outline-luxury px-4 py-3 text-xs font-semibold uppercase tracking-widest rounded-lg backdrop-blur-sm transition-all duration-300">
-        Discover Story
+      <a href="#brand-story" class="btn-outline-luxury px-5 py-3 text-sm font-semibold uppercase tracking-widest rounded-lg backdrop-blur-sm transition-all duration-300 smooth-scroll">
+        Our Story
       </a>
     </div>
   </div>
 
   <!-- Animated Scroll Down Indicator -->
-  <button (click)="scrollToFeatured()"
-    class="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2 cursor-pointer bg-transparent border-none text-pearl/50 hover:text-gold transition-colors duration-300"
-    aria-label="Scroll Down">
-    <span class="font-body text-[9px] uppercase tracking-widest font-semibold">Scroll Down</span>
+  <button (click)="scrollToFeatured()" class="scroll-down-btn absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex-column flex-center gap-2 cursor-pointer bg-transparent border-none transition-colors duration-300" aria-label="Scroll Down">
+    <span class="font-body text-xs uppercase tracking-widest font-semibold">Discover</span>
     <div class="scroll-arrow-box">
       <div class="scroll-dot"></div>
     </div>
   </button>
 </section>
 
-<div id="featured-section">
-  <app-featured-products></app-featured-products>
-</div>
+<!-- Promotional Banner -->
+<section class="promo-banner w-full bg-rose-gold text-pearl py-4 flex-center text-center">
+  <p class="font-body text-sm font-medium tracking-wide m-0">
+    ✨ Free Shipping on all Custom Artisan Orders over PKR 5,000 ✨
+  </p>
+</section>
+
+<!-- Category Showcase Section -->
+<section class="category-section py-20 bg-cream">
+  <div class="container-premium text-center">
+    <h2 class="font-heading text-4xl font-bold text-charcoal mb-4">Shop by Category</h2>
+    <hr class="divider-gold mx-auto w-24" />
+    <p class="font-serif text-lg text-charcoal-soft mb-12 max-w-2xl mx-auto">
+      Explore our curated selection of handcrafted pieces, designed to complement your unique style.
+    </p>
+
+    <div class="grid-responsive">
+      <a *ngFor="let category of categories" [routerLink]="category.link" class="category-card relative group rounded-2xl overflow-hidden shadow-soft block">
+        <div class="category-img-wrapper w-full aspect-square overflow-hidden">
+          <img [src]="category.image" [alt]="category.name" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+        </div>
+        <div class="category-overlay absolute inset-0 bg-gradient-to-t from-charcoal/80 to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-8">
+          <h3 class="text-pearl font-heading text-2xl tracking-wide transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">{{ category.name }}</h3>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Artisan Craftsmanship & Brand Story Section -->
+<section id="brand-story" class="brand-story-section py-24 bg-pearl relative overflow-hidden">
+  <div class="container-premium">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+      <div class="story-image-container relative rounded-2xl overflow-hidden shadow-strong aspect-[4/5] lg:aspect-auto lg:h-[600px]">
+        <img src="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=1200" alt="Artisan handcrafting jewelry" class="w-full h-full object-cover">
+        <div class="absolute inset-0 border-2 border-gold/30 m-4 rounded-xl pointer-events-none"></div>
+      </div>
+      <div class="story-content text-left">
+        <span class="badge-premium mb-6">Our Heritage</span>
+        <h2 class="font-heading text-4xl sm:text-5xl font-bold text-charcoal mb-6 leading-tight">
+          The Art of <span class="text-rose-gold">Handmade</span>
+        </h2>
+        <p class="font-body text-lg text-charcoal-soft mb-6 leading-relaxed">
+          At The Twisted Threads, we believe that true beauty lies in the details. Every necklace, bracelet, and earring is meticulously handcrafted by skilled artisans who pour their passion into each knot and bead.
+        </p>
+        <p class="font-body text-lg text-charcoal-soft mb-8 leading-relaxed">
+          We source the finest quality threads, natural pearls, and vibrant beads to create jewelry that isn't just an accessory, but a piece of wearable art. Our commitment to authentic craftsmanship ensures that no two pieces are exactly alike.
+        </p>
+        <a routerLink="/about" class="btn-outline-luxury text-charcoal border-charcoal hover:bg-charcoal hover:text-pearl px-8 py-3 text-sm font-semibold uppercase tracking-widest rounded-lg inline-block transition-all duration-300">
+          Read Our Full Story
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Featured Products Section -->
+<section id="featured-section" class="featured-products-wrapper py-20 bg-cream-dark">
+  <div class="container-premium">
+    <div class="text-center mb-12">
+      <h2 class="font-heading text-4xl font-bold text-charcoal mb-4">Trending Handcrafts</h2>
+      <hr class="divider-gold mx-auto w-24" />
+    </div>
+    <app-featured-products></app-featured-products>
+  </div>
+</section>
+
+<!-- Customer Testimonials Section -->
+<!-- <section class="testimonials-section py-24 bg-purple text-pearl relative text-center">
+  <div class="container-premium">
+    <h2 class="font-heading text-4xl font-bold mb-4">Loved by Our Community</h2>
+    <hr class="divider-gold mx-auto w-24 border-gold-light" />
+    
+    <div class="testimonials-grid mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div *ngFor="let testimonial of testimonials" class="testimonial-card bg-pearl/5 backdrop-blur-md border border-pearl/10 p-8 rounded-2xl text-left hover:bg-pearl/10 transition-colors duration-300">
+        <div class="flex text-gold mb-4 gap-1">
+          <svg *ngFor="let star of [1,2,3,4,5]" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+        </div>
+        <p class="font-serif text-lg italic mb-6 leading-relaxed opacity-90">"{{ testimonial.text }}"</p>
+        <div>
+          <p class="font-heading font-bold text-lg mb-1">{{ testimonial.name }}</p>
+          <p class="font-body text-xs uppercase tracking-widest text-gold-light">{{ testimonial.role }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section> -->

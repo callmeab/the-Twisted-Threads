@@ -69,6 +69,13 @@
   height: 100%;
   object-fit: cover;
   display: block;
+  transition: transform var(--transition-normal) ease-out;
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      transform: scale(1.15);
+    }
+  }
 }
 
 .expand-btn {

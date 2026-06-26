@@ -19,97 +19,131 @@
 
 <div class="container-premium py-12">
   <ng-template #filtersTpl>
-    <div class="space-y-6 filters-panel-content mt-3">
+    <div class="filters-panel-content mt-3 flex flex-col h-full">
+      <div class="flex-grow space-y-4">
+        <!-- Clear all filters button (Desktop only, mobile will have sticky footer) -->
+        <button (click)="clearAllFilters()"
+          class="hidden lg:block w-full py-2.5 bg-neutral-100 text-neutral-600 hover:bg-rose-gold hover:text-pearl transition-all duration-300 font-body text-xs font-semibold uppercase tracking-widest rounded-lg border-none cursor-pointer mb-4">
+          Reset Filters
+        </button>
 
-      <!-- Category Filter -->
-      <div class="filter-section space-y-3">
-        <h4 class="font-heading text-sm font-bold text-charcoal tracking-wide border-b border-neutral-100 pb-2">Category
-        </h4>
-        <div class="flex flex-col gap-2 font-body text-xs text-neutral-600">
-          @for (cat of availableCategories; track cat) {
-          <label class="flex items-center gap-3 cursor-pointer select-none">
-            <input type="checkbox" [checked]="selectedCategories().has(cat)" (change)="toggleCategory(cat)"
-              class="filter-checkbox">
-            <span>{{ cat }}</span>
-          </label>
-          }
+        <mat-accordion multi="true" class="premium-accordion space-y-2">
+          
+          <!-- Category Filter -->
+          <mat-expansion-panel expanded="true" class="filter-panel shadow-none border-b border-neutral-100 !rounded-none">
+            <mat-expansion-panel-header class="px-0 hover:bg-transparent">
+              <mat-panel-title class="font-heading text-sm font-bold text-charcoal tracking-wide">Category</mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="flex flex-col gap-2 font-body text-xs text-neutral-600 pt-2 pb-4">
+              @for (cat of availableCategories; track cat) {
+              <label class="flex items-center gap-3 cursor-pointer select-none">
+                <input type="checkbox" [checked]="selectedCategories().has(cat)" (change)="toggleCategory(cat)"
+                  class="filter-checkbox">
+                <span>{{ cat }}</span>
+              </label>
+              }
+            </div>
+          </mat-expansion-panel>
+
+          <!-- Price Range Filter -->
+          <mat-expansion-panel expanded="true" class="filter-panel shadow-none border-b border-neutral-100 !rounded-none">
+            <mat-expansion-panel-header class="px-0 hover:bg-transparent">
+              <mat-panel-title class="font-heading text-sm font-bold text-charcoal tracking-wide">Price Limit</mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="space-y-4 pt-2 pb-4">
+              <input type="range" min="0" max="1000" step="20" [value]="maxPrice()" (input)="onPriceChange($event)"
+                class="w-full price-slider">
+              <div class="flex justify-between font-body text-[10px] text-neutral-500 font-semibold uppercase">
+                <span>Up to</span>
+                <span class="text-rose-gold text-xs font-bold">{{ maxPrice() | customCurrency }}</span>
+              </div>
+            </div>
+          </mat-expansion-panel>
+
+          <!-- Materials Filter -->
+          <mat-expansion-panel expanded="true" class="filter-panel shadow-none border-b border-neutral-100 !rounded-none">
+            <mat-expansion-panel-header class="px-0 hover:bg-transparent">
+              <mat-panel-title class="font-heading text-sm font-bold text-charcoal tracking-wide">Materials</mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="flex flex-col gap-2 font-body text-xs text-neutral-600 max-h-[180px] overflow-y-auto pr-2 custom-scrollbar pt-2 pb-4">
+              @for (mat of availableMaterials; track mat) {
+              <label class="flex items-center gap-3 cursor-pointer select-none">
+                <input type="checkbox" [checked]="selectedMaterials().has(mat)" (change)="toggleMaterial(mat)"
+                  class="filter-checkbox">
+                <span>{{ mat }}</span>
+              </label>
+              }
+            </div>
+          </mat-expansion-panel>
+
+          <!-- Colors Filter -->
+          <mat-expansion-panel expanded="true" class="filter-panel shadow-none border-b border-neutral-100 !rounded-none">
+            <mat-expansion-panel-header class="px-0 hover:bg-transparent">
+              <mat-panel-title class="font-heading text-sm font-bold text-charcoal tracking-wide">Colors</mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="flex flex-wrap gap-3 pt-2 pb-4">
+              @for (col of availableColors; track col) {
+              <button type="button" 
+                      (click)="toggleColor(col)"
+                      class="color-swatch-btn"
+                      [class.active]="selectedColors().has(col)"
+                      [style.backgroundColor]="colorSwatches[col]"
+                      [title]="col">
+                @if (selectedColors().has(col)) {
+                  <mat-icon class="text-[14px] w-3.5 h-3.5 flex items-center justify-center text-charcoal mix-blend-difference opacity-80">check</mat-icon>
+                }
+              </button>
+              }
+            </div>
+          </mat-expansion-panel>
+
+          <!-- Customer Rating Filter -->
+          <mat-expansion-panel class="filter-panel shadow-none border-b border-neutral-100 !rounded-none">
+            <mat-expansion-panel-header class="px-0 hover:bg-transparent">
+              <mat-panel-title class="font-heading text-sm font-bold text-charcoal tracking-wide">Customer Rating</mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="flex flex-col gap-3 font-body text-xs text-neutral-600 pt-2 pb-4">
+              @for (rating of [4, 3]; track rating) {
+              <label class="flex items-center gap-3 cursor-pointer select-none rating-filter-row" (click)="toggleRating(rating)">
+                <div class="filter-checkbox radio-style" [class.checked]="selectedRating() === rating"></div>
+                <div class="flex items-center text-gold">
+                  @for (star of [1,2,3,4,5]; track star) {
+                    <mat-icon class="text-sm w-4 h-4">{{ star <= rating ? 'star' : 'star_border' }}</mat-icon>
+                  }
+                  <span class="text-charcoal ml-2">& Up</span>
+                </div>
+              </label>
+              }
+            </div>
+          </mat-expansion-panel>
+
+          <!-- Sizes Filter -->
+          <mat-expansion-panel class="filter-panel shadow-none !rounded-none">
+            <mat-expansion-panel-header class="px-0 hover:bg-transparent">
+              <mat-panel-title class="font-heading text-sm font-bold text-charcoal tracking-wide">Sizes</mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="flex flex-wrap gap-2 pt-2 pb-4">
+              @for (sz of availableSizes; track sz) {
+              <button (click)="toggleSize(sz)"
+                class="size-pill font-body text-[10px] px-3 py-1.5 rounded-md border font-semibold transition-all duration-200"
+                [ngClass]="{ 'active': selectedSizes().has(sz) }">
+                {{ sz }}
+              </button>
+              }
+            </div>
+          </mat-expansion-panel>
+
+        </mat-accordion>
+
+        <!-- In Stock Slide Toggle -->
+        <div class="pt-4 pb-2 border-t border-neutral-100 flex items-center justify-between">
+          <span class="font-heading text-sm font-bold text-charcoal tracking-wide">Availability</span>
+          <mat-slide-toggle [checked]="inStockOnly()" (change)="toggleStockOnly($event.checked)" color="primary"
+            class="font-body text-xs text-neutral-600 font-semibold tracking-wider">
+            In Stock Only
+          </mat-slide-toggle>
         </div>
       </div>
-
-      <!-- Price Range Filter -->
-      <div class="filter-section space-y-3">
-        <h4 class="font-heading text-sm font-bold text-charcoal tracking-wide border-b border-neutral-100 pb-2">Price
-          Limit</h4>
-        <div class="space-y-2">
-          <input type="range" min="0" max="1000" step="20" [value]="maxPrice()" (input)="onPriceChange($event)"
-            class="w-full price-slider">
-          <div class="flex justify-between font-body text-[10px] text-neutral-500 font-semibold uppercase">
-            <span>Up to</span>
-            <span class="text-rose-gold text-xs font-bold">{{ maxPrice() | customCurrency }}</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Materials Filter -->
-      <div class="filter-section space-y-3">
-        <h4 class="font-heading text-sm font-bold text-charcoal tracking-wide border-b border-neutral-100 pb-2">
-          Materials</h4>
-        <div
-          class="flex flex-col gap-2 font-body text-xs text-neutral-600 max-h-[160px] overflow-y-auto pr-2 custom-scrollbar">
-          @for (mat of availableMaterials; track mat) {
-          <label class="flex items-center gap-3 cursor-pointer select-none">
-            <input type="checkbox" [checked]="selectedMaterials().has(mat)" (change)="toggleMaterial(mat)"
-              class="filter-checkbox">
-            <span>{{ mat }}</span>
-          </label>
-          }
-        </div>
-      </div>
-
-      <!-- Colors Filter -->
-      <div class="filter-section space-y-3">
-        <h4 class="font-heading text-sm font-bold text-charcoal tracking-wide border-b border-neutral-100 pb-2">Colors
-        </h4>
-        <div
-          class="flex flex-col gap-2 font-body text-xs text-neutral-600 max-h-[160px] overflow-y-auto pr-2 custom-scrollbar">
-          @for (col of availableColors; track col) {
-          <label class="flex items-center gap-3 cursor-pointer select-none">
-            <input type="checkbox" [checked]="selectedColors().has(col)" (change)="toggleColor(col)"
-              class="filter-checkbox">
-            <span>{{ col }}</span>
-          </label>
-          }
-        </div>
-      </div>
-
-      <!-- Sizes Filter -->
-      <div class="filter-section space-y-3">
-        <h4 class="font-heading text-sm font-bold text-charcoal tracking-wide border-b border-neutral-100 pb-2">Sizes
-        </h4>
-        <div class="flex flex-wrap gap-2 pt-1">
-          @for (sz of availableSizes; track sz) {
-          <button (click)="toggleSize(sz)"
-            class="size-pill font-body text-[10px] px-3 py-1.5 rounded-md border font-semibold transition-all duration-200"
-            [ngClass]="{ 'active': selectedSizes().has(sz) }">
-            {{ sz }}
-          </button>
-          }
-        </div>
-      </div>
-
-      <!-- In Stock Slide Toggle -->
-      <div class="filter-section pt-2">
-        <mat-slide-toggle [checked]="inStockOnly()" (change)="toggleStockOnly($event.checked)" color="primary"
-          class="font-body text-xs text-neutral-600 font-semibold uppercase tracking-wider">
-          In Stock Only
-        </mat-slide-toggle>
-      </div>
-
-      <!-- Clear all filters button -->
-      <button (click)="clearAllFilters()"
-        class="w-full py-2.5 bg-neutral-100 text-neutral-600 hover:bg-rose-gold hover:text-pearl transition-all duration-300 font-body text-xs font-semibold uppercase tracking-widest rounded-lg border-none cursor-pointer">
-        Clear All Filters
-      </button>
     </div>
   </ng-template>
 
@@ -152,6 +186,7 @@
           <select [value]="selectedSort()" (change)="selectedSort.set($any($event.target).value); currentPage.set(1)"
             class="sort-dropdown-custom w-56">
             <option value="featured">Featured Collection</option>
+            <option value="popular">Popular Selection</option>
             <option value="price-low">Price: Low to High</option>
             <option value="price-high">Price: High to Low</option>
             <option value="rating">Top Customer Rated</option>
@@ -342,9 +377,18 @@
   </div>
 
   <app-bottom-sheet [isOpen]="filterSheetOpen()" title="Filters" (closed)="closeFilterSheet()">
-    <ng-container *ngTemplateOutlet="filtersTpl" />
-    <button type="button" class="filter-apply-btn" (click)="closeFilterSheet()">
-      Show {{ filteredProducts().length }} results
-    </button>
+    <div class="pb-20">
+      <ng-container *ngTemplateOutlet="filtersTpl" />
+    </div>
+    
+    <!-- Sticky Footer Actions for Mobile -->
+    <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-neutral-100 p-4 flex gap-3 shadow-[0_-4px_10px_rgba(0,0,0,0.05)] z-10 lg:hidden">
+      <button type="button" class="flex-1 py-3 bg-neutral-100 text-charcoal font-body text-xs font-bold uppercase tracking-widest rounded-lg border-none cursor-pointer" (click)="clearAllFilters()">
+        Reset
+      </button>
+      <button type="button" class="flex-[2] py-3 bg-charcoal text-pearl hover:bg-rose-gold font-body text-xs font-bold uppercase tracking-widest rounded-lg border-none cursor-pointer transition-colors" (click)="closeFilterSheet()">
+        Apply ({{ filteredProducts().length }})
+      </button>
+    </div>
   </app-bottom-sheet>
 </div>
