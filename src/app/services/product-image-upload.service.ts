@@ -1,11 +1,5 @@
 import { Injectable, inject, signal } from '@angular/core';
-import {
-  Storage,
-  ref,
-  uploadBytesResumable,
-  getDownloadURL,
-  deleteObject,
-} from '@angular/fire/storage';
+// Firebase storage removed in favor of Cloudinary
 
 export interface UploadedImage {
   url: string;           // public download URL
@@ -23,7 +17,7 @@ export interface UploadTask {
 
 @Injectable({ providedIn: 'root' })
 export class ProductImageUploadService {
-  private storage = inject(Storage);
+// Firebase Storage removed
 
   /** Active upload progress list (used by the form UI) */
   uploadTasks = signal<UploadTask[]>([]);
@@ -33,31 +27,43 @@ export class ProductImageUploadService {
    * Returns { url, storagePath } on success.
    */
   async uploadOne(file: File, productId: string): Promise<UploadedImage> {
-    const ext = file.name.split('.').pop() ?? 'jpg';
-    const storagePath = `products/${productId}/${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
-    const storageRef = ref(this.storage, storagePath);
+    const cloudName = 'dcoqvrwqu';
+    const uploadPreset = 'twisted_thread_preset';
+    const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`;
 
     return new Promise((resolve, reject) => {
-      const task = uploadBytesResumable(storageRef, file, {
-        contentType: file.type,
-      });
-
-      task.on(
-        'state_changed',
-        snapshot => {
-          const pct = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', cloudinaryUrl, true);
+      
+      xhr.upload.onprogress = (e) => {
+        if (e.lengthComputable) {
+          const pct = Math.round((e.loaded / e.total) * 100);
           this._updateProgress(file.name, pct, 'uploading');
-        },
-        error => {
-          this._updateProgress(file.name, 0, 'error', error.message);
-          reject(error);
-        },
-        async () => {
-          const url = await getDownloadURL(task.snapshot.ref);
+        }
+      };
+
+      xhr.onload = () => {
+        if (xhr.status === 200) {
+          const response = JSON.parse(xhr.responseText);
           this._updateProgress(file.name, 100, 'done');
-          resolve({ url, storagePath });
-        },
-      );
+          resolve({ url: response.secure_url, storagePath: response.public_id });
+        } else {
+          this._updateProgress(file.name, 0, 'error', 'Upload failed');
+          reject(new Error('Upload failed'));
+        }
+      };
+
+      xhr.onerror = () => {
+        this._updateProgress(file.name, 0, 'error', 'Network error');
+        reject(new Error('Network error'));
+      };
+
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('upload_preset', uploadPreset);
+      formData.append('folder', `products/${productId}`);
+
+      xhr.send(formData);
     });
   }
 
@@ -75,12 +81,8 @@ export class ProductImageUploadService {
   /** Delete an image from Firebase Storage by its storage path */
   async deleteImage(storagePath: string): Promise<void> {
     if (!storagePath) return;
-    try {
-      await deleteObject(ref(this.storage, storagePath));
-    } catch (err: any) {
-      // 404 = already deleted — safe to ignore
-      if (err?.code !== 'storage/object-not-found') throw err;
-    }
+    // Unsigned deletion is not supported directly by Cloudinary frontend API.
+    console.warn('Deletion of Cloudinary images from frontend is disabled for security.');
   }
 
   /** Generate a local blob preview URL for a File */

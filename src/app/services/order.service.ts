@@ -12,12 +12,7 @@ import {
   serverTimestamp,
   Timestamp,
 } from '@angular/fire/firestore';
-import {
-  Storage,
-  ref,
-  uploadBytes,
-  getDownloadURL,
-} from '@angular/fire/storage';
+// Firebase storage removed in favor of Cloudinary
 import { Functions, httpsCallable } from '@angular/fire/functions';
 import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
@@ -46,7 +41,7 @@ interface FirestoreOrderDoc extends Omit<OrderModel, 'createdAt' | 'estimatedDel
 })
 export class OrderService {
   private readonly firestore = inject(Firestore);
-  private readonly storage = inject(Storage);
+  // Firebase Storage removed
   private readonly functions = inject(Functions);
   private readonly ordersCol = collection(this.firestore, 'orders');
 
@@ -237,20 +232,30 @@ export class OrderService {
       throw new Error('Invalid payment proof file data.');
     }
 
-    const contentType = dataUrlMatch[1];
-    const base64 = dataUrlMatch[2];
-    const bytes = Uint8Array.from(atob(base64), char => char.charCodeAt(0));
-    const safeName = proof.fileName.replace(/[^a-zA-Z0-9._-]/g, '_');
-    const storagePath = `orders/${orderId}/payment-proof/${Date.now()}_${safeName}`;
-    const storageRef = ref(this.storage, storagePath);
+    const cloudName = 'dcoqvrwqu';
+    const uploadPreset = 'twisted_thread_preset';
+    const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`;
 
-    await uploadBytes(storageRef, bytes, { contentType });
-    const fileUrl = await getDownloadURL(storageRef);
+    const formData = new FormData();
+    formData.append('file', proof.fileData);
+    formData.append('upload_preset', uploadPreset);
+    formData.append('folder', `orders/${orderId}/payment-proof`);
+
+    const response = await fetch(cloudinaryUrl, {
+      method: 'POST',
+      body: formData
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to upload payment proof to Cloudinary');
+    }
+
+    const result = await response.json();
 
     return {
       fileName: proof.fileName,
-      fileUrl,
-      storagePath,
+      fileUrl: result.secure_url,
+      storagePath: result.public_id,
       uploadedAt: proof.uploadedAt,
       uploadMethod: proof.uploadMethod,
     };
