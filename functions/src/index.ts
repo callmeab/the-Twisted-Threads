@@ -20,6 +20,7 @@ export const onOrderCreated = onDocumentCreated('orders/{orderId}', async event 
 
   try {
     console.info(`[onOrderCreated] Order ${order.orderNumber} created. Notification is handled client-side.`);
+    
     await snapshot.ref.update({
       whatsappConfirmationSent: true,
       whatsappConfirmationSentAt: new Date(),

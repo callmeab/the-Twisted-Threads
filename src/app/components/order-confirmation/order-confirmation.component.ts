@@ -7,6 +7,7 @@ import {
   OnInit,
   PLATFORM_ID,
   ViewChild,
+  signal,
 } from '@angular/core';
 import { isPlatformBrowser, DatePipe, DOCUMENT, LowerCasePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
@@ -51,12 +52,12 @@ export class OrderConfirmationComponent implements OnInit, AfterViewInit, OnDest
   private readonly platformId = inject(PLATFORM_ID);
   private readonly whatsappService = inject(WhatsAppService);
 
-  protected pageReady = false;
+  protected pageReady = signal(false);
   protected showOrderDetails = false;
   protected orderCopied = false;
 
-  protected readonly supportEmail = 'concierge@thetwistedthreads.com';
-  protected readonly supportPhone = '(503) 555-0199';
+  protected readonly supportEmail = 'twistedthread45@gmail.com';
+  protected readonly supportPhone = '03316903634';
   protected readonly whatsappNumber = '923316903634';
 
   private confettiFrameId = 0;
@@ -66,9 +67,9 @@ export class OrderConfirmationComponent implements OnInit, AfterViewInit, OnDest
     if (!isPlatformBrowser(this.platformId)) {
       return;
     }
-    requestAnimationFrame(() => {
-      this.pageReady = true;
-    });
+    setTimeout(() => {
+      this.pageReady.set(true);
+    }, 50);
   }
 
   public ngAfterViewInit(): void {

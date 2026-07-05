@@ -1,7 +1,7 @@
 {
   "projects": {
-    "default": "the-twisted-thread",
-    "development": "the-twisted-thread",
-    "production": "the-twisted-thread"
+    "default": "twistedthread-3dd2a",
+    "development": "twistedthread-3dd2a",
+    "production": "twistedthread-3dd2a"
   }
 }

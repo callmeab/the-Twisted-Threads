@@ -100,6 +100,16 @@ export const routes: Routes = [
     ],
   },
 
+  {
+    path: 'customer-care',
+    redirectTo: 'customer-care/shipping',
+    pathMatch: 'full'
+  },
+  {
+    path: 'customer-care/:section',
+    loadComponent: () => import('./components/customer-care/customer-care.component').then(m => m.CustomerCareComponent),
+  },
+
   // ── Fallback ───────────────────────────────────────────────────────────
   {
     path: '**',

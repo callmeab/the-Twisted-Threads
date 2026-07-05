@@ -110,8 +110,7 @@ export class AboutComponent implements AfterViewInit, OnDestroy {
       title: 'Inspiration & Sketch',
       description:
         'Every collection begins at the drafting table, where texture, proportion, and movement are mapped in pencil and gold leaf studies.',
-      image:
-        'https://images.unsplash.com/photo-1452860606248-7aee3229b791?q=80&w=600&auto=format&fit=crop',
+      image: 'images/Inspiration%20%26%20Sketch.png',
     },
     {
       step: 2,
@@ -140,10 +139,10 @@ export class AboutComponent implements AfterViewInit, OnDestroy {
   ];
 
   protected readonly workshopGallery = [
-    'https://images.unsplash.com/photo-1617038260897-41a608fafc66?q=80&w=500&auto=format&fit=crop',
+    'images/workshop-1.png',
     'https://images.unsplash.com/photo-1506630448388-4e683c67ddb0?q=80&w=500&auto=format&fit=crop',
     'https://images.unsplash.com/photo-1573408301185-9146fe634ad0?q=80&w=500&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1611591434851-0fefb849605e?q=80&w=500&auto=format&fit=crop',
+    'images/workshop-4.png',
   ];
 
   protected readonly team: TeamMember[] = [

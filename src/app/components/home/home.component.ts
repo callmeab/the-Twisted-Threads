@@ -28,10 +28,10 @@ export class HomeComponent {
 
   // Mock data for new sections
   categories = [
-    { name: 'Beaded Necklaces', image: 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=800', link: '/products?category=necklaces' },
-    { name: 'Woven Bracelets', image: 'https://images.unsplash.com/photo-1611085583191-a3b181a88401?q=80&w=800', link: '/products?category=bracelets' },
-    { name: 'Pearl Earrings', image: 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=800', link: '/products?category=earrings' },
-    { name: 'Custom Designs', image: 'https://images.unsplash.com/photo-1606760227091-3dd870d97f1d?q=80&w=800', link: '/products?category=custom' }
+    { name: 'Beaded Necklaces', image: 'images/Beaded%20Necklaces.png', link: '/products?category=necklaces' },
+    { name: 'Woven Bracelets', image: 'images/Woven%20Bracelets.png', link: '/products?category=bracelets' },
+    { name: 'Pearl Earrings', image: 'images/Pearl%20Earrings.png', link: '/products?category=earrings' },
+    { name: 'Custom Designs', image: 'images/Custom%20Designs.png', link: '/products?category=custom' }
   ];
 
   testimonials = [

@@ -66,28 +66,24 @@ export class ContactComponent implements AfterViewInit, OnDestroy {
 
   protected readonly business = {
     name: 'The Twisted Threads Atelier',
-    street: '104 Twisted Thread Blvd, Suite 200',
-    city: 'Portland, OR 97201',
-    country: 'United States',
-    phone: '(503) 555-0199',
-    phoneTel: '+15035550199',
-    email: 'concierge@thetwistedthreads.com',
+    address: 'Haroonabad, Punjab Pakistan',
+    phone: '03316903634',
     whatsapp: '923316903634',
-    hoursWeekday: 'Monday – Friday: 9:00 AM – 6:00 PM PST',
-    hoursWeekend: 'Saturday: 10:00 AM – 4:00 PM · Closed Sundays',
+    email: 'twistedthread45@gmail.com',
+    hours: 'Monday - Friday: 10am - 6pm PKT\nSaturday - Sunday: Closed'
   };
 
   protected readonly mapEmbedUrl: SafeResourceUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
-    'https://maps.google.com/maps?q=104+Twisted+Thread+Blvd,+Portland,+OR+97201&z=15&output=embed'
+    'https://maps.google.com/maps?q=Haroonabad,+Punjab,+Pakistan&z=15&output=embed'
   );
 
   protected readonly directionsUrl =
-    'https://www.google.com/maps/dir/?api=1&destination=104+Twisted+Thread+Blvd,+Portland,+OR+97201';
+    'https://www.google.com/maps/dir/?api=1&destination=Haroonabad,+Punjab,+Pakistan';
 
   protected readonly socialLinks: SocialLink[] = [
     {
       label: 'Instagram',
-      href: 'https://instagram.com/thetwistedthreads',
+      href: 'https://www.instagram.com/the_twisted_threadsss?igsh=YjhxeGxvd2I0MDF0',
       icon: 'instagram',
     },
     {
@@ -136,7 +132,7 @@ export class ContactComponent implements AfterViewInit, OnDestroy {
       id: 'faq-5',
       question: 'Can I visit the atelier in person?',
       answer:
-        'Walk-ins are welcome during business hours, though appointments are recommended for custom consultations. Use the directions link below to find our Portland studio.',
+        'Walk-ins are welcome during business hours, though appointments are recommended for custom consultations. Use the directions link below to find our Haroonabad studio.',
     },
   ];
 

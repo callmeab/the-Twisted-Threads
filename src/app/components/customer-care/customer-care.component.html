@@ -1,0 +1,183 @@
+<div class="customer-care-page">
+  <!-- Page Header -->
+  <header class="care-header">
+    <div class="container-premium text-center">
+      <span class="eyebrow gradient-purple-rose">At your service</span>
+      <h1>Customer Care</h1>
+      <p class="subtitle">
+        Everything you need to know about our handcrafted jewelry, bespoke services, and our commitment to your satisfaction.
+      </p>
+    </div>
+  </header>
+
+  <!-- Main Content Layout -->
+  <div class="container-premium care-layout">
+    
+    <!-- Sidebar Navigation -->
+    <aside class="care-sidebar">
+      <nav class="care-nav" aria-label="Customer Care Navigation">
+        @for (section of sections; track section.id) {
+          <a
+            [routerLink]="['/customer-care', section.id]"
+            routerLinkActive="active"
+            class="care-nav-link"
+          >
+            <mat-icon>{{ section.icon }}</mat-icon>
+            <span>{{ section.label }}</span>
+          </a>
+        }
+      </nav>
+      
+      <!-- Need more help box -->
+      <div class="help-box">
+        <h4>Still need help?</h4>
+        <p>Our concierge team is available to assist you.</p>
+        <a routerLink="/contact" class="btn btn-outline-premium w-full mt-4">Contact Us</a>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="care-content fade-in">
+      <h2 class="content-title">{{ currentSectionTitle }}</h2>
+
+      <!-- Shipping & Delivery -->
+      @if (currentSection() === 'shipping') {
+        <section class="policy-section">
+          <h3>Domestic Shipping</h3>
+          <p>
+            We offer complimentary standard shipping on all domestic orders within Pakistan. 
+            All our pieces are meticulously handcrafted and securely packaged to ensure they arrive in pristine condition.
+          </p>
+          <ul>
+            <li><strong>Standard Shipping:</strong> 3-5 business days (Complimentary)</li>
+            <li><strong>Express Shipping:</strong> 1-2 business days (1,500 PKR)</li>
+          </ul>
+
+          <h3>International Shipping</h3>
+          <p>
+            We proudly ship our woven creations worldwide. International shipping rates are calculated at checkout based on your delivery address.
+            Please note that international customers are responsible for any customs duties or taxes levied by their respective countries.
+          </p>
+          <ul>
+            <li><strong>Standard International:</strong> 7-14 business days</li>
+            <li><strong>DHL Express:</strong> 3-5 business days</li>
+          </ul>
+
+          <h3>Order Processing Time</h3>
+          <p>
+            Since many of our pieces are woven by hand upon order, please allow <strong>1-3 business days</strong> for your jewelry to be crafted before it is dispatched. You will receive a tracking link via email the moment your package leaves our atelier.
+          </p>
+        </section>
+      }
+
+      <!-- Returns & Exchanges -->
+      @if (currentSection() === 'returns') {
+        <section class="policy-section">
+          <h3>Our Return Policy</h3>
+          <p>
+            At The Twisted Threads, we want you to absolutely adore your handcrafted jewelry. If a piece does not meet your expectations, we accept returns and exchanges within <strong>14 days of delivery</strong>.
+          </p>
+          <p>
+            To be eligible for a return, the item must be unworn, in its original condition, and safely housed within its original packaging and pouches.
+          </p>
+          
+          <h3>Exceptions</h3>
+          <p>
+            Please note that the following items cannot be returned or exchanged:
+          </p>
+          <ul>
+            <li>Customized, engraved, or bespoke designs</li>
+            <li>Worn or damaged items</li>
+            <li>Items purchased during final sale events</li>
+          </ul>
+
+          <h3>How to Initiate a Return</h3>
+          <ol>
+            <li>Contact our concierge at <strong>twistedthread45&#64;gmail.com</strong> with your order number.</li>
+            <li>We will provide you with a return authorization and the shipping address to our Haroonabad atelier.</li>
+            <li>Carefully package the item. We strongly recommend using a trackable shipping service.</li>
+            <li>Once received and inspected, your refund will be processed to your original payment method within 5-7 business days.</li>
+          </ol>
+        </section>
+      }
+
+      <!-- Sizing Guide -->
+      @if (currentSection() === 'sizing') {
+        <section class="policy-section">
+          <h3>Necklace Lengths</h3>
+          <p>
+            Our necklaces are designed to drape beautifully. Here is a quick guide to understanding where they typically fall:
+          </p>
+          <ul>
+            <li><strong>14" - 16" (Choker):</strong> Wraps closely around the base of the neck.</li>
+            <li><strong>18" (Princess):</strong> Falls elegantly right at the collarbone. <em>(Most common length)</em></li>
+            <li><strong>20" - 24" (Matinee):</strong> Falls gracefully below the collarbone, perfect for plunging necklines.</li>
+          </ul>
+
+          <h3>Bracelet Sizing</h3>
+          <p>
+            To find your perfect fit, measure your wrist with a flexible measuring tape just below the wrist bone.
+          </p>
+          <ul>
+            <li><strong>Petite:</strong> 5.5 - 6.0 inches</li>
+            <li><strong>Standard:</strong> 6.5 - 7.0 inches</li>
+            <li><strong>Extended:</strong> 7.5 - 8.0 inches</li>
+          </ul>
+          <div class="tip-box">
+            <mat-icon>lightbulb</mat-icon>
+            <p>Because our threads are woven by hand, they may have a very slight, natural stretch over time. We recommend selecting a size that fits snugly.</p>
+          </div>
+        </section>
+      }
+
+      <!-- Care Guide -->
+      @if (currentSection() === 'care') {
+        <section class="policy-section">
+          <h3>Caring for Woven Threads</h3>
+          <p>
+            The Twisted Threads uses premium silk and nylon blends designed for durability, but they still require gentle care to maintain their luster.
+          </p>
+          <ul>
+            <li><strong>Keep it Dry:</strong> Avoid exposing your woven jewelry to water, lotions, or perfumes. Moisture can weaken the threads over time.</li>
+            <li><strong>Gentle Cleaning:</strong> If the threads gather dust, lightly brush them with a soft, dry makeup brush. Do not use chemical jewelry cleaners.</li>
+            <li><strong>Storage:</strong> Store your pieces flat in the provided velvet pouch or a jewelry box to prevent the threads from snagging or tangling with other items.</li>
+          </ul>
+
+          <h3>Caring for Natural Pearls</h3>
+          <p>
+            Pearls are organic gems and are delightfully delicate. Remember the golden rule of pearls: <em>"Last thing on, first thing off."</em>
+          </p>
+          <ul>
+            <li>Put your pearls on only after you have applied your perfume, hairspray, and cosmetics.</li>
+            <li>Wipe them gently with a soft microfiber cloth after each wear to remove any natural body oils.</li>
+            <li>Never store pearls in airtight plastic bags, as they need ambient moisture to retain their beautiful sheen.</li>
+          </ul>
+        </section>
+      }
+
+      <!-- Custom Orders -->
+      @if (currentSection() === 'custom') {
+        <section class="policy-section">
+          <h3>Bespoke Creations</h3>
+          <p>
+            There is nothing more special than a piece of jewelry crafted entirely for you. We love working directly with our clients to bring their unique visions to life.
+          </p>
+          <p>
+            Whether you are dreaming of a specific pearl color, a unique thread weave, or a completely original design for a special occasion, our artisans are at your disposal.
+          </p>
+
+          <h3>The Custom Process</h3>
+          <ol>
+            <li><strong>Consultation:</strong> Reach out via our Contact page or WhatsApp (03316903634) with your ideas, inspirations, and budget.</li>
+            <li><strong>Design & Sketch:</strong> Our design team will sketch out concepts and propose a selection of materials for your approval.</li>
+            <li><strong>Crafting:</strong> Once approved, our artisans will carefully weave your bespoke piece. Custom orders typically take 2-4 weeks.</li>
+            <li><strong>Delivery:</strong> Your one-of-a-kind creation is elegantly packaged and shipped to you.</li>
+          </ol>
+
+          <a routerLink="/contact" [queryParams]="{ subject: 'custom' }" class="btn btn-premium mt-6">Start Your Custom Order</a>
+        </section>
+      }
+
+    </main>
+  </div>
+</div>

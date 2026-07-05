@@ -8,6 +8,9 @@ import { WhatsAppService } from '../../services/whatsapp.service';
 import { CustomCurrencyPipe } from '../../pipes/custom-currency.pipe';
 import { ToastrService } from 'ngx-toastr';
 import { CustomerInfo, PaymentProof, ShippingAddress } from '../../models/order.model';
+import { HttpClient } from '@angular/common/http';
+import { HostListener, OnInit } from '@angular/core';
+import { EmailNotificationService } from '../../services/email-notification.service';
 
 export const GIFT_WRAP_FEE = 200;
 export const COD_FEE = 150;
@@ -20,12 +23,14 @@ export const COD_FEE = 150;
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.scss'
 })
-export class CheckoutComponent {
+export class CheckoutComponent implements OnInit {
   protected readonly cartService = inject(CartService);
   private readonly orderService = inject(OrderService);
   private readonly router = inject(Router);
   private readonly toastr = inject(ToastrService);
   private readonly whatsappService = inject(WhatsAppService);
+  private readonly http = inject(HttpClient);
+  private readonly emailNotificationService = inject(EmailNotificationService);
 
   protected currentStep = 1;
   protected paymentMethod: 'COD' | 'BankTransfer' | '' = '';
@@ -51,6 +56,7 @@ export class CheckoutComponent {
 
   protected address: ShippingAddress = {
     fullName: '',
+    email: '',
     whatsappNumber: '',
     phone: '',
     alternativePhone: '',
@@ -63,8 +69,14 @@ export class CheckoutComponent {
   };
 
   protected billingSameAsShipping = true;
-  protected cities = ['Karachi', 'Lahore', 'Islamabad', 'Rawalpindi', 'Faisalabad', 'Multan', 'Peshawar'];
-  protected provinces = ['Sindh', 'Punjab', 'Khyber Pakhtunkhwa', 'Balochistan', 'Gilgit-Baltistan', 'Azad Kashmir'];
+  protected provinces = ['Sindh', 'Punjab', 'Khyber Pakhtunkhwa', 'Balochistan', 'Gilgit-Baltistan', 'Azad Kashmir', 'Islamabad Capital Territory'];
+  
+  protected citySearchQuery = '';
+  protected allCities: string[] = [];
+  protected filteredCities: string[] = [];
+  protected showCityDropdown = false;
+  protected isLoadingCities = false;
+
   protected readonly phonePattern = '^(?:\\+92|0)[\\s-]?3\\d{2}[\\s-]?\\d{7}$';
   protected readonly addressStorageKey = 'checkoutShippingAddress';
 
@@ -78,6 +90,65 @@ export class CheckoutComponent {
 
   constructor() {
     this.loadAddressFromStorage();
+  }
+
+  ngOnInit(): void {
+    this.fetchCities();
+  }
+
+  private fetchCities(): void {
+    this.isLoadingCities = true;
+    this.http.post<{ error: boolean, data: string[] }>('https://countriesnow.space/api/v0.1/countries/cities', { country: 'Pakistan' })
+      .subscribe({
+        next: (response) => {
+          if (!response.error && response.data) {
+            this.allCities = response.data;
+          }
+          this.isLoadingCities = false;
+        },
+        error: (err) => {
+          console.error('Failed to load cities', err);
+          this.isLoadingCities = false;
+          // Fallback to a small list if API fails
+          this.allCities = ['Karachi', 'Lahore', 'Islamabad', 'Rawalpindi', 'Faisalabad'];
+        }
+      });
+  }
+
+  @HostListener('document:click', ['$event'])
+  clickout(event: Event) {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.city-autocomplete-wrapper')) {
+      this.showCityDropdown = false;
+    }
+  }
+
+  protected filterCities(): void {
+    if (!this.citySearchQuery.trim()) {
+      this.filteredCities = this.allCities.slice(0, 100); // Limit default list for performance
+      this.showCityDropdown = true;
+      return;
+    }
+    const query = this.citySearchQuery.toLowerCase();
+    this.filteredCities = this.allCities.filter(c => c.toLowerCase().includes(query)).slice(0, 100);
+    this.showCityDropdown = true;
+  }
+
+  protected selectCity(city: string): void {
+    this.address.city = city;
+    this.citySearchQuery = city;
+    this.showCityDropdown = false;
+    this.persistChanges();
+  }
+
+  protected onCityFocus(): void {
+    this.filterCities();
+  }
+
+  protected onCityInput(): void {
+    this.address.city = this.citySearchQuery;
+    this.filterCities();
+    this.persistChanges();
   }
 
   protected onNext(checkoutForm: NgForm): void {
@@ -129,6 +200,7 @@ export class CheckoutComponent {
     try {
       const customerInfo: CustomerInfo = {
         fullName: this.address.fullName,
+        email: this.address.email,
         whatsappNumber: this.address.whatsappNumber,
         phone: this.address.phone,
         alternativePhone: this.address.alternativePhone,
@@ -148,6 +220,7 @@ export class CheckoutComponent {
       }
 
       const order = await this.orderService.createOrder({
+        email: this.address.email,
         customerInfo,
         items,
         shippingAddress: { ...this.address },
@@ -159,13 +232,23 @@ export class CheckoutComponent {
         total: this.grandTotal,
       });
 
-      // Automatically launch the Click-to-WhatsApp URL
+      // Send professional email notifications via Google Apps Script (in the background)
       try {
-        const whatsappUrl = this.whatsappService.getOrderWhatsAppUrl(order);
-        window.open(whatsappUrl, '_blank');
-      } catch (err) {
-        console.warn('[Checkout] Failed to auto-open WhatsApp link:', err);
+        this.emailNotificationService.sendOrderEmails(order).subscribe({
+          next: () => console.info('[Checkout] Email notifications successfully dispatched.'),
+          error: (err) => console.error('[Checkout] Failed to dispatch email notifications:', err)
+        });
+      } catch (e) {
+        console.error('[Checkout] Error calling email notification service:', e);
       }
+
+      // Automatically launch the Click-to-WhatsApp URL
+      // try {
+      //   const whatsappUrl = this.whatsappService.getOrderWhatsAppUrl(order);
+      //   window.open(whatsappUrl, '_blank');
+      // } catch (err) {
+      //   console.warn('[Checkout] Failed to auto-open WhatsApp link:', err);
+      // }
 
       this.isProcessing = false;
       this.isSuccess = true;
@@ -330,6 +413,7 @@ export class CheckoutComponent {
       this.billingSameAsShipping = parsed.billingSameAsShipping ?? true;
       this.currentStep = parsed.currentStep ?? 1;
       this.paymentMethod = parsed.paymentMethod ?? '';
+      this.citySearchQuery = this.address.city; // Restore query from loaded city
       this.receiptFile = parsed.receiptFile ?? null;
       this.receiptFileName = parsed.receiptFileName ?? null;
       this.receiptFileType = parsed.receiptFileType ?? null;

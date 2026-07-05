@@ -21,7 +21,7 @@ export class ContactService {
     this.persistInquiry(record);
 
     console.info('[ContactService] Inquiry received (simulated email dispatch)', {
-      to: 'concierge@thetwistedthreads.com',
+      to: 'twistedthread45@gmail.com',
       from: record.email,
       subject: record.subject,
       id: record.id,

@@ -11,7 +11,7 @@ import { AdminAuditService } from '../../../services/admin-audit.service';
 @Component({
   selector: 'app-admin-order-detail',
   imports: [CommonModule, FormsModule, RouterLink, MatIconModule],
-  templateUrl: './admin-order-detail.html',
+  template: `./admin-order-detail.html`,
   styleUrl: './admin-order-detail.css',
 })
 export class AdminOrderDetail implements OnInit {

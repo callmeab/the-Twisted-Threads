@@ -103,7 +103,7 @@ export const FAQ_CATEGORIES: FaqCategory[] = [
         id: 'ret-2',
         question: 'How do I return an item?',
         answer:
-          'Email concierge@thetwistedthreads.com with your order number and reason for return. We will provide a return authorisation and shipping instructions. Items must be securely packaged to avoid damage in transit.',
+          'Email twistedthread45@gmail.com with your order number and reason for return. We will provide a return authorisation and shipping instructions. Items must be securely packaged to avoid damage in transit.',
       },
       {
         id: 'ret-3',

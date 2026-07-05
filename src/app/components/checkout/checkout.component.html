@@ -153,6 +153,16 @@
               }
             </div>
 
+            <div class="form-field" [class.has-error]="email.invalid && (email.dirty || email.touched)">
+              <input id="email" name="email" type="email" [(ngModel)]="address.email"
+                (ngModelChange)="persistChanges()" #email="ngModel" required email placeholder=" " autocomplete="email" />
+              <label for="email">Email Address</label>
+              @if (email.invalid && (email.dirty || email.touched)) {
+              @if (email.hasError('required')) { <span class="field-error">Email is required for order updates.</span> }
+              @if (email.hasError('email')) { <span class="field-error">Enter a valid email address.</span> }
+              }
+            </div>
+
             <div class="form-field"
               [class.has-error]="whatsappNumber.invalid && (whatsappNumber.dirty || whatsappNumber.touched)">
               <input id="whatsappNumber" name="whatsappNumber" type="tel" [(ngModel)]="address.whatsappNumber"
@@ -210,15 +220,34 @@
               <label for="addressLine2">Address Line 2 (Optional)</label>
             </div>
 
-            <div class="form-field" [class.has-error]="city.invalid && (city.dirty || city.touched)">
-              <select id="city" name="city" [(ngModel)]="address.city" (ngModelChange)="persistChanges()"
-                #city="ngModel" required [class.has-value]="address.city !== ''">
-                <option value="" disabled></option>
-                @for (cityName of cities; track cityName) { <option [value]="cityName">{{ cityName }}</option> }
-              </select>
-              <label for="city">City</label>
-              @if (city.invalid && (city.dirty || city.touched)) { <span class="field-error">Please choose a
-                city.</span> }
+            <div class="form-field city-autocomplete-wrapper" [class.has-error]="city.invalid && (citySearchQuery !== '' || city.touched)">
+              <input id="citySearchQuery" name="citySearchQuery" type="text" 
+                     [(ngModel)]="citySearchQuery" (ngModelChange)="onCityInput()"
+                     (focus)="onCityFocus()"
+                     placeholder=" " autocomplete="off" />
+              <input type="hidden" name="city" [(ngModel)]="address.city" #city="ngModel" required />
+              <label for="citySearchQuery">City</label>
+              @if (isLoadingCities && showCityDropdown) {
+              <ul class="autocomplete-dropdown animate-fade-in">
+                <li class="autocomplete-empty">Loading cities...</li>
+              </ul>
+              } @else if (showCityDropdown && filteredCities.length > 0) {
+              <ul class="autocomplete-dropdown animate-fade-in">
+                @for (c of filteredCities; track $index) {
+                <li class="autocomplete-item" (click)="selectCity(c)">
+                  <span class="city-name">{{ c }}</span>
+                </li>
+                }
+              </ul>
+              } @else if (showCityDropdown && citySearchQuery) {
+              <ul class="autocomplete-dropdown animate-fade-in">
+                <li class="autocomplete-empty">No cities found.</li>
+              </ul>
+              }
+              
+              @if (city.invalid && (citySearchQuery !== '' || city.touched) && !showCityDropdown) { 
+                <span class="field-error">Please choose a city.</span> 
+              }
             </div>
 
             <div class="form-field"
@@ -464,6 +493,7 @@
             </div>
             <div class="review-content-card">
               <p><strong>Name:</strong> {{ address.fullName }}</p>
+              <p><strong>Email:</strong> {{ address.email }}</p>
               <p><strong>WhatsApp:</strong> {{ address.whatsappNumber }}</p>
               <p><strong>Phone:</strong> {{ address.phone }}</p>
               @if (address.alternativePhone) {

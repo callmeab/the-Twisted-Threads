@@ -1,0 +1,112 @@
+export interface City {
+  name: string;
+  province: string;
+}
+
+export const PAKISTAN_CITIES: City[] = [
+  // Sindh
+  { name: 'Karachi', province: 'Sindh' },
+  { name: 'Hyderabad', province: 'Sindh' },
+  { name: 'Sukkur', province: 'Sindh' },
+  { name: 'Larkana', province: 'Sindh' },
+  { name: 'Nawabshah', province: 'Sindh' },
+  { name: 'Mirpur Khas', province: 'Sindh' },
+  { name: 'Jacobabad', province: 'Sindh' },
+  { name: 'Shikarpur', province: 'Sindh' },
+  { name: 'Dadu', province: 'Sindh' },
+  { name: 'Khairpur', province: 'Sindh' },
+  { name: 'Tando Adam', province: 'Sindh' },
+  { name: 'Umerkot', province: 'Sindh' },
+  { name: 'Badin', province: 'Sindh' },
+  { name: 'Thatta', province: 'Sindh' },
+  { name: 'Jamshoro', province: 'Sindh' },
+
+  // Punjab
+  { name: 'Lahore', province: 'Punjab' },
+  { name: 'Faisalabad', province: 'Punjab' },
+  { name: 'Rawalpindi', province: 'Punjab' },
+  { name: 'Multan', province: 'Punjab' },
+  { name: 'Gujranwala', province: 'Punjab' },
+  { name: 'Sialkot', province: 'Punjab' },
+  { name: 'Sargodha', province: 'Punjab' },
+  { name: 'Bahawalpur', province: 'Punjab' },
+  { name: 'Gujrat', province: 'Punjab' },
+  { name: 'Sheikhupura', province: 'Punjab' },
+  { name: 'Jhang', province: 'Punjab' },
+  { name: 'Rahim Yar Khan', province: 'Punjab' },
+  { name: 'Kasur', province: 'Punjab' },
+  { name: 'Muzaffargarh', province: 'Punjab' },
+  { name: 'Okara', province: 'Punjab' },
+  { name: 'Sahiwal', province: 'Punjab' },
+  { name: 'Wah Cantonment', province: 'Punjab' },
+  { name: 'Dera Ghazi Khan', province: 'Punjab' },
+  { name: 'Mandi Bahauddin', province: 'Punjab' },
+  { name: 'Vehari', province: 'Punjab' },
+  { name: 'Hafizabad', province: 'Punjab' },
+  { name: 'Chiniot', province: 'Punjab' },
+  { name: 'Attock', province: 'Punjab' },
+  { name: 'Jhelum', province: 'Punjab' },
+  { name: 'Khanewal', province: 'Punjab' },
+  { name: 'Bahawalnagar', province: 'Punjab' },
+  { name: 'Mianwali', province: 'Punjab' },
+  { name: 'Pakpattan', province: 'Punjab' },
+  { name: 'Khushab', province: 'Punjab' },
+  { name: 'Bhakkar', province: 'Punjab' },
+  { name: 'Rajanpur', province: 'Punjab' },
+  { name: 'Layyah', province: 'Punjab' },
+  { name: 'Chakwal', province: 'Punjab' },
+  { name: 'Lodhran', province: 'Punjab' },
+  { name: 'Nankana Sahib', province: 'Punjab' },
+  { name: 'Narowal', province: 'Punjab' },
+
+  // Khyber Pakhtunkhwa (KPK)
+  { name: 'Peshawar', province: 'Khyber Pakhtunkhwa' },
+  { name: 'Mardan', province: 'Khyber Pakhtunkhwa' },
+  { name: 'Mingora', province: 'Khyber Pakhtunkhwa' },
+  { name: 'Kohat', province: 'Khyber Pakhtunkhwa' },
+  { name: 'Abbottabad', province: 'Khyber Pakhtunkhwa' },
+  { name: 'Dera Ismail Khan', province: 'Khyber Pakhtunkhwa' },
+  { name: 'Swabi', province: 'Khyber Pakhtunkhwa' },
+  { name: 'Charsadda', province: 'Khyber Pakhtunkhwa' },
+  { name: 'Mansehra', province: 'Khyber Pakhtunkhwa' },
+  { name: 'Nowshera', province: 'Khyber Pakhtunkhwa' },
+  { name: 'Bannu', province: 'Khyber Pakhtunkhwa' },
+  { name: 'Swat', province: 'Khyber Pakhtunkhwa' },
+  { name: 'Karak', province: 'Khyber Pakhtunkhwa' },
+  { name: 'Hangu', province: 'Khyber Pakhtunkhwa' },
+  { name: 'Haripur', province: 'Khyber Pakhtunkhwa' },
+  { name: 'Chitral', province: 'Khyber Pakhtunkhwa' },
+
+  // Balochistan
+  { name: 'Quetta', province: 'Balochistan' },
+  { name: 'Turbat', province: 'Balochistan' },
+  { name: 'Khuzdar', province: 'Balochistan' },
+  { name: 'Chaman', province: 'Balochistan' },
+  { name: 'Hub', province: 'Balochistan' },
+  { name: 'Sibi', province: 'Balochistan' },
+  { name: 'Zhob', province: 'Balochistan' },
+  { name: 'Gwadar', province: 'Balochistan' },
+  { name: 'Dera Murad Jamali', province: 'Balochistan' },
+  { name: 'Usta Muhammad', province: 'Balochistan' },
+  { name: 'Loralai', province: 'Balochistan' },
+  { name: 'Pasni', province: 'Balochistan' },
+  { name: 'Mastung', province: 'Balochistan' },
+  { name: 'Kalat', province: 'Balochistan' },
+
+  // Islamabad Capital Territory
+  { name: 'Islamabad', province: 'Islamabad Capital Territory' },
+
+  // Azad Kashmir
+  { name: 'Muzaffarabad', province: 'Azad Kashmir' },
+  { name: 'Mirpur', province: 'Azad Kashmir' },
+  { name: 'Kotli', province: 'Azad Kashmir' },
+  { name: 'Rawalakot', province: 'Azad Kashmir' },
+  { name: 'Bagh', province: 'Azad Kashmir' },
+
+  // Gilgit-Baltistan
+  { name: 'Gilgit', province: 'Gilgit-Baltistan' },
+  { name: 'Skardu', province: 'Gilgit-Baltistan' },
+  { name: 'Hunza', province: 'Gilgit-Baltistan' },
+  { name: 'Chilas', province: 'Gilgit-Baltistan' },
+  { name: 'Gakuch', province: 'Gilgit-Baltistan' }
+].sort((a, b) => a.name.localeCompare(b.name));

@@ -34,7 +34,7 @@ export class OrderTrackingComponent implements OnInit {
   protected detailsExpanded = false;
   protected resultsVisible = signal(false);
 
-  protected readonly supportEmail = 'concierge@thetwistedthreads.com';
+  protected readonly supportEmail = 'twistedthread45@gmail.com';
   protected foundOrder: OrderModel | null = null;
   protected errorMessage = '';
 
