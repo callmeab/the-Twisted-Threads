@@ -81,12 +81,45 @@ swiper-container {
 // 2. Buttons Styling
 // ============================================================
 
+.hero-cta {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2rem;
+  flex-wrap: wrap;  // safety net for very narrow screens
+
+  // ── Mobile: stack vertically, full width ──────────────────
+  @media (max-width: 479px) {
+    flex-direction: column;
+    align-items: stretch;       // buttons stretch to same width
+    gap: 0.75rem;
+    width: 100%;
+    max-width: 280px;           // keep card-like width, centered
+  }
+}
+
 .btn-primary-luxury {
   background-color: var(--color-gold) !important;
   color: var(--color-purple) !important;
   border: 1px solid var(--color-gold) !important;
   box-shadow: var(--shadow-gold) !important;
   text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  white-space: nowrap;
+  min-height: 48px;             // comfortable tap target
+
+  // Mobile: slightly smaller padding so text doesn't overflow
+  @media (max-width: 479px) {
+    padding: 0.75rem 1.25rem !important;
+    font-size: 0.75rem !important;
+    letter-spacing: 0.12em !important;
+    width: 100%;
+  }
 
   &:hover {
     background-color: var(--color-gold-light) !important;
@@ -105,6 +138,20 @@ swiper-container {
   color: var(--color-pearl);
   border: 1px solid rgba(254, 254, 254, 0.2);
   text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  white-space: nowrap;
+  min-height: 48px;             // comfortable tap target
+
+  // Mobile: slightly smaller padding so text doesn't overflow
+  @media (max-width: 479px) {
+    padding: 0.75rem 1.25rem !important;
+    font-size: 0.75rem !important;
+    letter-spacing: 0.12em !important;
+    width: 100%;
+  }
 
   &:hover {
     background-color: rgba(254, 254, 254, 0.12);
@@ -184,28 +231,265 @@ swiper-container {
 }
 
 // ============================================================
-// 5. Category Showcase
+// 5. Category Showcase — Premium Card Design
 // ============================================================
 
 .category-section {
-  padding-top: var(--space-20);
-  padding-bottom: var(--space-20);
+  padding: var(--space-24) 0;
+  background: linear-gradient(180deg, var(--color-background) 0%, var(--color-pearl) 100%);
 }
 
-.category-card {
-  cursor: pointer;
-  
-  .category-img-wrapper {
-    background-color: var(--color-charcoal-soft);
+// ── Section Header ────────────────────────────────────────────
+.cat-section-header {
+  text-align: center;
+  margin-bottom: var(--space-14);
+}
+
+.cat-eyebrow {
+  display: inline-block;
+  font-family: var(--font-body);
+  font-size: var(--font-size-xxs);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--color-rose-gold);
+  margin-bottom: var(--space-3);
+}
+
+.cat-title {
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-purple);
+  margin: 0 0 var(--space-4);
+}
+
+.cat-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+
+  span:not(.cat-divider-gem) {
+    display: block;
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--color-gold));
+
+    &:last-child {
+      background: linear-gradient(90deg, var(--color-gold), transparent);
+    }
   }
-  
-  &:hover .category-overlay {
-    opacity: 1;
+}
+
+.cat-divider-gem {
+  color: var(--color-gold);
+  font-size: 10px;
+}
+
+.cat-subtitle {
+  font-family: var(--font-body);
+  font-size: var(--font-size-base);
+  color: var(--color-charcoal-soft);
+  max-width: 500px;
+  margin: 0 auto;
+  line-height: var(--line-height-relaxed);
+}
+
+// ── Cards Grid ────────────────────────────────────────────────
+.cat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-6);
+
+  @media (max-width: 1024px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-5);
   }
-  
-  &:hover img {
-    transform: scale(1.1);
+
+  @media (max-width: 560px) {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
   }
+}
+
+// ── Individual Card ───────────────────────────────────────────
+.cat-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--radius-2xl);
+  overflow: hidden;
+  text-decoration: none;
+  background: var(--color-pearl);
+  box-shadow: 0 4px 20px rgba(44, 44, 44, 0.08);
+  transition: transform 0.4s cubic-bezier(.4,0,.2,1), box-shadow 0.4s ease;
+
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 48px rgba(44, 44, 44, 0.16);
+
+    .cat-img {
+      transform: scale(1.08);
+    }
+
+    .cat-overlay {
+      opacity: 1;
+    }
+
+    .cat-info {
+      background: var(--cat-gradient, linear-gradient(135deg, var(--color-rose-gold), var(--color-rose-gold-dark)));
+    }
+
+    .cat-name,
+    .cat-desc,
+    .cat-count {
+      color: rgba(255,255,255,0.95);
+    }
+
+    .cat-icon-ring {
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
+      border-color: rgba(255,255,255,0.3);
+    }
+
+    .cat-arrow {
+      background: rgba(255,255,255,0.25);
+      color: #fff;
+      transform: translateX(4px);
+    }
+  }
+}
+
+// Badge pill (top-right)
+.cat-badge {
+  position: absolute;
+  top: var(--space-3);
+  right: var(--space-3);
+  z-index: 10;
+  padding: 4px 10px;
+  font-family: var(--font-body);
+  font-size: var(--font-size-xxs);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: rgba(26, 18, 24, 0.75);
+  color: var(--color-gold);
+  border-radius: var(--radius-full);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+// Image wrapper — square aspect ratio
+.cat-img-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+}
+
+.cat-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(.4,0,.2,1);
+  display: block;
+}
+
+.cat-overlay {
+  position: absolute;
+  inset: 0;
+  background: var(--cat-gradient, linear-gradient(135deg, rgba(183,110,121,0.6), rgba(74,44,62,0.7)));
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+// Bottom info panel
+.cat-info {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-4);
+  background: var(--color-pearl);
+  border-top: 1px solid rgba(183, 110, 121, 0.1);
+  transition: background 0.4s ease;
+  min-height: 80px;
+}
+
+.cat-icon-ring {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(183, 110, 121, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-rose-gold);
+  background: rgba(183, 110, 121, 0.06);
+  transition: all 0.35s ease;
+}
+
+.cat-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.cat-name {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-purple);
+  margin: 0 0 2px;
+  transition: color 0.35s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cat-desc {
+  font-family: var(--font-body);
+  font-size: var(--font-size-xxs);
+  color: var(--color-charcoal-soft);
+  margin: 0;
+  opacity: 0.75;
+  transition: color 0.35s ease;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: var(--line-height-snug);
+}
+
+.cat-meta {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-1);
+}
+
+.cat-count {
+  font-family: var(--font-body);
+  font-size: var(--font-size-xxs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-charcoal-soft);
+  opacity: 0.65;
+  transition: color 0.35s ease;
+  white-space: nowrap;
+}
+
+.cat-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(183, 110, 121, 0.08);
+  color: var(--color-rose-gold);
+  transition: all 0.35s ease;
 }
 
 // ============================================================

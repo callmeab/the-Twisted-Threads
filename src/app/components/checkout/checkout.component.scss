@@ -1173,6 +1173,269 @@
 }
 
 // ============================================================
+// Order Customizations — Professional Card Design
+// ============================================================
+
+.order-customizations-card {
+  background: var(--color-background);
+  border: 1.5px solid rgba(183, 110, 121, 0.12);
+  border-radius: var(--radius-xl);
+  padding: var(--space-6);
+  margin-top: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.customizations-header {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+
+  h4 {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-purple);
+    margin: 0 0 var(--space-1);
+  }
+
+  p {
+    margin: 0;
+    font-size: var(--font-size-sm);
+    color: var(--color-charcoal-soft);
+    line-height: var(--line-height-snug);
+  }
+}
+
+.customizations-header-icon {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, rgba(183, 110, 121, 0.12), rgba(212, 175, 55, 0.1));
+  border: 1px solid rgba(183, 110, 121, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-rose-gold);
+}
+
+.notes-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.notes-label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-charcoal);
+  letter-spacing: 0.01em;
+
+  svg {
+    color: var(--color-rose-gold);
+    flex-shrink: 0;
+  }
+}
+
+.label-optional {
+  font-weight: var(--font-weight-normal);
+  color: var(--color-charcoal-soft);
+  opacity: 0.65;
+  font-size: var(--font-size-xs);
+}
+
+.notes-textarea {
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  border: 1.5px solid rgba(183, 110, 121, 0.22);
+  border-radius: var(--radius-md);
+  background: var(--color-pearl);
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  color: var(--color-charcoal);
+  line-height: var(--line-height-relaxed);
+  resize: vertical;
+  outline: none;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  box-sizing: border-box;
+
+  &::placeholder {
+    color: var(--color-charcoal-soft);
+    opacity: 0.5;
+  }
+
+  &:focus {
+    border-color: var(--color-rose-gold);
+    box-shadow: 0 0 0 3px rgba(183, 110, 121, 0.1);
+  }
+}
+
+.char-count {
+  align-self: flex-end;
+  font-size: var(--font-size-xxs);
+  color: var(--color-charcoal-soft);
+  opacity: 0.55;
+  letter-spacing: 0.02em;
+}
+
+// Gift Option Cards
+.gift-options-row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.gift-option-card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-5);
+  background: var(--color-pearl);
+  border: 1.5px solid rgba(183, 110, 121, 0.14);
+  border-radius: var(--radius-xl);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+
+  // Hidden native checkbox
+  input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+  }
+
+  &:hover {
+    border-color: rgba(183, 110, 121, 0.3);
+    box-shadow: 0 4px 16px rgba(183, 110, 121, 0.08);
+    transform: translateY(-1px);
+  }
+
+  &.selected {
+    border-color: var(--color-rose-gold);
+    background: rgba(183, 110, 121, 0.04);
+    box-shadow: 0 4px 20px rgba(183, 110, 121, 0.12);
+
+    .gift-option-icon {
+      background: var(--color-rose-gold);
+      color: var(--color-pearl);
+      border-color: var(--color-rose-gold);
+    }
+
+    .gift-option-body strong {
+      color: var(--color-rose-gold-dark);
+    }
+
+    .gift-option-check {
+      background: var(--color-rose-gold);
+      border-color: var(--color-rose-gold);
+      color: var(--color-pearl);
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+}
+
+.gift-option-icon {
+  flex-shrink: 0;
+  width: 46px;
+  height: 46px;
+  border-radius: var(--radius-md);
+  background: rgba(183, 110, 121, 0.08);
+  border: 1px solid rgba(183, 110, 121, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-rose-gold);
+  transition: all var(--transition-normal);
+}
+
+.gift-option-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.gift-option-title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+
+  strong {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-purple);
+    transition: color var(--transition-fast);
+  }
+}
+
+.gift-option-desc {
+  font-size: var(--font-size-xs);
+  color: var(--color-charcoal-soft);
+  line-height: var(--line-height-snug);
+  opacity: 0.8;
+}
+
+.gift-option-check {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(183, 110, 121, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: transparent;
+  transition: all var(--transition-normal);
+  transform: scale(0.8);
+  opacity: 0.3;
+}
+
+.gift-fee-tag {
+  display: inline-block;
+  padding: 3px 9px;
+  font-family: var(--font-body);
+  font-size: var(--font-size-xxs);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.04em;
+  background: rgba(212, 175, 55, 0.12);
+  color: var(--color-gold-dark);
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  border-radius: var(--radius-xs);
+  white-space: nowrap;
+  text-transform: uppercase;
+
+  &.free-tag {
+    background: rgba(46, 125, 50, 0.1);
+    color: #2e7d32;
+    border-color: rgba(46, 125, 50, 0.2);
+  }
+}
+
+.gift-message-expander {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  background: rgba(183, 110, 121, 0.04);
+  border: 1px dashed rgba(183, 110, 121, 0.2);
+  border-radius: var(--radius-lg);
+  animation: slideDownFadeIn 0.3s ease forwards;
+}
+
+// ============================================================
 // Mobile Responsive — Full Implementation
 // ============================================================
 
@@ -1514,12 +1777,8 @@
     font-size: 16px !important;
   }
 
-  .gift-checkbox {
+  .gift-option-card {
     font-size: var(--font-size-xs);
-
-    .gift-checkbox-text span {
-      font-size: var(--font-size-xs);
-    }
   }
 
   .gift-fee-tag {

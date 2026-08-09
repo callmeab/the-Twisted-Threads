@@ -563,12 +563,30 @@
         <!-- Order Notes & Gift Options -->
         <div class="order-customizations-card">
           <div class="customizations-header">
-            <h4>Order Customizations</h4>
-            <p>Add a special note or gift wrap options for your order.</p>
+            <div class="customizations-header-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+              </svg>
+            </div>
+            <div>
+              <h4>Order Customizations</h4>
+              <p>Add special instructions or gift options to make your order extra special.</p>
+            </div>
           </div>
 
           <div class="notes-field">
-            <label for="orderNotes" class="notes-label">Special Instructions (Optional)</label>
+            <label for="orderNotes" class="notes-label">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="16" y1="13" x2="8" y2="13"/>
+                <line x1="16" y1="17" x2="8" y2="17"/>
+                <polyline points="10 9 9 9 8 9"/>
+              </svg>
+              Special Instructions <span class="label-optional">(Optional)</span>
+            </label>
             <textarea id="orderNotes" name="orderNotes" [(ngModel)]="orderNotes" (ngModelChange)="persistChanges()"
               rows="3" maxlength="500"
               placeholder="Any delivery instructions, special requests, or notes for the packing team…"
@@ -577,30 +595,66 @@
           </div>
 
           <div class="gift-options-row">
-            <label class="custom-checkbox gift-checkbox">
+            <label class="gift-option-card" [class.selected]="giftWrap">
               <input type="checkbox" name="giftWrap" [(ngModel)]="giftWrap" (ngModelChange)="persistChanges()" />
-              <span class="checkmark"></span>
-              <div class="gift-checkbox-text">
-                <strong>Premium Gift Wrapping</strong>
-                <span>Luxury wrapping paper, satin ribbon, and a complimentary ribbon seal.</span>
+              <div class="gift-option-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 12 20 22 4 22 4 12"/>
+                  <rect x="2" y="7" width="20" height="5"/>
+                  <line x1="12" y1="22" x2="12" y2="7"/>
+                  <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/>
+                  <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/>
+                </svg>
               </div>
-              <span class="gift-fee-tag">+ {{ 200 | customCurrency }}</span>
+              <div class="gift-option-body">
+                <div class="gift-option-title">
+                  <strong>Premium Gift Wrapping</strong>
+                  <span class="gift-fee-tag">+ {{ 200 | customCurrency }}</span>
+                </div>
+                <span class="gift-option-desc">Luxury wrapping paper, satin ribbon, and a complimentary ribbon seal.</span>
+              </div>
+              <div class="gift-option-check">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+              </div>
             </label>
 
-            <label class="custom-checkbox gift-checkbox" style="margin-top: 0.75rem;">
+            <label class="gift-option-card" [class.selected]="isGift">
               <input type="checkbox" name="isGift" [(ngModel)]="isGift" (ngModelChange)="persistChanges()" />
-              <span class="checkmark"></span>
-              <div class="gift-checkbox-text">
-                <strong>Include a Gift Message</strong>
-                <span>We'll print your personal message on a complimentary card.</span>
+              <div class="gift-option-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                </svg>
               </div>
-              <span class="gift-fee-tag free-tag">Free</span>
+              <div class="gift-option-body">
+                <div class="gift-option-title">
+                  <strong>Include a Gift Message</strong>
+                  <span class="gift-fee-tag free-tag">Free</span>
+                </div>
+                <span class="gift-option-desc">We'll print your personal message on a complimentary card.</span>
+              </div>
+              <div class="gift-option-check">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+              </div>
             </label>
           </div>
 
           @if (isGift) {
           <div class="gift-message-expander animate-fade-in">
-            <label for="giftMessage" class="notes-label">Gift Message</label>
+            <label for="giftMessage" class="notes-label">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+              </svg>
+              Gift Message
+            </label>
             <textarea id="giftMessage" name="giftMessage" [(ngModel)]="giftMessage" (ngModelChange)="persistChanges()"
               rows="3" maxlength="200" placeholder="Write your heartfelt message here…"
               class="notes-textarea"></textarea>
@@ -653,11 +707,20 @@
             <span class="btn-spinner"></span>
             Processing…
             } @else {
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2">
-              <polyline points="20 6 9 17 4 12"></polyline>
+            <!-- Shopping bag icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+              <line x1="3" y1="6" x2="21" y2="6"/>
+              <path d="M16 10a4 4 0 0 1-8 0"/>
             </svg>
             Place Order · {{ grandTotal | customCurrency }}
+            <!-- Right arrow -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"/>
+              <polyline points="12 5 19 12 12 19"/>
+            </svg>
             }
           </button>
         </div>
@@ -725,7 +788,18 @@
         <span class="btn-spinner sidebar-spinner"></span>
         Processing…
         } @else {
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <path d="M16 10a4 4 0 0 1-8 0"/>
+        </svg>
         Place Order
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"/>
+          <polyline points="12 5 19 12 12 19"/>
+        </svg>
         }
       </button>
       }
@@ -748,7 +822,18 @@
         @if (isProcessing) {
         <span class="btn-spinner"></span> Processing…
         } @else {
+        <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <path d="M16 10a4 4 0 0 1-8 0"/>
+        </svg>
         Place Order
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"/>
+          <polyline points="12 5 19 12 12 19"/>
+        </svg>
         }
       </button>
       } @else if (currentStep === 2) {

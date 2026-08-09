@@ -33,16 +33,31 @@
   color: var(--color-charcoal);
   text-decoration: none;
   font-size: var(--font-size-xs);
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-semibold);
   letter-spacing: 0.18em;
+  text-transform: uppercase;
   padding: var(--space-2) 0;
   position: relative;
   transition: color var(--transition-fast);
+
+  // Make BOTH <a> and <button> nav-links behave identically
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  line-height: 1;            // removes inherited line-height differences
+  vertical-align: middle;
+
+  // Reset button-specific defaults
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  outline: none;
 
   &:hover {
     color: var(--color-rose-gold);
 
     mat-icon {
-      transform: translateY(2px);
       color: var(--color-rose-gold);
     }
   }
@@ -59,9 +74,21 @@
     transition: width var(--transition-normal), left var(--transition-normal);
   }
 
-  &:hover::after {
+  &:hover::after,
+  &:focus-visible::after {
     width: 100%;
     left: 0;
+  }
+
+  // The chevron icon — keep it small and on the same baseline
+  mat-icon.dropdown-arrow {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    line-height: 16px;
+    flex-shrink: 0;
+    transition: transform var(--transition-normal);
+    vertical-align: middle;
   }
 }
 
@@ -257,16 +284,19 @@
 // 6. Custom Inline Nav Dropdown
 .nav-dropdown-wrapper {
   position: relative;
-  
-  &:hover {
+  display: inline-flex;
+  align-items: center;
+
+  &:hover,
+  &:focus-within {
     .nav-dropdown-menu {
       visibility: visible;
       opacity: 1;
-      transform: translateY(0);
+      transform: translateX(-50%) translateY(0);
       pointer-events: auto;
     }
-    
-    .dropdown-arrow {
+
+    .nav-link .dropdown-arrow {
       transform: rotate(180deg);
     }
   }

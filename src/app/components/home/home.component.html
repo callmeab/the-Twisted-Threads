@@ -45,11 +45,11 @@
     </p>
 
     <!-- CTA Actions -->
-    <div class="hero-cta animate-slide-up flex-row flex-center gap-4 mt-8">
-      <a routerLink="/products" class="btn-primary-luxury px-5 py-3 text-sm font-semibold uppercase tracking-widest rounded-lg transition-all duration-300">
+    <div class="hero-cta animate-slide-up">
+      <a routerLink="/products" class="btn-primary-luxury px-6 py-3 text-sm font-semibold uppercase tracking-widest rounded-lg transition-all duration-300">
         Shop Collection
       </a>
-      <a href="#brand-story" class="btn-outline-luxury px-5 py-3 text-sm font-semibold uppercase tracking-widest rounded-lg backdrop-blur-sm transition-all duration-300 smooth-scroll">
+      <a href="#brand-story" class="btn-outline-luxury px-6 py-3 text-sm font-semibold uppercase tracking-widest rounded-lg backdrop-blur-sm transition-all duration-300 smooth-scroll">
         Our Story
       </a>
     </div>
@@ -72,21 +72,68 @@
 </section>
 
 <!-- Category Showcase Section -->
-<section class="category-section py-20 bg-cream">
-  <div class="container-premium text-center">
-    <h2 class="font-heading text-4xl font-bold text-charcoal mb-4">Shop by Category</h2>
-    <hr class="divider-gold mx-auto w-24" />
-    <p class="font-serif text-lg text-charcoal-soft mb-12 max-w-2xl mx-auto">
-      Explore our curated selection of handcrafted pieces, designed to complement your unique style.
-    </p>
+<section class="category-section">
+  <div class="container-premium">
 
-    <div class="grid-responsive">
-      <a *ngFor="let category of categories" [routerLink]="category.link" class="category-card relative group rounded-2xl overflow-hidden shadow-soft block">
-        <div class="category-img-wrapper w-full aspect-square overflow-hidden">
-          <img [src]="category.image" [alt]="category.name" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+    <!-- Section Header -->
+    <div class="cat-section-header">
+      <span class="cat-eyebrow">Handcrafted Collections</span>
+      <h2 class="cat-title">Shop by Category</h2>
+      <div class="cat-divider">
+        <span></span><span class="cat-divider-gem">◆</span><span></span>
+      </div>
+      <p class="cat-subtitle">
+        Each collection is crafted with love — explore the art of handmade jewelry.
+      </p>
+    </div>
+
+    <!-- Category Cards Grid -->
+    <div class="cat-grid">
+      <a
+        *ngFor="let cat of categories; let i = index"
+        [routerLink]="cat.link"
+        [queryParams]="cat.queryParams"
+        class="cat-card"
+        [style.--cat-gradient]="cat.gradient"
+        [attr.data-index]="i"
+      >
+        <!-- Badge -->
+        <span class="cat-badge">{{ cat.badge }}</span>
+
+        <!-- Image -->
+        <div class="cat-img-wrap">
+          <img [src]="cat.image" [alt]="cat.name" class="cat-img" loading="lazy" />
+          <!-- Hover Overlay -->
+          <div class="cat-overlay"></div>
+        </div>
+
+        <!-- Bottom Info Panel -->
+        <div class="cat-info">
+          <!-- Icon Circle -->
+          <div class="cat-icon-ring">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22">
+              <path [attr.d]="cat.icon" />
+            </svg>
+          </div>
+
+          <div class="cat-text">
+            <h3 class="cat-name">{{ cat.name }}</h3>
+            <p class="cat-desc">{{ cat.description }}</p>
+          </div>
+
+          <div class="cat-meta">
+            <span class="cat-count">{{ cat.itemCount }} pieces</span>
+            <span class="cat-arrow">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16">
+                <line x1="5" y1="12" x2="19" y2="12"/>
+                <polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </span>
+          </div>
         </div>
       </a>
     </div>
+
   </div>
 </section>
 

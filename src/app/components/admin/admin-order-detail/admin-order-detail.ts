@@ -10,7 +10,7 @@ import { AdminAuditService } from '../../../services/admin-audit.service';
 
 @Component({
   selector: 'app-admin-order-detail',
-  imports: [CommonModule, FormsModule, RouterLink, MatIconModule],
+  imports: [CommonModule, FormsModule, MatIconModule],
   template: `./admin-order-detail.html`,
   styleUrl: './admin-order-detail.css',
 })

@@ -344,47 +344,79 @@
 
 .whatsapp-floating-btn {
   position: fixed;
-  bottom: var(--space-6);
-  right: var(--space-6);
   z-index: var(--z-fixed);
   width: 54px;
   height: 54px;
   border-radius: var(--radius-full);
-  background-color: #25D366; // Standard WhatsApp color
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  color: var(--color-pearl);
-  box-shadow: var(--shadow-strong);
-  transition: transform var(--transition-normal), background-color var(--transition-normal);
+  cursor: grab;
+  user-select: none;
+  touch-action: none; // prevent browser scroll interference
+
+  // Pulse animation still applies to the whole wrapper
   animation: whatsappPulse 2s infinite;
 
-  svg {
-    width: 28px;
-    height: 28px;
-    fill: #ffffff;
-  }
-
-  &:hover {
-    transform: scale(1.1) rotate(5deg);
-    background-color: #128C7E;
-    box-shadow: var(--shadow-gold) !important;
-  }
-
-  &:active {
-    transform: scale(0.95);
+  &.is-dragging {
+    cursor: grabbing;
+    animation: none;
+    opacity: 0.88;
+    transform: scale(1.12);
   }
 
   @media (min-width: 640px) {
-    bottom: var(--space-8);
-    right: var(--space-8);
     width: 58px;
     height: 58px;
-
-    svg {
-      width: 30px;
-      height: 30px;
-    }
   }
+}
+
+// Inner anchor — fills the whole button
+.whatsapp-inner-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-full);
+  background-color: #25D366;
+  color: #fff;
+  box-shadow: var(--shadow-strong);
+  text-decoration: none;
+  position: relative;
+  transition: background-color var(--transition-normal), box-shadow var(--transition-normal), transform var(--transition-fast);
+
+  &:hover {
+    background-color: #128C7E;
+    box-shadow: var(--shadow-gold) !important;
+    transform: scale(1.08) rotate(4deg);
+  }
+
+  &:active {
+    transform: scale(0.93);
+  }
+}
+
+.whatsapp-svg {
+  width: 28px;
+  height: 28px;
+  fill: #ffffff;
+
+  @media (min-width: 640px) {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+// Six-dot drag-handle hint shown at top-left of button
+.drag-hint {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  color: rgba(255, 255, 255, 0.55);
+  line-height: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.whatsapp-inner-link:hover .drag-hint {
+  opacity: 1;
 }

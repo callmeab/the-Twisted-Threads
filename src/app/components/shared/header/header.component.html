@@ -18,9 +18,9 @@
       
       <!-- Inline CSS Dropdown for Collections -->
       <div class="nav-dropdown-wrapper">
-        <button class="nav-link flex items-center gap-1 border-none cursor-pointer bg-transparent">
+        <button class="nav-link" type="button">
           Collections
-          <mat-icon class="text-xs transition-transform duration-200 dropdown-arrow">keyboard_arrow_down</mat-icon>
+          <mat-icon class="dropdown-arrow">keyboard_arrow_down</mat-icon>
         </button>
         <div class="nav-dropdown-menu">
           <a routerLink="/products" [queryParams]="{ category: 'Necklaces' }" class="nav-dropdown-item">
