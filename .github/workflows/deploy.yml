@@ -35,12 +35,12 @@ jobs:
         run: npx ng build --configuration=production --base-href="/the-Twisted-Threads/"
 
       - name: Copy index.html as 404.html (SPA routing fix)
-        run: cp dist/the-twisted-threads/browser/index.html dist/the-twisted-threads/browser/404.html
+        run: cp dist/the-Twisted-Threads/browser/index.html dist/the-Twisted-Threads/browser/404.html
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: dist/the-twisted-threads/browser
+          path: dist/the-Twisted-Threads/browser
 
   deploy:
     needs: build
