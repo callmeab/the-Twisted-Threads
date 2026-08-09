@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, inject, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
@@ -30,25 +30,24 @@ import { WishlistHeartButtonComponent } from '../shared/wishlist-heart-button/wi
   templateUrl: './featured-products.component.html',
   styleUrl: './featured-products.component.scss'
 })
-export class FeaturedProductsComponent implements OnInit {
+export class FeaturedProductsComponent {
   private readonly productService = inject(ProductService);
-  private readonly cartService = inject(CartService);
+  private readonly cartService    = inject(CartService);
   private readonly quickViewService = inject(ProductQuickViewService);
 
-  // States
-  isLoading = signal<boolean>(true);
-  products = signal<Product[]>([]);
+  /**
+   * Reactive slice — automatically updates whenever Firestore delivers data.
+   * No ngOnInit needed: computed() re-evaluates any time the source signal changes.
+   */
+  readonly products = computed<Product[]>(() =>
+    this.productService.getProducts()().slice(0, 4)
+  );
 
-  ngOnInit(): void {
-    // Fetch products and simulate network loading shimmer for 1.2s
-    const allProducts = this.productService.getProducts()();
-    // Select first 4 products for the featured row
-    this.products.set(allProducts.slice(0, 4));
-
-    setTimeout(() => {
-      this.isLoading.set(false);
-    }, 1200);
-  }
+  /**
+   * Mirror the service loading state directly.
+   * Shows skeleton until the first Firestore snapshot arrives.
+   */
+  readonly isLoading = this.productService.isLoading;
 
   addToCart(product: Product, event: Event) {
     event.stopPropagation();
@@ -64,12 +63,9 @@ export class FeaturedProductsComponent implements OnInit {
 
   // Resolve dynamic badges for product mockups
   getProductBadge(index: number): { text: string; type: 'new' | 'sale' } | null {
-    if (index === 0 || index === 3) {
-      return { text: 'New', type: 'new' };
-    }
-    if (index === 1) {
-      return { text: 'Sale', type: 'sale' };
-    }
+    if (index === 0 || index === 3) return { text: 'New',  type: 'new'  };
+    if (index === 1)                return { text: 'Sale', type: 'sale' };
     return null;
   }
 }
+
