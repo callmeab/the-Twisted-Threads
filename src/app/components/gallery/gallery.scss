@@ -1,0 +1,182 @@
+$bg-color: #f7f7f7;
+$text-color: #050505;
+
+.gallery-scene {
+  position: relative;
+  width: 100%;
+  height: 100vh; 
+  min-height: 600px;
+  background-color: $bg-color;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  perspective: 1500px;
+  transform-style: preserve-3d;
+  font-family: 'Inter', sans-serif;
+  margin-top: -80px; // Offset for header overlap to truly center
+  padding-top: 80px;
+}
+
+.center-content {
+  transform: translateZ(0); // Explicit depth 0
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  pointer-events: none; // Allows clicking elements rotating behind/in-front
+}
+
+.icon-logo {
+  svg {
+    width: 60px;
+    height: 60px;
+    stroke-width: 1px;
+    stroke: $text-color;
+    fill: none;
+    opacity: 0.8;
+  }
+}
+
+.main-title {
+  font-family: 'Inter', sans-serif;
+  font-size: 3.2rem;
+  font-weight: 500;
+  line-height: 1.05;
+  color: $text-color;
+  letter-spacing: -0.06em;
+  margin: 0;
+
+  @media (min-width: 768px) {
+    font-size: 5rem;
+  }
+  @media (min-width: 1024px) {
+    font-size: 7.5rem;
+  }
+}
+
+.start-btn {
+  background-color: $text-color;
+  color: #fff;
+  border: none;
+  padding: 0.85rem 2.5rem;
+  font-size: 1rem;
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  border-radius: 6px;
+  cursor: pointer;
+  pointer-events: auto; // Re-enable for button
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  
+  &:hover {
+    opacity: 0.85;
+    transform: scale(1.03);
+  }
+}
+
+.carousel-wrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  transform-style: preserve-3d;
+  // Tilt the ring downwards to create the circular perspective
+  transform: rotateX(-12deg) rotateZ(0deg);
+  
+  &.reverse {
+    margin-top: 260px;
+  }
+}
+
+.gallery-carousel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  transform-style: preserve-3d;
+  animation: rotateRing 120s infinite linear; // Very smooth slow rotation
+  
+  &:hover {
+    animation-play-state: paused;
+  }
+}
+
+@keyframes rotateRing {
+  from {
+    transform: rotateY(0deg);
+  }
+  to {
+    transform: rotateY(-360deg);
+  }
+}
+
+@keyframes rotateRingReverse {
+  from {
+    transform: rotateY(0deg);
+  }
+  to {
+    transform: rotateY(360deg);
+  }
+}
+
+.gallery-carousel.reverse-animation {
+  animation: rotateRingReverse 120s infinite linear;
+}
+
+.gallery-item {
+  position: absolute;
+  top: -125px; // Half of height
+  left: -100px; // Half of width
+  width: 200px;
+  height: 250px;
+  backface-visibility: visible;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+  background: transparent;
+  
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    // Add light shadow to make items pop from background
+    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    transition: filter 0.4s ease;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+  }
+
+  &:hover {
+    // Zoom the item slightly while preserving its 3D depth
+    img {
+      filter: brightness(1.15) contrast(1.05);
+    }
+  }
+}
+
+// Mobile specific sizing
+@media (max-width: 639px) {
+  .gallery-item {
+    width: 120px;
+    height: 150px;
+    top: -75px;
+    left: -60px;
+  }
+  
+  .carousel-wrapper {
+    transform: rotateX(-8deg) rotateZ(0deg); 
+  }
+}
+
+// Tablet specific sizing
+@media (min-width: 640px) and (max-width: 1023px) {
+  .gallery-item {
+    width: 160px;
+    height: 200px;
+    top: -100px;
+    left: -80px;
+  }
+}

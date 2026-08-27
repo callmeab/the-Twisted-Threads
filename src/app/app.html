@@ -2,7 +2,9 @@
 
 <div class="flex min-h-screen flex-col bg-white text-neutral-900 antialiased font-sans">
   <!-- Top Header Navigation -->
-  <app-header></app-header>
+  @if (!isAdminRoute()) {
+    <app-header></app-header>
+  }
 
   <!-- Core Content Area with Active Router Outlet -->
   <main class="app-main flex-grow">
@@ -10,8 +12,10 @@
   </main>
 
   <!-- Sleek Footer Layout -->
-  <app-footer></app-footer>
+  @if (!isAdminRoute()) {
+    <app-footer></app-footer>
 
-  <!-- Mobile bottom navigation -->
-  <app-bottom-nav />
+    <!-- Mobile bottom navigation -->
+    <app-bottom-nav />
+  }
 </div>

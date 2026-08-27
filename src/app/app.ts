@@ -16,6 +16,7 @@ import { filter } from 'rxjs/operators';
 })
 export class App implements OnInit {
   protected readonly title = signal('the-Twisted-Threads');
+  protected readonly isAdminRoute = signal(false);
 
   private readonly router = inject(Router);
   private readonly loader = inject(LoaderService);
@@ -26,6 +27,9 @@ export class App implements OnInit {
       .subscribe(event => {
         if (event instanceof NavigationStart) {
           this.loader.show('Loading...');
+        } else if (event instanceof NavigationEnd) {
+          this.loader.hide(200);
+          this.isAdminRoute.set(this.router.url.startsWith('/admin'));
         } else {
           this.loader.hide(200);
         }

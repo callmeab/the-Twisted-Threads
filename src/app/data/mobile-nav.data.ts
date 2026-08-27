@@ -22,6 +22,7 @@ export interface MegaMenuCategory {
 export const MOBILE_PRIMARY_LINKS: MobileNavLink[] = [
   { label: 'Home', route: '/', icon: 'home', exact: true },
   { label: 'Shop All', route: '/products', icon: 'storefront' },
+  { label: 'Gallery', route: '/gallery', icon: 'collections' },
   { label: 'About', route: '/about', icon: 'auto_awesome' },
   { label: 'Contact', route: '/contact', icon: 'mail_outline' },
   { label: 'FAQ', route: '/faq', icon: 'help_outline' },

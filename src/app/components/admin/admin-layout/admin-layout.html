@@ -21,6 +21,10 @@
     </nav>
 
     <div class="sidebar-footer">
+      <a routerLink="/" class="back-site-btn">
+        <mat-icon>storefront</mat-icon>
+        <span>Go to Store</span>
+      </a>
       <button class="logout-btn" (click)="logout()">
         <mat-icon>logout</mat-icon>
         <span>Log Out</span>
@@ -30,6 +34,24 @@
 
   <!-- Main content -->
   <main class="admin-main">
-    <router-outlet />
+    <!-- Admin Navbar -->
+    <header class="admin-header">
+      <div class="header-title">Admin Panel</div>
+      <div class="header-actions">
+        <div class="admin-profile">
+          <mat-icon>account_circle</mat-icon>
+          <span>Admin</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="admin-content">
+      <router-outlet />
+    </div>
+
+    <!-- Admin Footer -->
+    <footer class="admin-footer">
+      <p>&copy; 2026 Twisted Threads. All rights reserved.</p>
+    </footer>
   </main>
 </div>

@@ -1,0 +1,44 @@
+<div class="gallery-scene">
+
+  <!-- Center Content -->
+  <div class="center-content">
+    <div class="icon-logo">
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <!-- 3D Globe representation -->
+        <circle cx="50" cy="50" r="45" />
+        <ellipse cx="50" cy="50" rx="15" ry="45" />
+        <ellipse cx="50" cy="50" rx="45" ry="15" />
+      </svg>
+    </div>
+    <h1 class="main-title">Beyond the <br> Gallery</h1>
+    <button class="start-btn">Start experience</button>
+  </div>
+
+  <!-- 3D Carousel Wrapper (for tilt) -->
+  <div class="carousel-wrapper">
+    <div class="gallery-carousel">
+      @for (product of carouselItems(); track i; let i = $index) {
+      <div class="gallery-item" [routerLink]="['/products', product.id]"
+        [style.transform]="'rotateY(' + (i * (360 / ringItemCount)) + 'deg) translateZ(' + radius() + 'px)'">
+        <img [src]="product.images[0]" [alt]="product.name" />
+        <!-- <div class="item-overlay">
+            <span>{{ product.name }}</span>
+          </div> -->
+      </div>
+      }
+    </div>
+  </div>
+
+  <!-- Second 3D Carousel Wrapper (reverse) -->
+  <div class="carousel-wrapper reverse">
+    <div class="gallery-carousel reverse-animation">
+      @for (product of carouselItems(); track i; let i = $index) {
+      <div class="gallery-item" [routerLink]="['/products', product.id]"
+        [style.transform]="'rotateY(' + (i * (360 / ringItemCount)) + 'deg) translateZ(' + radius() + 'px)'">
+        <img [src]="product.images[0]" [alt]="product.name" />
+      </div>
+      }
+    </div>
+  </div>
+
+</div>
